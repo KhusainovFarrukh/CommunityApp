@@ -1,21 +1,27 @@
 package khusainov.farrukh.articlestats.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.articlestats.R
-import khusainov.farrukh.articlestats.databinding.ActivityMainBinding
 import khusainov.farrukh.articlestats.databinding.ActivitySignInBinding
-import khusainov.farrukh.articlestats.model.Article
+import khusainov.farrukh.articlestats.model.Notif
 import khusainov.farrukh.articlestats.model.SignInData
 import khusainov.farrukh.articlestats.model.User
 import khusainov.farrukh.articlestats.viewmodel.ArticleViewModel
+import okhttp3.Cookie
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import java.net.URL
 
 class SignInActivity : AppCompatActivity() {
+
+    private lateinit var cookieRememberMe: Cookie
+    private lateinit var cookieSessionId: Cookie
 
     private lateinit var binding: ActivitySignInBinding
     private lateinit var articleViewModel: ArticleViewModel
@@ -35,7 +41,23 @@ class SignInActivity : AppCompatActivity() {
     private fun setObservers() {
         articleViewModel.responseUser.observe(this, { response ->
             if (response.isSuccessful) {
+
+                if (response.raw().headers("set-cookie").isNotEmpty()) {
+                    cookieRememberMe = Cookie.Companion.parse(
+                        response.raw().request.url,
+                        response.raw().headers("set-cookie")[0]
+                    )!!
+
+                    cookieSessionId = Cookie.Companion.parse(
+                        response.raw().request.url,
+                        response.raw().headers("set-cookie")[1]
+                    )!!
+                } else {
+                    Log.wtf("Cookie", "There is no cookies")
+                }
+
                 setStatsToViews(response.body()!!)
+
             } else {
                 Toast.makeText(
                     this,
@@ -48,6 +70,25 @@ class SignInActivity : AppCompatActivity() {
         articleViewModel.isLoading.observe(this, {
             binding.btnSignIn.isEnabled = !it
             binding.pbLoading.isVisible = it
+        })
+
+        articleViewModel.responseNotif.observe(this, { response ->
+            if (response.isSuccessful) {
+                Toast.makeText(
+                    this,
+                    response.body()?.get(0)?.verb ?: "Something is null",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                setNotifToViews(response.body()!!)
+
+            } else {
+                Toast.makeText(
+                    this,
+                    "Error code:" + response.code(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         })
     }
 
@@ -72,6 +113,13 @@ class SignInActivity : AppCompatActivity() {
                 }
             }
         }
+
+        binding.btnGetNotif.setOnClickListener {
+            articleViewModel.getNotifications(
+                cookieRememberMe.name + "=" + cookieRememberMe.value,
+                cookieSessionId.name + "=" + cookieSessionId.value
+            )
+        }
     }
 
     private fun setStatsToViews(user: User) {
@@ -86,6 +134,14 @@ class SignInActivity : AppCompatActivity() {
             crossfade(true)
             placeholder(R.drawable.ic_account_circle)
             transformations(CircleCropTransformation())
+        }
+    }
+
+    private fun setNotifToViews(notifList: List<Notif>) {
+        notifList.forEach {
+            if (!it.read) {
+                binding.txvNotif.append("${it.verb} turidagi xabar\n")
+            }
         }
     }
 }

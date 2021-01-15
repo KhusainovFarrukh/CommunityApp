@@ -1,13 +1,12 @@
 package khusainov.farrukh.articlestats.api
 
 import khusainov.farrukh.articlestats.model.Article
+import khusainov.farrukh.articlestats.model.Notif
 import khusainov.farrukh.articlestats.model.SignInData
 import khusainov.farrukh.articlestats.model.User
+import okhttp3.Cookie
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface CommunityApi {
 
@@ -18,6 +17,12 @@ interface CommunityApi {
 
     @POST("api/v1/sessions")
     suspend fun signIn(
-        @Body signInData: SignInData
+        @Body signInData: SignInData,
     ) : Response<User>
+
+    @GET("api/v1/notifications")
+    suspend fun getNotifications(
+        @Header("Cookie") cookie1: String,
+        @Header("Cookie") cookie2: String
+    ) : Response<List<Notif>>
 }
