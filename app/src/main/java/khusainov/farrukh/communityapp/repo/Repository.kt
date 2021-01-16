@@ -1,10 +1,10 @@
-package khusainov.farrukh.articlestats.repo
+package khusainov.farrukh.communityapp.repo
 
-import khusainov.farrukh.articlestats.api.RetrofitInstance
-import khusainov.farrukh.articlestats.model.Article
-import khusainov.farrukh.articlestats.model.Notif
-import khusainov.farrukh.articlestats.model.SignInData
-import khusainov.farrukh.articlestats.model.User
+import khusainov.farrukh.communityapp.api.RetrofitInstance
+import khusainov.farrukh.communityapp.model.Article
+import khusainov.farrukh.communityapp.model.Notif
+import khusainov.farrukh.communityapp.model.SignInData
+import khusainov.farrukh.communityapp.model.User
 import retrofit2.Response
 
 class Repository {

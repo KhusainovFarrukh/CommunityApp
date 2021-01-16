@@ -1,10 +1,9 @@
-package khusainov.farrukh.articlestats.api
+package khusainov.farrukh.communityapp.api
 
-import khusainov.farrukh.articlestats.model.Article
-import khusainov.farrukh.articlestats.model.Notif
-import khusainov.farrukh.articlestats.model.SignInData
-import khusainov.farrukh.articlestats.model.User
-import okhttp3.Cookie
+import khusainov.farrukh.communityapp.model.Article
+import khusainov.farrukh.communityapp.model.Notif
+import khusainov.farrukh.communityapp.model.SignInData
+import khusainov.farrukh.communityapp.model.User
 import retrofit2.Response
 import retrofit2.http.*
 

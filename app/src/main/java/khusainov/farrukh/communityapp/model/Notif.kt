@@ -1,4 +1,4 @@
-package khusainov.farrukh.articlestats.model
+package khusainov.farrukh.communityapp.model
 
 data class Notif(
     val verb: String,

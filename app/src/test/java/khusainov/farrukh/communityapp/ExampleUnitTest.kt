@@ -1,4 +1,4 @@
-package khusainov.farrukh.articlestats
+package khusainov.farrukh.communityapp
 
 import org.junit.Test
 

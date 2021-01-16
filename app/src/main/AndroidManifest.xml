@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="khusainov.farrukh.articlestats">
+    package="khusainov.farrukh.communityapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,15 +10,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ArticleStats">
-        <activity android:name=".ui.SignInActivity">
+        android:theme="@style/Theme.CommunityApp">
+        <activity android:name="khusainov.farrukh.communityapp.ui.SignInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity">
+        <activity android:name="khusainov.farrukh.communityapp.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

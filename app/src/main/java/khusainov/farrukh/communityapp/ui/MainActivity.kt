@@ -1,13 +1,13 @@
-package khusainov.farrukh.articlestats.ui
+package khusainov.farrukh.communityapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import khusainov.farrukh.articlestats.databinding.ActivityMainBinding
-import khusainov.farrukh.articlestats.model.Article
-import khusainov.farrukh.articlestats.viewmodel.ArticleViewModel
+import khusainov.farrukh.communityapp.databinding.ActivityMainBinding
+import khusainov.farrukh.communityapp.model.Article
+import khusainov.farrukh.communityapp.viewmodel.ArticleViewModel
 
 class MainActivity : AppCompatActivity() {
 

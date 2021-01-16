@@ -1,4 +1,4 @@
-package khusainov.farrukh.articlestats.utils
+package khusainov.farrukh.communityapp.utils
 
 class Constants {
 

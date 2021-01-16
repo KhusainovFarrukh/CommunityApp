@@ -1,6 +1,6 @@
-package khusainov.farrukh.articlestats.api
+package khusainov.farrukh.communityapp.api
 
-import khusainov.farrukh.articlestats.utils.Constants.Companion.BASE_URL
+import khusainov.farrukh.communityapp.utils.Constants.Companion.BASE_URL
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

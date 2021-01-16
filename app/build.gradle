@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "khusainov.farrukh.articlestats"
+        applicationId "khusainov.farrukh.communityapp"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

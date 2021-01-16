@@ -1,4 +1,4 @@
-package khusainov.farrukh.articlestats.ui
+package khusainov.farrukh.communityapp.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -8,15 +8,13 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import coil.transform.CircleCropTransformation
-import khusainov.farrukh.articlestats.R
-import khusainov.farrukh.articlestats.databinding.ActivitySignInBinding
-import khusainov.farrukh.articlestats.model.Notif
-import khusainov.farrukh.articlestats.model.SignInData
-import khusainov.farrukh.articlestats.model.User
-import khusainov.farrukh.articlestats.viewmodel.ArticleViewModel
+import khusainov.farrukh.communityapp.R
+import khusainov.farrukh.communityapp.databinding.ActivitySignInBinding
+import khusainov.farrukh.communityapp.model.Notif
+import khusainov.farrukh.communityapp.model.SignInData
+import khusainov.farrukh.communityapp.model.User
+import khusainov.farrukh.communityapp.viewmodel.ArticleViewModel
 import okhttp3.Cookie
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import java.net.URL
 
 class SignInActivity : AppCompatActivity() {
 

@@ -1,14 +1,14 @@
-package khusainov.farrukh.articlestats.viewmodel
+package khusainov.farrukh.communityapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import khusainov.farrukh.articlestats.model.Article
-import khusainov.farrukh.articlestats.model.Notif
-import khusainov.farrukh.articlestats.model.SignInData
-import khusainov.farrukh.articlestats.model.User
-import khusainov.farrukh.articlestats.repo.Repository
+import khusainov.farrukh.communityapp.model.Article
+import khusainov.farrukh.communityapp.model.Notif
+import khusainov.farrukh.communityapp.model.SignInData
+import khusainov.farrukh.communityapp.model.User
+import khusainov.farrukh.communityapp.repo.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
