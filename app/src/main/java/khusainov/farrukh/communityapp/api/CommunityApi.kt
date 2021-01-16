@@ -10,12 +10,12 @@ import retrofit2.http.*
 interface CommunityApi {
 
     @GET("api/v1/posts/{articleId}")
-    suspend fun getArticle(
+    suspend fun getArticleById(
         @Path("articleId") articleId: String
     ) : Response<Article>
 
     @POST("api/v1/sessions")
-    suspend fun signIn(
+    suspend fun signInWithEmail(
         @Body signInData: SignInData,
     ) : Response<User>
 

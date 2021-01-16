@@ -10,11 +10,11 @@ import retrofit2.Response
 class Repository {
 
     suspend fun getArticle(articleId: String): Response<Article> {
-        return RetrofitInstance.communityApi.getArticle(articleId)
+        return RetrofitInstance.communityApi.getArticleById(articleId)
     }
 
     suspend fun signIn(signInData: SignInData): Response<User> {
-        return RetrofitInstance.communityApi.signIn(signInData)
+        return RetrofitInstance.communityApi.signInWithEmail(signInData)
     }
 
     suspend fun getNotifications(cookie1: String, cookie2: String) : Response<List<Notif>> {

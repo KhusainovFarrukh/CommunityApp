@@ -23,8 +23,7 @@ data class UserStats(
     @SerializedName("replies")
     val comments: Int,
     val groups: Int,
-    @SerializedName("posts")
-    val articles: Int,
+    val posts: Int,
     val followings: Int,
     val followers: Int
 )
