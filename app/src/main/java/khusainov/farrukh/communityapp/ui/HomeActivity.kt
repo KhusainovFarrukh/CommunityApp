@@ -23,7 +23,7 @@ import okhttp3.Cookie
 
 class HomeActivity : AppCompatActivity() {
 
-    private val cookies = HashMap<String, String>()
+    val cookies = HashMap<String, String>()
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var articleViewModel: ArticleViewModel
@@ -41,42 +41,42 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setObservers() {
-        articleViewModel.responseUser.observe(this, { response ->
-            if (response.isSuccessful) {
-
-                if (response.raw().headers(COOKIES_KEY).isNotEmpty()) {
-
-                    response.raw().headers(COOKIES_KEY).forEach {
-                        val cookie = Cookie.Companion.parse(
-                            response.raw().request.url,
-                            it
-                        )!!
-                        cookies[cookie.name] = cookie.value
-                    }
-
-                } else {
-                    Toast.makeText(
-                        this,
-                        "There is no cookies",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                setStatsToViews(response.body()!!)
-
-            } else {
-                Toast.makeText(
-                    this,
-                    "Error code:" + response.code(),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
-
-        articleViewModel.isLoading.observe(this, {
-            binding.btnLogin.isEnabled = !it
-            binding.pbLoading.isVisible = it
-        })
+//        articleViewModel.responseUser.observe(this, { response ->
+//            if (response.isSuccessful) {
+//
+//                if (response.raw().headers(COOKIES_KEY).isNotEmpty()) {
+//
+//                    response.raw().headers(COOKIES_KEY).forEach {
+//                        val cookie = Cookie.Companion.parse(
+//                            response.raw().request.url,
+//                            it
+//                        )!!
+//                        cookies[cookie.name] = cookie.value
+//                    }
+//
+//                } else {
+//                    Toast.makeText(
+//                        this,
+//                        "There is no cookies",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//
+//                setStatsToViews(response.body()!!)
+//
+//            } else {
+//                Toast.makeText(
+//                    this,
+//                    "Error code:" + response.code(),
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        })
+//
+//        articleViewModel.isLoading.observe(this, {
+//            binding.btnLogin.isEnabled = !it
+//            binding.pbLoading.isVisible = it
+//        })
 
         articleViewModel.responseNotif.observe(this, { response ->
             if (response.isSuccessful) {
@@ -100,12 +100,16 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.btnLogin.setOnClickListener {
-            articleViewModel.signIn(
-                        SignInData(
-                            "temp_login",
-                            "temp_password"
-                        )
-                    )
+            LoginDialogFragment().show(supportFragmentManager, null)
+
+//            articleViewModel.signIn(
+//                        SignInData(
+//                            "temp_login",
+//                            "temp_password"
+//                        )
+//                    )
+
+
 //            when {
 //                binding.etEmail.text.isEmpty() && binding.etPassword.text.isEmpty() -> {
 //                    binding.etEmail.error = "Email manzilingizni yozing"
@@ -134,7 +138,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun setStatsToViews(user: User) {
+    fun setStatsToViews(user: User) {
 //        binding.txvName.text = user.profile.name
 //        binding.txvEmail.text = user.email
 //        binding.txvScoreValue.text = user.profile.score.toString()
