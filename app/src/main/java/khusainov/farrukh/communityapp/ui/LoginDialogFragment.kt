@@ -50,7 +50,7 @@ class LoginDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
+        val width = (resources.displayMetrics.widthPixels * 1)
         val height = (resources.displayMetrics.heightPixels * 0.40).toInt()
         dialog?.window?.setLayout(width, height)
     }
