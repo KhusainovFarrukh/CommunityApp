@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import khusainov.farrukh.communityapp.databinding.FragmentDialogLoginBinding
 import khusainov.farrukh.communityapp.model.SignInData
 import khusainov.farrukh.communityapp.utils.Constants
@@ -19,7 +19,7 @@ class LoginDialogFragment : DialogFragment() {
 
     private var _binding: FragmentDialogLoginBinding? = null
     private val binding get() = _binding!!
-    private lateinit var articleViewModel: ArticleViewModel
+    private val articleViewModel: ArticleViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +27,6 @@ class LoginDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentDialogLoginBinding.inflate(inflater)
-        articleViewModel = ViewModelProvider(this).get(ArticleViewModel::class.java)
         return binding.root
     }
 
@@ -86,28 +85,12 @@ class LoginDialogFragment : DialogFragment() {
     private fun setObservers() {
         articleViewModel.responseUser.observe(this, { response ->
             if (response.isSuccessful) {
-
-                if (response.raw().headers(Constants.COOKIES_KEY).isNotEmpty()) {
-
-                    response.raw().headers(Constants.COOKIES_KEY).forEach {
-                        val cookie = Cookie.Companion.parse(
-                            response.raw().request.url,
-                            it
-                        )!!
-                        (activity as HomeActivity).cookies[cookie.name] = cookie.value
-                    }
-
-                } else {
-                    Toast.makeText(
-                        context,
-                        "There is no cookies",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                (activity as HomeActivity).setStatsToViews(response.body()!!)
+                Toast.makeText(
+                    context,
+                    "Muvaffaqiyatli kirildi",
+                    Toast.LENGTH_SHORT
+                ).show()
                 this.dismiss()
-
             } else {
                 Toast.makeText(
                     context,
