@@ -109,8 +109,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_posts"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/gl_end"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
         app:layout_constraintTop_toBottomOf="@+id/txv_posts" />
@@ -143,4 +147,15 @@
         app:layout_constraintStart_toStartOf="@+id/btn_login"
         app:layout_constraintTop_toTopOf="@+id/btn_login"
         app:srcCompat="@drawable/ic_create_post" />
+
+    <ProgressBar
+        android:id="@+id/pb_loading_articles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

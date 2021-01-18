@@ -6,6 +6,7 @@ import khusainov.farrukh.communityapp.model.SignInData
 import khusainov.farrukh.communityapp.model.User
 import retrofit2.Response
 import retrofit2.http.*
+import java.lang.StringBuilder
 
 interface CommunityApi {
 
@@ -24,4 +25,10 @@ interface CommunityApi {
         @Header("Cookie") cookie1: String,
         @Header("Cookie") cookie2: String
     ) : Response<List<Notif>>
+
+    @GET("api/v1/posts")
+    suspend fun getAllPosts(
+        @Query("limit") limit: Int,
+        @Query("type") type: String
+    ) : Response<List<Article>>
 }

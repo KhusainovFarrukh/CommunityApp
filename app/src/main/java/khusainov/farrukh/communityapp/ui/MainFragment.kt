@@ -9,26 +9,30 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.databinding.FragmentMainBinding
+import khusainov.farrukh.communityapp.model.Article
 import khusainov.farrukh.communityapp.model.Notif
 import khusainov.farrukh.communityapp.model.User
-import khusainov.farrukh.communityapp.utils.Constants
+import khusainov.farrukh.communityapp.recycleradapter.ArticleAdapter
+import khusainov.farrukh.communityapp.utils.Constants.Companion.BASE_URL
 import khusainov.farrukh.communityapp.utils.Constants.Companion.COOKIES_KEY
-import khusainov.farrukh.communityapp.viewmodel.ArticleViewModel
+import khusainov.farrukh.communityapp.viewmodel.MainViewModel
 import okhttp3.Cookie
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), ArticleClickListener {
 
+    private val articleAdapter = ArticleAdapter(this)
     private var activityListener: HomeActivityListener? = null
     private val cookies = HashMap<String, String>()
-    private var _binding : FragmentMainBinding? = null
+    private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
-    private val articleViewModel: ArticleViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,8 +46,12 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initRecyclerView()
         setClickListeners()
         setObservers()
+        if (savedInstanceState == null) {
+            mainViewModel.getAllPosts(20, "article")
+        }
     }
 
     override fun onDestroyView() {
@@ -64,7 +72,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setObservers() {
-        articleViewModel.responseUser.observe(viewLifecycleOwner, { response ->
+        mainViewModel.responseUser.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful) {
 
                 if (response.raw().headers(COOKIES_KEY).isNotEmpty()) {
@@ -96,23 +104,48 @@ class MainFragment : Fragment() {
             }
         })
 
-        articleViewModel.responseNotif.observe(viewLifecycleOwner, { response ->
-            if (response.isSuccessful) {
-                Toast.makeText(
-                    context,
-                    response.body()?.get(0)?.verb ?: "Something is null",
-                    Toast.LENGTH_SHORT
-                ).show()
+//        mainViewModel.responseNotif.observe(viewLifecycleOwner, { response ->
+//            if (response.isSuccessful) {
+//                Toast.makeText(
+//                    context,
+//                    response.body()?.get(0)?.verb ?: "Something is null",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//
+//                setNotifToViews(response.body()!!)
+//
+//            } else {
+//                Toast.makeText(
+//                    context,
+//                    "Error code:" + response.code(),
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        })
 
-                setNotifToViews(response.body()!!)
-
+        mainViewModel.responseAllPosts.observe(viewLifecycleOwner, { responseList ->
+            if (responseList.isSuccessful) {
+                if (responseList.body()?.isNotEmpty() == true) {
+                    articleAdapter.submitList(responseList.body())
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Not valid list",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             } else {
                 Toast.makeText(
                     context,
-                    "Error code:" + response.code(),
+                    "Error code: " + responseList.code(),
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+        })
+
+        mainViewModel.isLoadingArticles.observe(viewLifecycleOwner, { isLoading ->
+            binding.pbLoadingArticles.isVisible = isLoading
         })
     }
 
@@ -121,12 +154,12 @@ class MainFragment : Fragment() {
             activityListener?.showLoginDialog()
         }
 
-        binding.imvNotif.setOnClickListener {
-            articleViewModel.getNotifications(
-                Constants.REMEMBER_ME_KEY + "=" + cookies[Constants.REMEMBER_ME_KEY],
-                Constants.SESSION_ID_KEY + "=" + cookies[Constants.SESSION_ID_KEY]
-            )
-        }
+//        binding.imvNotif.setOnClickListener {
+//            mainViewModel.getNotifications(
+//                Constants.REMEMBER_ME_KEY + "=" + cookies[Constants.REMEMBER_ME_KEY],
+//                Constants.SESSION_ID_KEY + "=" + cookies[Constants.SESSION_ID_KEY]
+//            )
+//        }
     }
 
     private fun setStatsToViews(user: User) {
@@ -136,18 +169,18 @@ class MainFragment : Fragment() {
 //        binding.txvArticlesValue.text = user.profile.userStats.articles.toString()
 //        binding.txvLikesValue.text = user.profile.userStats.likes.toString()
 //        binding.txvFollowersValue.text = user.profile.userStats.followers.toString()
-        Log.wtf("Name", user.profile.name)
+        Log.wtf("Name", user.profileInUser.name)
         Log.wtf("Email", user.email)
-        Log.wtf("Score", user.profile.score.toString())
-        Log.wtf("Posts", user.profile.userStats.posts.toString())
-        Log.wtf("Likes", user.profile.userStats.likes.toString())
-        Log.wtf("Followers", user.profile.userStats.followers.toString())
+        Log.wtf("Score", user.profileInUser.score.toString())
+        Log.wtf("Posts", user.profileInUser.statsInUser.posts.toString())
+        Log.wtf("Likes", user.profileInUser.statsInUser.likes.toString())
+        Log.wtf("Followers", user.profileInUser.statsInUser.followers.toString())
 
         binding.btnLogin.visibility = Button.INVISIBLE
         binding.imvProfile.visibility = ImageView.VISIBLE
         binding.imvCreatePost.visibility = ImageView.VISIBLE
 
-        binding.imvProfile.load(user.profile.picture) {
+        binding.imvProfile.load(user.profileInUser.picture) {
             crossfade(true)
             placeholder(R.drawable.ic_account_circle)
             transformations(CircleCropTransformation())
@@ -157,9 +190,21 @@ class MainFragment : Fragment() {
     private fun setNotifToViews(notifList: List<Notif>) {
         notifList.forEach {
             if (!it.read) {
-//                binding.txvNotif.append("${it.verb} turidagi xabar\n")
                 Log.wtf("Notif", "${it.verb} turidagi xabar")
             }
         }
     }
+
+    private fun initRecyclerView() {
+        binding.rvPosts.setHasFixedSize(true)
+        binding.rvPosts.adapter = articleAdapter
+    }
+
+    override fun onArticleClick(article: Article) {
+        activityListener?.goToBrowser(BASE_URL + article.url)
+    }
+}
+
+interface ArticleClickListener {
+    fun onArticleClick(article: Article)
 }

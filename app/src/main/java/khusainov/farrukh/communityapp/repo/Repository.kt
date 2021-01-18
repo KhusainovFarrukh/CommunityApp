@@ -20,4 +20,8 @@ class Repository {
     suspend fun getNotifications(cookie1: String, cookie2: String) : Response<List<Notif>> {
         return RetrofitInstance.communityApi.getNotifications(cookie1, cookie2)
     }
+
+    suspend fun getAllPosts(limit: Int, type: String) : Response<List<Article>> {
+        return RetrofitInstance.communityApi.getAllPosts(limit, type)
+    }
 }

@@ -9,39 +9,46 @@ import khusainov.farrukh.communityapp.model.Notif
 import khusainov.farrukh.communityapp.model.SignInData
 import khusainov.farrukh.communityapp.model.User
 import khusainov.farrukh.communityapp.repo.Repository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class ArticleViewModel : ViewModel() {
+class MainViewModel : ViewModel() {
 
+    private lateinit var loginJob: Job
     private val repo = Repository()
-    private val _isLoading = MutableLiveData<Boolean>()
+    private val _isLoadingLogin = MutableLiveData<Boolean>()
+    private val _isLoadingArticles = MutableLiveData<Boolean>()
     private val _responseArticle = MutableLiveData<Response<Article>>()
     private val _responseUser = MutableLiveData<Response<User>>()
     private val _responseNotif = MutableLiveData<Response<List<Notif>>>()
+    private val _responseAllPosts = MutableLiveData<Response<List<Article>>>()
 
-    val isLoading: LiveData<Boolean> = _isLoading
+    val isLoadingLogin: LiveData<Boolean> = _isLoadingLogin
+    val isLoadingArticles: LiveData<Boolean> = _isLoadingArticles
     val responseArticle: LiveData<Response<Article>> = _responseArticle
     val responseUser: LiveData<Response<User>> = _responseUser
     val responseNotif: LiveData<Response<List<Notif>>> = _responseNotif
+    val responseAllPosts: LiveData<Response<List<Article>>> = _responseAllPosts
 
     fun getArticle(articleId: String) {
         viewModelScope.launch {
-            _isLoading.postValue(true)
+            _isLoadingLogin.postValue(true)
 
             _responseArticle.postValue(repo.getArticle(articleId))
 
-            _isLoading.postValue(false)
+            _isLoadingLogin.postValue(false)
         }
     }
 
     fun signIn(signInData: SignInData) {
-        viewModelScope.launch {
-            _isLoading.postValue(true)
+        loginJob = viewModelScope.launch {
+            _isLoadingLogin.postValue(true)
 
             _responseUser.postValue(repo.signIn(signInData))
 
-            _isLoading.postValue(false)
+            _isLoadingLogin.postValue(false)
         }
     }
 
@@ -49,5 +56,20 @@ class ArticleViewModel : ViewModel() {
         viewModelScope.launch {
             _responseNotif.postValue(repo.getNotifications(cookie1, cookie2))
         }
+    }
+
+    fun getAllPosts(limit: Int, type: String) {
+        viewModelScope.launch {
+            _isLoadingArticles.postValue(true)
+
+            _responseAllPosts.postValue(repo.getAllPosts(limit, type))
+
+            _isLoadingArticles.postValue(false)
+        }
+    }
+
+    fun cancelJob() {
+        loginJob.cancel()
+        _isLoadingLogin.postValue(false)
     }
 }

@@ -7,27 +7,26 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import khusainov.farrukh.communityapp.databinding.ActivityMainBinding
 import khusainov.farrukh.communityapp.model.Article
-import khusainov.farrukh.communityapp.viewmodel.ArticleViewModel
+import khusainov.farrukh.communityapp.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var articleViewModel: ArticleViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        articleViewModel = ViewModelProvider(this).get(ArticleViewModel::class.java)
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         setClickListeners()
         setObservers()
-
     }
 
     private fun setObservers() {
-        articleViewModel.responseArticle.observe(this, { response ->
+        mainViewModel.responseArticle.observe(this, { response ->
             if (response.isSuccessful) {
                 setStatsToViews(response.body()!!)
             } else {
@@ -39,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        articleViewModel.isLoading.observe(this, {
+        mainViewModel.isLoadingLogin.observe(this, {
             binding.btnOk.isEnabled = !it
             binding.pbLoading.isVisible = it
         })
@@ -51,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 val link = binding.etLink.text.toString()
                 val articleId = link.substring(link.lastIndexOf('-') + 1)
 
-                articleViewModel.getArticle(articleId)
+                mainViewModel.getArticle(articleId)
             } else {
                 binding.etLink.error = "Maqola linkini yozing"
             }
@@ -60,9 +59,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setStatsToViews(article: Article) {
         binding.txvTitleValue.text = article.title
-        binding.txvLikesValue.text = article.stats.likes.toString()
-        binding.txvViewsValue.text = article.stats.views.toString()
-        binding.txvFollowersValue.text = article.stats.followers.toString()
-        binding.txvCommentsValue.text = article.stats.comments.toString()
+        binding.txvLikesValue.text = article.stats.likesCount.toString()
+        binding.txvViewsValue.text = article.stats.viewsCount.toString()
+        binding.txvFollowersValue.text = article.stats.followersCount.toString()
+        binding.txvCommentsValue.text = article.stats.commentsCount.toString()
     }
 }

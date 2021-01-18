@@ -11,15 +11,13 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import khusainov.farrukh.communityapp.databinding.FragmentDialogLoginBinding
 import khusainov.farrukh.communityapp.model.SignInData
-import khusainov.farrukh.communityapp.utils.Constants
-import khusainov.farrukh.communityapp.viewmodel.ArticleViewModel
-import okhttp3.Cookie
+import khusainov.farrukh.communityapp.viewmodel.MainViewModel
 
 class LoginDialogFragment : DialogFragment() {
 
     private var _binding: FragmentDialogLoginBinding? = null
     private val binding get() = _binding!!
-    private val articleViewModel: ArticleViewModel by activityViewModels()
+    private val mainViewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +37,10 @@ class LoginDialogFragment : DialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
+
+        if (mainViewModel.isLoadingLogin.value == true) {
+            mainViewModel.cancelJob()
+        }
 
         Toast.makeText(
             context,
@@ -71,7 +73,7 @@ class LoginDialogFragment : DialogFragment() {
                 binding.etPassword.text.isEmpty() -> binding.etPassword.error =
                     "Parolingizni kiriting"
                 else -> {
-                    articleViewModel.signIn(
+                    mainViewModel.signIn(
                         SignInData(
                             binding.etEmail.text.toString(),
                             binding.etPassword.text.toString()
@@ -83,7 +85,7 @@ class LoginDialogFragment : DialogFragment() {
     }
 
     private fun setObservers() {
-        articleViewModel.responseUser.observe(this, { response ->
+        mainViewModel.responseUser.observe(this, { response ->
             if (response.isSuccessful) {
                 Toast.makeText(
                     context,
@@ -100,7 +102,7 @@ class LoginDialogFragment : DialogFragment() {
             }
         })
 
-        articleViewModel.isLoading.observe(this, {
+        mainViewModel.isLoadingLogin.observe(this, {
             binding.btnLogin.isEnabled = !it
             binding.pbLoading.isVisible = it
         })

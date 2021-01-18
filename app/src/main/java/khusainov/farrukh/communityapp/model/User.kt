@@ -6,18 +6,18 @@ data class User(
     @SerializedName("email")
     val email: String,
     @SerializedName("profile")
-    val profile: Profile
+    val profileInUser: ProfileInUser
 )
 
-data class Profile(
+data class ProfileInUser(
     @SerializedName("counts")
-    val userStats: UserStats,
+    val statsInUser: StatsInUser,
     val score: Int,
     val picture: String,
     val name: String
 )
 
-data class UserStats(
+data class StatsInUser(
     @SerializedName("receivedLikes")
     val likes: Int,
     @SerializedName("replies")

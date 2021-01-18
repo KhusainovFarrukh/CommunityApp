@@ -1,29 +1,13 @@
 package khusainov.farrukh.communityapp.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
-import coil.load
-import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
-import khusainov.farrukh.communityapp.model.Notif
-import khusainov.farrukh.communityapp.model.SignInData
-import khusainov.farrukh.communityapp.model.User
-import khusainov.farrukh.communityapp.utils.Constants.Companion.COOKIES_KEY
-import khusainov.farrukh.communityapp.utils.Constants.Companion.REMEMBER_ME_KEY
-import khusainov.farrukh.communityapp.utils.Constants.Companion.SESSION_ID_KEY
-import khusainov.farrukh.communityapp.viewmodel.ArticleViewModel
-import okhttp3.Cookie
 
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
-
-    val cookies = HashMap<String, String>()
 
     private lateinit var binding: ActivityHomeBinding
 
@@ -46,10 +30,16 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
             .replace(R.id.view_container, MainFragment())
             .commit()
     }
+
+    override fun goToBrowser(url: String) {
+        val browserIntent = Intent(Intent.ACTION_VIEW)
+        browserIntent.data = Uri.parse(url)
+        startActivity(browserIntent)
+    }
 }
 
 interface HomeActivityListener {
     fun showLoginDialog()
     fun showMainFragment()
-
+    fun goToBrowser(url: String)
 }
