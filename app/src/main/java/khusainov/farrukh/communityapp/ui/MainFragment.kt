@@ -136,6 +136,11 @@ class MainFragment : Fragment(), ArticleClickListener {
         mainViewModel.isLoadingArticles.observe(viewLifecycleOwner, { isLoading ->
             binding.pbLoadingArticles.isVisible = isLoading
         })
+
+        mainViewModel.isLoadingLogin.observe(viewLifecycleOwner, { isLoading ->
+            binding.pbLoadingLogin.isVisible = isLoading
+            binding.btnLogin.isEnabled = !isLoading
+        })
     }
 
     private fun setClickListeners() {
