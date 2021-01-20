@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">CommunityApp</string>
-    <string name="verb_post">%s1 %s2 ni chop etdi.</string>
+    <string name="verb_post">%s %s ni chop etdi.</string>
     <string name="verb_follow_user">%s sizga yozildi.</string>
-    <string name="verb_post_upvote">%s1 %s2 ga layk bosdi.</string>
-    <string name="verb_reply">%s1 %s2 ni sharhladi: \n%s3.</string>
+    <string name="verb_post_upvote">%s %s ga layk bosdi.</string>
+    <string name="verb_reply">%s %s ni sharhladi: \n%s.</string>
     <string name="verb_else">%s turidagi xabarnoma. Dastur muallifiga xabar bering.</string>
 </resources>
