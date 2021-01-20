@@ -61,14 +61,32 @@
             <TextView
                 android:id="@+id/txv_title"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="32dp"
+                android:ellipsize="end"
+                android:gravity="bottom"
                 android:textColor="@color/white"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/txv_author"
+                app:layout_constraintEnd_toEndOf="@id/gl_end"
+                app:layout_constraintStart_toStartOf="@id/gl_start"
+                app:layout_constraintTop_toBottomOf="@+id/txv_comments"
+                tools:text="This is title" />
+
+            <TextView
+                android:id="@+id/txv_author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/gl_end"
                 app:layout_constraintStart_toStartOf="@id/gl_start"
-                tools:text="This is title" />
+                tools:text="John Smith" />
 
             <TextView
                 android:id="@+id/txv_views"

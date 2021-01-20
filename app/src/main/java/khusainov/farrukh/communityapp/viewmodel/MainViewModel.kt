@@ -5,12 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.model.Article
-import khusainov.farrukh.communityapp.model.Notif
+import khusainov.farrukh.communityapp.model.Notification
 import khusainov.farrukh.communityapp.model.SignInData
 import khusainov.farrukh.communityapp.model.User
 import khusainov.farrukh.communityapp.repo.Repository
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -20,16 +19,18 @@ class MainViewModel : ViewModel() {
     private val repo = Repository()
     private val _isLoadingLogin = MutableLiveData<Boolean>()
     private val _isLoadingArticles = MutableLiveData<Boolean>()
+    private val _isLoadingNotifications = MutableLiveData<Boolean>()
     private val _responseArticle = MutableLiveData<Response<Article>>()
     private val _responseUser = MutableLiveData<Response<User>>()
-    private val _responseNotif = MutableLiveData<Response<List<Notif>>>()
+    private val _responseNotif = MutableLiveData<Response<List<Notification>>>()
     private val _responseAllPosts = MutableLiveData<Response<List<Article>>>()
 
     val isLoadingLogin: LiveData<Boolean> = _isLoadingLogin
     val isLoadingArticles: LiveData<Boolean> = _isLoadingArticles
+    val isLoadingNotifications: LiveData<Boolean> = _isLoadingNotifications
     val responseArticle: LiveData<Response<Article>> = _responseArticle
     val responseUser: LiveData<Response<User>> = _responseUser
-    val responseNotif: LiveData<Response<List<Notif>>> = _responseNotif
+    val responseNotification: LiveData<Response<List<Notification>>> = _responseNotif
     val responseAllPosts: LiveData<Response<List<Article>>> = _responseAllPosts
 
     fun getArticle(articleId: String) {
@@ -54,7 +55,11 @@ class MainViewModel : ViewModel() {
 
     fun getNotifications(cookie1: String, cookie2: String) {
         viewModelScope.launch {
+            _isLoadingNotifications.postValue(true)
+
             _responseNotif.postValue(repo.getNotifications(cookie1, cookie2))
+
+            _isLoadingNotifications.postValue(false)
         }
     }
 

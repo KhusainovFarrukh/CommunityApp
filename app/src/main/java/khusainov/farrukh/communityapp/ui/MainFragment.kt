@@ -15,9 +15,9 @@ import androidx.fragment.app.activityViewModels
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
+import khusainov.farrukh.communityapp.clicklistener.ArticleClickListener
 import khusainov.farrukh.communityapp.databinding.FragmentMainBinding
 import khusainov.farrukh.communityapp.model.Article
-import khusainov.farrukh.communityapp.model.Notif
 import khusainov.farrukh.communityapp.model.User
 import khusainov.farrukh.communityapp.recycleradapter.ArticleAdapter
 import khusainov.farrukh.communityapp.utils.Constants.Companion.BASE_URL
@@ -29,7 +29,6 @@ class MainFragment : Fragment(), ArticleClickListener {
 
     private val articleAdapter = ArticleAdapter(this)
     private var activityListener: HomeActivityListener? = null
-    private val cookies = HashMap<String, String>()
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -77,6 +76,8 @@ class MainFragment : Fragment(), ArticleClickListener {
 
                 if (response.raw().headers(COOKIES_KEY).isNotEmpty()) {
 
+                    val cookies = HashMap<String, String>()
+
                     response.raw().headers(COOKIES_KEY).forEach {
                         val cookie = Cookie.Companion.parse(
                             response.raw().request.url,
@@ -84,6 +85,8 @@ class MainFragment : Fragment(), ArticleClickListener {
                         )!!
                         cookies[cookie.name] = cookie.value
                     }
+
+                    activityListener?.setCookies(cookies)
 
                 } else {
                     Toast.makeText(
@@ -103,25 +106,6 @@ class MainFragment : Fragment(), ArticleClickListener {
                 ).show()
             }
         })
-
-//        mainViewModel.responseNotif.observe(viewLifecycleOwner, { response ->
-//            if (response.isSuccessful) {
-//                Toast.makeText(
-//                    context,
-//                    response.body()?.get(0)?.verb ?: "Something is null",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//
-//                setNotifToViews(response.body()!!)
-//
-//            } else {
-//                Toast.makeText(
-//                    context,
-//                    "Error code:" + response.code(),
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//        })
 
         mainViewModel.responseAllPosts.observe(viewLifecycleOwner, { responseList ->
             if (responseList.isSuccessful) {
@@ -154,21 +138,13 @@ class MainFragment : Fragment(), ArticleClickListener {
             activityListener?.showLoginDialog()
         }
 
-//        binding.imvNotif.setOnClickListener {
-//            mainViewModel.getNotifications(
-//                Constants.REMEMBER_ME_KEY + "=" + cookies[Constants.REMEMBER_ME_KEY],
-//                Constants.SESSION_ID_KEY + "=" + cookies[Constants.SESSION_ID_KEY]
-//            )
-//        }
+        binding.imvNotif.setOnClickListener {
+            activityListener?.showNotificationsFragment()
+        }
     }
 
     private fun setStatsToViews(user: User) {
-//        binding.txvName.text = user.profile.name
-//        binding.txvEmail.text = user.email
-//        binding.txvScoreValue.text = user.profile.score.toString()
-//        binding.txvArticlesValue.text = user.profile.userStats.articles.toString()
-//        binding.txvLikesValue.text = user.profile.userStats.likes.toString()
-//        binding.txvFollowersValue.text = user.profile.userStats.followers.toString()
+
         Log.wtf("Name", user.profileInUser.name)
         Log.wtf("Email", user.email)
         Log.wtf("Score", user.profileInUser.score.toString())
@@ -187,14 +163,6 @@ class MainFragment : Fragment(), ArticleClickListener {
         }
     }
 
-    private fun setNotifToViews(notifList: List<Notif>) {
-        notifList.forEach {
-            if (!it.read) {
-                Log.wtf("Notif", "${it.verb} turidagi xabar")
-            }
-        }
-    }
-
     private fun initRecyclerView() {
         binding.rvPosts.setHasFixedSize(true)
         binding.rvPosts.adapter = articleAdapter
@@ -203,8 +171,4 @@ class MainFragment : Fragment(), ArticleClickListener {
     override fun onArticleClick(article: Article) {
         activityListener?.goToBrowser(BASE_URL + article.url)
     }
-}
-
-interface ArticleClickListener {
-    fun onArticleClick(article: Article)
 }

@@ -5,26 +5,16 @@ import com.google.gson.annotations.SerializedName
 data class Article(
     @SerializedName("_id")
     val articleId: String,
-    val title: String,
+    val title: String?,
     @SerializedName("images")
     val imagesList: List<ImagesInArticle>,
     @SerializedName("counts")
     val stats: StatsInArticle,
     val content: String,
-    val user: UserInArticle,
-    val url: String
-)
-
-data class UserInArticle(
-    @SerializedName("_id")
-    val userId: String,
-    val profile: ProfileInArticle
-)
-
-data class ProfileInArticle(
-    @SerializedName("picture")
-    val profilePhoto: String,
-    val name: String
+    val user: UserModel,
+    val url: String,
+    val parent: Article,
+    val summary: String
 )
 
 data class ImagesInArticle(
