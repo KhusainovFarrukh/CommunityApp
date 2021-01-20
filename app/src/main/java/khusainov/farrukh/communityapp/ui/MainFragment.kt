@@ -50,6 +50,11 @@ class MainFragment : Fragment(), ArticleClickListener {
         setObservers()
         if (savedInstanceState == null) {
             mainViewModel.getAllPosts(20, "article")
+            activityListener?.getSignInData().let {
+                if (it != null) {
+                    mainViewModel.signIn(it)
+                }
+            }
         }
     }
 
@@ -86,7 +91,7 @@ class MainFragment : Fragment(), ArticleClickListener {
                         cookies[cookie.name] = cookie.value
                     }
 
-                    activityListener?.setCookies(cookies)
+                    activityListener?.saveCookies(cookies)
 
                 } else {
                     Toast.makeText(

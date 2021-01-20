@@ -1,5 +1,6 @@
 package khusainov.farrukh.communityapp.ui
 
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +16,7 @@ import khusainov.farrukh.communityapp.viewmodel.MainViewModel
 
 class LoginDialogFragment : DialogFragment() {
 
+    private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentDialogLoginBinding? = null
     private val binding get() = _binding!!
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -61,6 +63,18 @@ class LoginDialogFragment : DialogFragment() {
         _binding = null
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is HomeActivityListener) {
+            activityListener = context
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        activityListener = null
+    }
+
     private fun setClickListeners() {
         binding.btnLogin.setOnClickListener {
             when {
@@ -87,6 +101,13 @@ class LoginDialogFragment : DialogFragment() {
     private fun setObservers() {
         mainViewModel.responseUser.observe(this, { response ->
             if (response.isSuccessful) {
+
+                activityListener?.saveSignInData(
+                    SignInData(
+                        binding.etEmail.text.toString(),
+                        binding.etPassword.text.toString()
+                    )
+                )
                 Toast.makeText(
                     context,
                     "Muvaffaqiyatli kirildi",
