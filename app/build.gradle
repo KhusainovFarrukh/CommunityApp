@@ -59,5 +59,9 @@ dependencies {
     //coil
     implementation 'io.coil-kt:coil:1.1.1'
 
+    //fragment-ktx
     implementation "androidx.fragment:fragment-ktx:1.2.5"
+
+    //jsoup
+    implementation 'org.jsoup:jsoup:1.13.1'
 }

@@ -9,6 +9,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
+import khusainov.farrukh.communityapp.model.Article
 import khusainov.farrukh.communityapp.model.SignInData
 
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
@@ -53,6 +54,17 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
             .commit()
     }
 
+    override fun showArticleFragment(article: Article) {
+        val fragment = ArticleFragment()
+        val bundle = Bundle()
+        bundle.putString("content", article.content)
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.view_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     override fun saveSignInData(value: SignInData) {
         editor.putString("sign_in_data", Gson().toJson(value)).apply()
     }
@@ -81,6 +93,7 @@ interface HomeActivityListener {
     fun showMainFragment()
     fun goToBrowser(url: String)
     fun showNotificationsFragment()
+    fun showArticleFragment(article: Article)
     fun saveSignInData(value: SignInData)
     fun getSignInData(): SignInData?
     fun saveCookies(value: Map<String, String>)

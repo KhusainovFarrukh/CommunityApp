@@ -179,6 +179,7 @@ class MainFragment : Fragment(), ArticleClickListener {
     }
 
     override fun onArticleClick(article: Article) {
-        activityListener?.goToBrowser(BASE_URL + article.url)
+        activityListener?.showArticleFragment(article)
+//        activityListener?.goToBrowser(BASE_URL + article.url)
     }
 }
