@@ -1,9 +1,6 @@
 package khusainov.farrukh.communityapp.api
 
-import khusainov.farrukh.communityapp.model.Article
-import khusainov.farrukh.communityapp.model.Notification
-import khusainov.farrukh.communityapp.model.SignInData
-import khusainov.farrukh.communityapp.model.User
+import khusainov.farrukh.communityapp.model.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -31,4 +28,9 @@ interface CommunityApi {
         @Query("limit") limit: Int,
         @Query("type") type: String
     ): Response<List<Article>>
+
+    @GET("api/v1/topics")
+    suspend fun getTopics(
+        @Query("type") type: String
+    ): Response<List<Topic>>
 }

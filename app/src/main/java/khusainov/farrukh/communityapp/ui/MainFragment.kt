@@ -20,6 +20,7 @@ import khusainov.farrukh.communityapp.databinding.FragmentMainBinding
 import khusainov.farrukh.communityapp.model.Article
 import khusainov.farrukh.communityapp.model.User
 import khusainov.farrukh.communityapp.recycleradapter.ArticleAdapter
+import khusainov.farrukh.communityapp.recycleradapter.TopicAdapter
 import khusainov.farrukh.communityapp.utils.Constants.Companion.COOKIES_KEY
 import khusainov.farrukh.communityapp.viewmodel.MainViewModel
 import okhttp3.Cookie
@@ -27,6 +28,7 @@ import okhttp3.Cookie
 class MainFragment : Fragment(), ArticleClickListener {
 
     private val articleAdapter = ArticleAdapter(this)
+    private val topicAdapter = TopicAdapter()
     private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -48,6 +50,7 @@ class MainFragment : Fragment(), ArticleClickListener {
         setClickListeners()
         setObservers()
         if (savedInstanceState == null) {
+            mainViewModel.getTopics()
             mainViewModel.getAllPosts(20, "article")
             activityListener?.getSignInData().let {
                 if (it != null) {
@@ -132,6 +135,28 @@ class MainFragment : Fragment(), ArticleClickListener {
 
         })
 
+        mainViewModel.responseTopics.observe(viewLifecycleOwner, { responseTopics ->
+            if (responseTopics.isSuccessful) {
+                if (responseTopics.body()?.isNotEmpty() == true) {
+                    topicAdapter.submitList(responseTopics.body())
+                    Log.wtf("submitList:", responseTopics.body()?.toString())
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Not valid list",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                Toast.makeText(
+                    context,
+                    "Error code: " + responseTopics.code(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        })
+
         mainViewModel.isLoadingArticles.observe(viewLifecycleOwner, { isLoading ->
             binding.pbLoadingArticles.isVisible = isLoading
         })
@@ -173,6 +198,8 @@ class MainFragment : Fragment(), ArticleClickListener {
     }
 
     private fun initRecyclerView() {
+        binding.rvTopics.setHasFixedSize(true)
+        binding.rvTopics.adapter = topicAdapter
         binding.rvPosts.setHasFixedSize(true)
         binding.rvPosts.adapter = articleAdapter
     }

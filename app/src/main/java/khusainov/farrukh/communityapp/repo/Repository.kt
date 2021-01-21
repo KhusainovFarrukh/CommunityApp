@@ -1,10 +1,7 @@
 package khusainov.farrukh.communityapp.repo
 
 import khusainov.farrukh.communityapp.api.RetrofitInstance
-import khusainov.farrukh.communityapp.model.Article
-import khusainov.farrukh.communityapp.model.Notification
-import khusainov.farrukh.communityapp.model.SignInData
-import khusainov.farrukh.communityapp.model.User
+import khusainov.farrukh.communityapp.model.*
 import retrofit2.Response
 
 class Repository {
@@ -23,5 +20,9 @@ class Repository {
 
     suspend fun getAllPosts(limit: Int, type: String): Response<List<Article>> {
         return RetrofitInstance.communityApi.getAllPosts(limit, type)
+    }
+
+    suspend fun getTopics(): Response<List<Topic>> {
+        return RetrofitInstance.communityApi.getTopics("collection")
     }
 }

@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import khusainov.farrukh.communityapp.model.Article
-import khusainov.farrukh.communityapp.model.Notification
-import khusainov.farrukh.communityapp.model.SignInData
-import khusainov.farrukh.communityapp.model.User
+import khusainov.farrukh.communityapp.model.*
 import khusainov.farrukh.communityapp.repo.Repository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -24,6 +21,7 @@ class MainViewModel : ViewModel() {
     private val _responseUser = MutableLiveData<Response<User>>()
     private val _responseNotif = MutableLiveData<Response<List<Notification>>>()
     private val _responseAllPosts = MutableLiveData<Response<List<Article>>>()
+    private val _responseTopics = MutableLiveData<Response<List<Topic>>>()
 
     val isLoadingLogin: LiveData<Boolean> = _isLoadingLogin
     val isLoadingArticles: LiveData<Boolean> = _isLoadingArticles
@@ -32,6 +30,7 @@ class MainViewModel : ViewModel() {
     val responseUser: LiveData<Response<User>> = _responseUser
     val responseNotification: LiveData<Response<List<Notification>>> = _responseNotif
     val responseAllPosts: LiveData<Response<List<Article>>> = _responseAllPosts
+    val responseTopics: LiveData<Response<List<Topic>>> = _responseTopics
 
     fun getArticle(articleId: String) {
         viewModelScope.launch {
@@ -70,6 +69,12 @@ class MainViewModel : ViewModel() {
             _responseAllPosts.postValue(repo.getAllPosts(limit, type))
 
             _isLoadingArticles.postValue(false)
+        }
+    }
+
+    fun getTopics() {
+        viewModelScope.launch {
+            _responseTopics.postValue(repo.getTopics())
         }
     }
 
