@@ -20,7 +20,6 @@ import khusainov.farrukh.communityapp.databinding.FragmentMainBinding
 import khusainov.farrukh.communityapp.model.Article
 import khusainov.farrukh.communityapp.model.User
 import khusainov.farrukh.communityapp.recycleradapter.ArticleAdapter
-import khusainov.farrukh.communityapp.utils.Constants.Companion.BASE_URL
 import khusainov.farrukh.communityapp.utils.Constants.Companion.COOKIES_KEY
 import khusainov.farrukh.communityapp.viewmodel.MainViewModel
 import okhttp3.Cookie
@@ -138,6 +137,7 @@ class MainFragment : Fragment(), ArticleClickListener {
         })
 
         mainViewModel.isLoadingLogin.observe(viewLifecycleOwner, { isLoading ->
+            Log.e("isLoadingLogin", isLoading.toString())
             binding.pbLoadingLogin.isVisible = isLoading
             binding.btnLogin.isEnabled = !isLoading
         })

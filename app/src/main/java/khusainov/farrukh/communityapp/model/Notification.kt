@@ -7,6 +7,6 @@ data class Notification(
     val notificationId: String,
     val verb: String,
     val from: List<UserModel>,
-    val isRead: Boolean,
+    val read: Boolean,
     val objects: List<Article>
 )

@@ -1,6 +1,7 @@
 package khusainov.farrukh.communityapp.recycleradapter
 
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,7 +38,10 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     private val imvIcon = itemView.findViewById<ImageView>(R.id.imv_icon)
 
     fun onBindArticle(notification: Notification) {
-        if (!notification.isRead) {
+        Log.e("isRead", notification.read.toString())
+        if (notification.read) {
+            txvText.typeface = Typeface.DEFAULT
+        } else {
             txvText.typeface = Typeface.DEFAULT_BOLD
         }
 

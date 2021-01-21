@@ -49,7 +49,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
     override fun showNotificationsFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.view_container, NotificationsFragment())
+            .add(R.id.view_container, NotificationsFragment())
             .addToBackStack(null)
             .commit()
     }
@@ -60,7 +60,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
         bundle.putString("content", article.content)
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction()
-            .replace(R.id.view_container, fragment)
+            .add(R.id.view_container, fragment)
             .addToBackStack(null)
             .commit()
     }

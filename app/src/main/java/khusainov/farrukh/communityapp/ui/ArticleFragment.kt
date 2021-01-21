@@ -1,6 +1,7 @@
 package khusainov.farrukh.communityapp.ui
 
 import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,11 +28,17 @@ class ArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val content = arguments?.getString("content", "") ?: ""
+        var content = arguments?.getString("content", "") ?: ""
+        content = content.replace("#", Uri.encode("#"))
         val doc = Jsoup.parse(content)
 
         doc.select("img").attr("width", "100%")
 
+        binding.wvArticle.settings.setSupportZoom(true)
+        binding.wvArticle.settings.builtInZoomControls = true
+        binding.wvArticle.settings.displayZoomControls = false
+
+        binding.wvArticle.settings.javaScriptEnabled = true
         binding.wvArticle.loadData(
             doc.html(),
             "text/html",
