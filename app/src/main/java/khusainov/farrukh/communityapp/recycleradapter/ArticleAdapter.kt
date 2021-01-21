@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -48,7 +49,10 @@ class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             imvImage.load(article.imagesList[0].imageLink) {
                 crossfade(true)
                 placeholder(R.drawable.ic_launcher_foreground)
+                error(R.drawable.no_image)
             }
+        } else {
+            imvImage.load(ContextCompat.getDrawable(itemView.context, R.drawable.no_image))
         }
     }
 }
