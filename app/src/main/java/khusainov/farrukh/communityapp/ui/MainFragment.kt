@@ -137,7 +137,6 @@ class MainFragment : Fragment(), ArticleClickListener {
         })
 
         mainViewModel.isLoadingLogin.observe(viewLifecycleOwner, { isLoading ->
-            Log.e("isLoadingLogin", isLoading.toString())
             binding.pbLoadingLogin.isVisible = isLoading
             binding.btnLogin.isEnabled = !isLoading
         })
