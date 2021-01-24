@@ -23,10 +23,9 @@ interface CommunityApi {
         @Query("limit") limit: Int
     ): Response<List<Notification>>
 
-    @GET("api/v1/posts")
+    @GET("api/v1/posts?type=article")
     suspend fun getAllPosts(
-        @Query("limit") limit: Int,
-        @Query("type") type: String
+        @Query("limit") limit: Int
     ): Response<List<Article>>
 
     @GET("api/v1/topics")

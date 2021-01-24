@@ -41,7 +41,7 @@ class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun onBindArticle(article: Article) {
         txvTitle.text = article.title
-        txvAuthor.text = article.user.profile.name
+        txvAuthor.text = article.user?.profile?.name ?: "Noma`lum"
         txvViews.text = article.stats.viewsCount.toString()
         txvLikes.text = article.stats.likesCount.toString()
         txvComments.text = article.stats.commentsCount.toString()

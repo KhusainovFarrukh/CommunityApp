@@ -11,7 +11,7 @@ data class Article(
     @SerializedName("counts")
     val stats: StatsInArticle,
     val content: String,
-    val user: UserModel,
+    val user: UserModel?,
     val url: String,
     val parent: Article,
     val summary: String

@@ -62,11 +62,11 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun getAllPosts(limit: Int, type: String) {
+    fun getAllPosts(limit: Int) {
         viewModelScope.launch {
             _isLoadingArticles.postValue(true)
 
-            _responseAllPosts.postValue(repo.getAllPosts(limit, type))
+            _responseAllPosts.postValue(repo.getAllPosts(limit))
 
             _isLoadingArticles.postValue(false)
         }

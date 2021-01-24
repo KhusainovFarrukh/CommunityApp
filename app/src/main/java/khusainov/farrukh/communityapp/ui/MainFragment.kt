@@ -51,7 +51,7 @@ class MainFragment : Fragment(), ArticleClickListener {
         setObservers()
         if (savedInstanceState == null) {
             mainViewModel.getTopics()
-            mainViewModel.getAllPosts(20, "article")
+            mainViewModel.getAllPosts(20)
             activityListener?.getSignInData().let {
                 if (it != null) {
                     mainViewModel.signIn(it)
