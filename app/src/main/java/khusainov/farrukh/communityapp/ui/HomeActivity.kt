@@ -57,10 +57,10 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
     override fun showArticleFragment(article: Article) {
         val fragment = ArticleFragment()
         val bundle = Bundle()
-        bundle.putString("content", article.content)
+        bundle.putString("articleId", article.articleId)
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction()
-            .add(R.id.view_container, fragment)
+            .replace(R.id.view_container, fragment)
             .addToBackStack(null)
             .commit()
     }
