@@ -12,5 +12,5 @@ data class ProfileModel(
     @SerializedName("picture")
     val profilePhoto: String,
     val name: String,
-    val description: String?
+    val title: String?
 )

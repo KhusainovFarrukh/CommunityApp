@@ -15,10 +15,12 @@ class ArticlesListViewModel : ViewModel() {
 
     private val repo = Repository(RetrofitInstance.communityApi)
     private val _isLoadingArticles = MutableLiveData<Boolean>()
+    private val _isLoadingTopics = MutableLiveData<Boolean>()
     private val _responseAllPosts = MutableLiveData<Response<List<Article>>>()
     private val _responseTopics = MutableLiveData<Response<List<Topic>>>()
 
     val isLoadingArticles: LiveData<Boolean> = _isLoadingArticles
+    val isLoadingTopics: LiveData<Boolean> = _isLoadingTopics
     val responseAllPosts: LiveData<Response<List<Article>>> = _responseAllPosts
     val responseTopics: LiveData<Response<List<Topic>>> = _responseTopics
 
@@ -32,7 +34,11 @@ class ArticlesListViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
+            _isLoadingTopics.postValue(true)
+
             _responseTopics.postValue(repo.getTopics())
+
+            _isLoadingTopics.postValue(false)
         }
     }
 }

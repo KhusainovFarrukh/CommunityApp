@@ -20,7 +20,7 @@ import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.model.Article
 import khusainov.farrukh.communityapp.data.model.User
 import khusainov.farrukh.communityapp.data.repository.Repository
-import khusainov.farrukh.communityapp.databinding.FragmentMainBinding
+import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.TopicAdapter
@@ -31,12 +31,12 @@ import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticlesListViewModel
 import okhttp3.Cookie
 
-class MainFragment : Fragment(), ArticleClickListener {
+class ArticlesListFragment : Fragment(), ArticleClickListener {
 
     private val articleAdapter = ArticleAdapter(this)
     private val topicAdapter = TopicAdapter()
     private var activityListener: HomeActivityListener? = null
-    private var _binding: FragmentMainBinding? = null
+    private var _binding: FragmentArticlesListBinding? = null
     private val binding get() = _binding!!
     private lateinit var articlesListViewModel: ArticlesListViewModel
     private val loginViewModel: LoginViewModel by activityViewModels {
@@ -48,7 +48,7 @@ class MainFragment : Fragment(), ArticleClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMainBinding.inflate(inflater)
+        _binding = FragmentArticlesListBinding.inflate(inflater)
         return binding.root
     }
 
@@ -165,14 +165,18 @@ class MainFragment : Fragment(), ArticleClickListener {
 
         })
 
-        articlesListViewModel.isLoadingArticles.observe(viewLifecycleOwner, { isLoading ->
-            binding.pbLoadingArticles.isVisible = isLoading
-        })
+        articlesListViewModel.isLoadingArticles.observe(viewLifecycleOwner) {
+            binding.pbLoadingArticles.isVisible = it
+        }
 
-        loginViewModel.isLoading.observe(viewLifecycleOwner, { isLoading ->
-            binding.pbLoadingLogin.isVisible = isLoading
-            binding.btnLogin.isEnabled = !isLoading
-        })
+        articlesListViewModel.isLoadingTopics.observe(viewLifecycleOwner) {
+            binding.pbLoadingTopics.isVisible = it
+        }
+
+        loginViewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.pbLoadingLogin.isVisible = it
+            binding.btnLogin.isEnabled = !it
+        }
     }
 
     private fun setClickListeners() {
@@ -213,6 +217,5 @@ class MainFragment : Fragment(), ArticleClickListener {
 
     override fun onArticleClick(article: Article) {
         activityListener?.showArticleFragment(article)
-//        activityListener?.goToBrowser(BASE_URL + article.url)
     }
 }

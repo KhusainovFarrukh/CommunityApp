@@ -3,11 +3,11 @@ package khusainov.farrukh.communityapp.ui.fragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import coil.load
@@ -23,7 +23,7 @@ import khusainov.farrukh.communityapp.vm.viewmodels.ArticleDetailsViewModel
 import org.jsoup.Jsoup
 import java.util.*
 
-class ArticleFragment : Fragment() {
+class ArticleDetailsFragment : Fragment() {
 
     private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentArticleBinding? = null
@@ -82,6 +82,10 @@ class ArticleFragment : Fragment() {
                 ).show()
             }
         }
+
+        articleViewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.rlLoading.isVisible = it
+        }
     }
 
     private fun setDataToViews(article: Article) {
@@ -108,9 +112,7 @@ class ArticleFragment : Fragment() {
             txvViews.text = "${article.stats.viewsCount} views"
             txvTime.text = "00 seconds ago"
 
-            article.user?.profile?.description?.let {
-                txvUserDescription.text = Html.fromHtml(it)
-            }
+            txvUserDescription.text = article.user?.profile?.title
 
             txvHashtags.text = ""
             article.topics.forEach {

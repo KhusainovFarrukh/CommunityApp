@@ -111,10 +111,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:textColor="#1B8AF2"
-                android:textStyle="bold"
-                android:textSize="12sp"
                 android:gravity="bottom"
+                android:textColor="#1B8AF2"
+                android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/txv_see_stats"
                 app:layout_constraintStart_toStartOf="@+id/gl_start"
                 app:layout_constraintTop_toBottomOf="@+id/view_divider"
@@ -124,10 +124,10 @@
                 android:id="@+id/txv_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:gravity="top"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:gravity="top"
                 app:layout_constraintEnd_toStartOf="@+id/gl_end"
                 app:layout_constraintStart_toStartOf="@+id/gl_start"
                 app:layout_constraintTop_toBottomOf="@+id/txv_hashtags"
@@ -231,5 +231,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/slv_stats" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+        </RelativeLayout>
     </com.google.android.material.card.MaterialCardView>
 </FrameLayout>

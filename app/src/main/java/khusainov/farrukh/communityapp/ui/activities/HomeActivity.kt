@@ -11,9 +11,9 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
 import khusainov.farrukh.communityapp.data.model.Article
 import khusainov.farrukh.communityapp.data.model.SignInData
-import khusainov.farrukh.communityapp.ui.fragments.ArticleFragment
+import khusainov.farrukh.communityapp.ui.fragments.ArticleDetailsFragment
 import khusainov.farrukh.communityapp.ui.fragments.LoginDialogFragment
-import khusainov.farrukh.communityapp.ui.fragments.MainFragment
+import khusainov.farrukh.communityapp.ui.fragments.ArticlesListFragment
 import khusainov.farrukh.communityapp.ui.fragments.NotificationsFragment
 
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
@@ -41,7 +41,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
     override fun showMainFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.view_container, MainFragment())
+            .replace(R.id.view_container, ArticlesListFragment())
             .commit()
     }
 
@@ -59,7 +59,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
     }
 
     override fun showArticleFragment(article: Article) {
-        val fragment = ArticleFragment()
+        val fragment = ArticleDetailsFragment()
         val bundle = Bundle()
         bundle.putString("articleId", article.articleId)
         fragment.arguments = bundle
