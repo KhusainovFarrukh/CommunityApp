@@ -53,10 +53,8 @@ class MainFragment : Fragment(), ArticleClickListener {
         if (savedInstanceState == null) {
             mainViewModel.getTopics()
             mainViewModel.getAllPosts(20)
-            activityListener?.getSignInData().let {
-                if (it != null) {
-                    mainViewModel.signIn(it)
-                }
+            activityListener?.getSignInData()?.let {
+                mainViewModel.signIn(it)
             }
         }
     }
@@ -199,7 +197,6 @@ class MainFragment : Fragment(), ArticleClickListener {
     }
 
     private fun initRecyclerView() {
-        binding.rvTopics.setHasFixedSize(true)
         binding.rvTopics.adapter = topicAdapter
         binding.rvPosts.setHasFixedSize(true)
         binding.rvPosts.adapter = articleAdapter

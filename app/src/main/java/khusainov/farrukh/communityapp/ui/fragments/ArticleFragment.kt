@@ -3,14 +3,19 @@ package khusainov.farrukh.communityapp.ui.fragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import khusainov.farrukh.communityapp.databinding.FragmentArticleBinding
+import coil.load
+import coil.transform.CircleCropTransformation
+import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.model.Article
+import khusainov.farrukh.communityapp.databinding.FragmentArticleBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.viewmodels.MainViewModel
 import org.jsoup.Jsoup
@@ -93,10 +98,27 @@ class ArticleFragment : Fragment() {
             txvViews.text = "${article.stats.viewsCount} views"
             txvTime.text = "00 seconds ago"
 
-            txvUserName.text = article.user?.profile?.name ?: "Unknown"
-            txvUserDescription.text = "lorem ipsum"
+            article.user?.profile?.description?.let {
+                txvUserDescription.text = Html.fromHtml(it)
+            }
 
-            txvTitle.text = article.title
+            txvHashtags.text = ""
+            article.topics.forEach {
+                txvHashtags.append("#${it.name}")
+                if (it != article.topics.last()) {
+                    txvHashtags.append(" ")
+                }
+            }
+
+            txvUserName.text = article.user?.profile?.name ?: "Unknown"
+
+            txvTitle.text = article.title?.trim()
+
+            imvProfilePhoto.load(article.user?.profile?.profilePhoto) {
+                crossfade(true)
+                placeholder(R.drawable.ic_account_circle)
+                transformations(CircleCropTransformation())
+            }
         }
     }
 }

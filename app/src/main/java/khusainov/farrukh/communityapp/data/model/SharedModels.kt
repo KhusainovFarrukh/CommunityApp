@@ -11,5 +11,6 @@ data class UserModel(
 data class ProfileModel(
     @SerializedName("picture")
     val profilePhoto: String,
-    val name: String
+    val name: String,
+    val description: String?
 )

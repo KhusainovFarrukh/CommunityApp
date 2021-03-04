@@ -49,7 +49,7 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/txv_user_description"
                 app:layout_constraintEnd_toStartOf="@+id/txv_see_profile"
@@ -113,6 +113,8 @@
                 android:layout_marginEnd="16dp"
                 android:textColor="#1B8AF2"
                 android:textStyle="bold"
+                android:textSize="12sp"
+                android:gravity="bottom"
                 app:layout_constraintEnd_toStartOf="@+id/txv_see_stats"
                 app:layout_constraintStart_toStartOf="@+id/gl_start"
                 app:layout_constraintTop_toBottomOf="@+id/view_divider"
@@ -122,10 +124,10 @@
                 android:id="@+id/txv_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
+                android:gravity="top"
                 app:layout_constraintEnd_toStartOf="@+id/gl_end"
                 app:layout_constraintStart_toStartOf="@+id/gl_start"
                 app:layout_constraintTop_toBottomOf="@+id/txv_hashtags"
@@ -149,6 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:orientation="horizontal"
                 app:layout_constraintEnd_toStartOf="@+id/txv_share"
                 app:layout_constraintStart_toStartOf="@id/gl_start"
                 app:layout_constraintTop_toBottomOf="@id/txv_title">
@@ -165,6 +168,7 @@
                         android:gravity="center_vertical"
                         android:lines="1"
                         android:textSize="10sp"
+                        android:visibility="gone"
                         app:drawableStartCompat="@drawable/ic_time"
                         tools:text="23 minutes ago" />
 
@@ -205,9 +209,11 @@
                         android:id="@+id/txv_followers"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:gravity="center_vertical"
                         android:lines="1"
                         android:textSize="10sp"
+                        android:visibility="gone"
                         app:drawableStartCompat="@drawable/ic_follower"
                         tools:text="32 followers" />
 

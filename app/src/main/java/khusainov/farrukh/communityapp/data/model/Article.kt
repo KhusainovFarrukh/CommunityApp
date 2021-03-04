@@ -14,7 +14,8 @@ data class Article(
     val user: UserModel?,
     val url: String,
     val parent: Article,
-    val summary: String
+    val summary: String,
+    val topics: List<Topic>
 )
 
 data class ImagesInArticle(
