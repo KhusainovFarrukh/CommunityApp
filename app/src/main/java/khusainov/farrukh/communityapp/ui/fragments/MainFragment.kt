@@ -12,18 +12,23 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
-import khusainov.farrukh.communityapp.databinding.FragmentMainBinding
+import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.model.Article
 import khusainov.farrukh.communityapp.data.model.User
+import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.databinding.FragmentMainBinding
+import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.TopicAdapter
-import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.utils.Constants.Companion.COOKIES_KEY
-import khusainov.farrukh.communityapp.vm.viewmodels.MainViewModel
+import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
+import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
+import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
+import khusainov.farrukh.communityapp.vm.viewmodels.ArticlesListViewModel
 import okhttp3.Cookie
 
 class MainFragment : Fragment(), ArticleClickListener {
@@ -33,7 +38,10 @@ class MainFragment : Fragment(), ArticleClickListener {
     private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
-    private val mainViewModel: MainViewModel by activityViewModels()
+    private lateinit var articlesListViewModel: ArticlesListViewModel
+    private val loginViewModel: LoginViewModel by activityViewModels {
+        LoginVMFactory(Repository(RetrofitInstance.communityApi))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,14 +55,15 @@ class MainFragment : Fragment(), ArticleClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        articlesListViewModel = ViewModelProvider(this).get(ArticlesListViewModel::class.java)
+
         initRecyclerView()
         setClickListeners()
         setObservers()
-        if (savedInstanceState == null) {
-            mainViewModel.getTopics()
-            mainViewModel.getAllPosts(20)
+
+        if (loginViewModel.responseUser.value == null) {
             activityListener?.getSignInData()?.let {
-                mainViewModel.signIn(it)
+                loginViewModel.signIn(it)
             }
         }
     }
@@ -77,7 +86,7 @@ class MainFragment : Fragment(), ArticleClickListener {
     }
 
     private fun setObservers() {
-        mainViewModel.responseUser.observe(viewLifecycleOwner, { response ->
+        loginViewModel.responseUser.observe(viewLifecycleOwner, { response ->
             if (response.isSuccessful) {
 
                 if (response.raw().headers(COOKIES_KEY).isNotEmpty()) {
@@ -113,7 +122,7 @@ class MainFragment : Fragment(), ArticleClickListener {
             }
         })
 
-        mainViewModel.responseAllPosts.observe(viewLifecycleOwner, { responseList ->
+        articlesListViewModel.responseAllPosts.observe(viewLifecycleOwner, { responseList ->
             if (responseList.isSuccessful) {
                 if (responseList.body()?.isNotEmpty() == true) {
                     articleAdapter.submitList(responseList.body())
@@ -134,7 +143,7 @@ class MainFragment : Fragment(), ArticleClickListener {
 
         })
 
-        mainViewModel.responseTopics.observe(viewLifecycleOwner, { responseTopics ->
+        articlesListViewModel.responseTopics.observe(viewLifecycleOwner, { responseTopics ->
             if (responseTopics.isSuccessful) {
                 if (responseTopics.body()?.isNotEmpty() == true) {
                     topicAdapter.submitList(responseTopics.body())
@@ -156,11 +165,11 @@ class MainFragment : Fragment(), ArticleClickListener {
 
         })
 
-        mainViewModel.isLoadingArticles.observe(viewLifecycleOwner, { isLoading ->
+        articlesListViewModel.isLoadingArticles.observe(viewLifecycleOwner, { isLoading ->
             binding.pbLoadingArticles.isVisible = isLoading
         })
 
-        mainViewModel.isLoadingLogin.observe(viewLifecycleOwner, { isLoading ->
+        loginViewModel.isLoading.observe(viewLifecycleOwner, { isLoading ->
             binding.pbLoadingLogin.isVisible = isLoading
             binding.btnLogin.isEnabled = !isLoading
         })

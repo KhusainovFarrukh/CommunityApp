@@ -8,14 +8,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import khusainov.farrukh.communityapp.utils.clicklisteners.NotificationClickListener
-import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
+import androidx.lifecycle.ViewModelProvider
+import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.model.Notification
-import khusainov.farrukh.communityapp.ui.recycler.adapter.NotificationAdapter
+import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
+import khusainov.farrukh.communityapp.ui.recycler.adapter.NotificationAdapter
 import khusainov.farrukh.communityapp.utils.Constants
-import khusainov.farrukh.communityapp.vm.viewmodels.MainViewModel
+import khusainov.farrukh.communityapp.utils.clicklisteners.NotificationClickListener
+import khusainov.farrukh.communityapp.vm.factories.NotificationsVMFactory
+import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel
 
 class NotificationsFragment : Fragment(), NotificationClickListener {
 
@@ -23,7 +26,7 @@ class NotificationsFragment : Fragment(), NotificationClickListener {
     private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentNotificationsBinding? = null
     private val binding get() = _binding!!
-    private val mainViewModel: MainViewModel by activityViewModels()
+    private lateinit var notificationsViewModel: NotificationsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,14 +42,18 @@ class NotificationsFragment : Fragment(), NotificationClickListener {
 
         val cookies = activityListener?.getCookies()!!
 
+        val cookiesList = mutableListOf<String>()
+
+        cookiesList[0] = Constants.REMEMBER_ME_KEY + "=" + cookies[Constants.REMEMBER_ME_KEY]
+        cookiesList[1] = Constants.SESSION_ID_KEY + "=" + cookies[Constants.SESSION_ID_KEY]
+
+        notificationsViewModel = ViewModelProvider(
+            this,
+            NotificationsVMFactory(cookiesList, Repository(RetrofitInstance.communityApi))
+        ).get(NotificationsViewModel::class.java)
+
         initRecyclerView()
         setObservers()
-        if (savedInstanceState == null) {
-            mainViewModel.getNotifications(
-                Constants.REMEMBER_ME_KEY + "=" + cookies[Constants.REMEMBER_ME_KEY],
-                Constants.SESSION_ID_KEY + "=" + cookies[Constants.SESSION_ID_KEY]
-            )
-        }
     }
 
     override fun onDestroyView() {
@@ -80,7 +87,7 @@ class NotificationsFragment : Fragment(), NotificationClickListener {
     }
 
     private fun setObservers() {
-        mainViewModel.responseNotification.observe(viewLifecycleOwner, { responseList ->
+        notificationsViewModel.responseNotification.observe(viewLifecycleOwner, { responseList ->
             if (responseList.isSuccessful) {
                 if (responseList.body()?.isNotEmpty() == true) {
                     notificationAdapter.submitList(responseList.body())
@@ -101,7 +108,7 @@ class NotificationsFragment : Fragment(), NotificationClickListener {
 
         })
 
-        mainViewModel.isLoadingNotifications.observe(viewLifecycleOwner, {
+        notificationsViewModel.isLoading.observe(viewLifecycleOwner, {
             binding.pbLoadingNotification.isVisible = it
         })
     }

@@ -10,17 +10,22 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import khusainov.farrukh.communityapp.databinding.FragmentDialogLoginBinding
+import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.model.SignInData
+import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.databinding.FragmentDialogLoginBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.vm.viewmodels.MainViewModel
+import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
+import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
 
 class LoginDialogFragment : DialogFragment() {
 
     private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentDialogLoginBinding? = null
     private val binding get() = _binding!!
-    private val mainViewModel: MainViewModel by activityViewModels()
+    private val loginViewModel: LoginViewModel by activityViewModels {
+        LoginVMFactory(Repository(RetrofitInstance.communityApi))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,8 +46,8 @@ class LoginDialogFragment : DialogFragment() {
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
 
-        if (mainViewModel.isLoadingLogin.value == true) {
-            mainViewModel.cancelJob()
+        if (loginViewModel.isLoading.value == true) {
+            loginViewModel.cancelJob()
         }
 
         Toast.makeText(
@@ -88,7 +93,7 @@ class LoginDialogFragment : DialogFragment() {
                 binding.etPassword.text.isEmpty() -> binding.etPassword.error =
                     "Parolingizni kiriting"
                 else -> {
-                    mainViewModel.signIn(
+                    loginViewModel.signIn(
                         SignInData(
                             binding.etEmail.text.toString(),
                             binding.etPassword.text.toString()
@@ -100,7 +105,7 @@ class LoginDialogFragment : DialogFragment() {
     }
 
     private fun setObservers() {
-        mainViewModel.responseUser.observe(this, { response ->
+        loginViewModel.responseUser.observe(this, { response ->
             if (response.isSuccessful) {
 
                 activityListener?.saveSignInData(
@@ -124,7 +129,7 @@ class LoginDialogFragment : DialogFragment() {
             }
         })
 
-        mainViewModel.isLoadingLogin.observe(this, {
+        loginViewModel.isLoading.observe(this, {
             binding.btnLogin.isEnabled = !it
             binding.pbLoading.isVisible = it
         })

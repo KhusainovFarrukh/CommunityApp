@@ -40,7 +40,7 @@ class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val imvImage = itemView.findViewById<ImageView>(R.id.imv_image)
 
     fun onBindArticle(article: Article) {
-        txvTitle.text = article.title
+        txvTitle.text = article.title?.trim()
         txvAuthor.text = article.user?.profile?.name ?: "Noma`lum"
         txvViews.text = article.stats.viewsCount.toString()
         txvLikes.text = article.stats.likesCount.toString()
