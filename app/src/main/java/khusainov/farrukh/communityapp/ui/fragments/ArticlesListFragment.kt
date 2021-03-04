@@ -33,11 +33,11 @@ import okhttp3.Cookie
 
 class ArticlesListFragment : Fragment(), ArticleClickListener {
 
-    private val articleAdapter = ArticleAdapter(this)
-    private val topicAdapter = TopicAdapter()
-    private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentArticlesListBinding? = null
     private val binding get() = _binding!!
+    private var activityListener: HomeActivityListener? = null
+    private val articleAdapter = ArticleAdapter(this)
+    private val topicAdapter = TopicAdapter()
     private lateinit var articlesListViewModel: ArticlesListViewModel
     private val loginViewModel: LoginViewModel by activityViewModels {
         LoginVMFactory(Repository(RetrofitInstance.communityApi))
@@ -77,6 +77,8 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
         super.onAttach(context)
         if (context is HomeActivityListener) {
             activityListener = context
+        } else {
+            throw IllegalArgumentException("$context is not HomeActivityListener")
         }
     }
 
@@ -111,7 +113,7 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
                     ).show()
                 }
 
-                setStatsToViews(response.body()!!)
+                setUserToViews(response.body()!!)
 
             } else {
                 Toast.makeText(
@@ -189,14 +191,7 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
         }
     }
 
-    private fun setStatsToViews(user: User) {
-
-        Log.wtf("Name", user.profileInUser.name)
-        Log.wtf("Email", user.email)
-        Log.wtf("Score", user.profileInUser.score.toString())
-        Log.wtf("Posts", user.profileInUser.statsInUser.posts.toString())
-        Log.wtf("Likes", user.profileInUser.statsInUser.likes.toString())
-        Log.wtf("Followers", user.profileInUser.statsInUser.followers.toString())
+    private fun setUserToViews(user: User) {
 
         binding.btnLogin.visibility = Button.INVISIBLE
         binding.imvProfile.visibility = ImageView.VISIBLE

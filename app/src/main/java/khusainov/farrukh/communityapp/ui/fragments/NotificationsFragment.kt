@@ -22,10 +22,10 @@ import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel
 
 class NotificationsFragment : Fragment(), NotificationClickListener {
 
-    private val notificationAdapter = NotificationAdapter(this)
-    private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentNotificationsBinding? = null
     private val binding get() = _binding!!
+    private var activityListener: HomeActivityListener? = null
+    private val notificationAdapter = NotificationAdapter(this)
     private lateinit var notificationsViewModel: NotificationsViewModel
 
     override fun onCreateView(

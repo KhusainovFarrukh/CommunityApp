@@ -1,5 +1,6 @@
 package khusainov.farrukh.communityapp.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -25,9 +26,9 @@ import java.util.*
 
 class ArticleDetailsFragment : Fragment() {
 
-    private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
+    private var activityListener: HomeActivityListener? = null
     private lateinit var articleViewModel: ArticleDetailsViewModel
 
     override fun onCreateView(
@@ -62,6 +63,8 @@ class ArticleDetailsFragment : Fragment() {
         super.onAttach(context)
         if (context is HomeActivityListener) {
             activityListener = context
+        } else {
+            throw IllegalArgumentException("$context is not HomeActivityListener")
         }
     }
 
@@ -88,6 +91,8 @@ class ArticleDetailsFragment : Fragment() {
         }
     }
 
+    //TODO remove this annotation in the future
+    @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     private fun setDataToViews(article: Article) {
         binding.apply {
             val content = article.content.replace("#", Uri.encode("#"))

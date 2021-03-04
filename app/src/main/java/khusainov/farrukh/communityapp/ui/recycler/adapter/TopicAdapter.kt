@@ -1,21 +1,31 @@
 package khusainov.farrukh.communityapp.ui.recycler.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.ui.recycler.callback.TopicCallback
 import khusainov.farrukh.communityapp.data.model.Topic
+import khusainov.farrukh.communityapp.databinding.ViewholderTopicBinding
 
-class TopicAdapter : ListAdapter<Topic, TopicViewHolder>(TopicCallback()) {
+class TopicAdapter : ListAdapter<Topic, TopicViewHolder>(object : DiffUtil.ItemCallback<Topic>() {
+    override fun areItemsTheSame(oldItem: Topic, newItem: Topic): Boolean {
+        return oldItem.topicId == newItem.topicId
+    }
+
+    override fun areContentsTheSame(oldItem: Topic, newItem: Topic): Boolean {
+        return oldItem == newItem
+    }
+}) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {
         return TopicViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.viewholder_topic, parent, false)
+            ViewholderTopicBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
     }
 
@@ -27,19 +37,18 @@ class TopicAdapter : ListAdapter<Topic, TopicViewHolder>(TopicCallback()) {
     }
 }
 
-class TopicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    private val txvTitle = itemView.findViewById<TextView>(R.id.txv_title)
-    private val txvPosts = itemView.findViewById<TextView>(R.id.txv_posts)
-    private val imvIcon = itemView.findViewById<ImageView>(R.id.imv_icon)
+class TopicViewHolder(private val binding: ViewholderTopicBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun onBindArticle(topic: Topic) {
-        txvTitle.text = topic.name
-        txvPosts.text = topic.stats.posts.toString()
-        imvIcon.load(topic.picture) {
-            crossfade(true)
-            placeholder(R.drawable.ic_launcher_foreground)
-            error(R.drawable.no_image)
+        binding.apply {
+            txvTitle.text = topic.name
+            txvPosts.text = topic.stats.posts.toString()
+            imvIcon.load(topic.picture) {
+                crossfade(true)
+                placeholder(R.drawable.ic_launcher_foreground)
+                kotlin.error(R.drawable.no_image)
+            }
         }
     }
 }

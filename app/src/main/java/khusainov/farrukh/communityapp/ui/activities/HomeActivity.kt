@@ -84,6 +84,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
         editor.putString("cookies", Gson().toJson(value)).apply()
     }
 
+    //TODO change it
     override fun getCookies(): Map<String, String>? {
         return Gson().fromJson(
             sharedPreferences.getString("cookies", null),

@@ -20,9 +20,9 @@ import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
 
 class LoginDialogFragment : DialogFragment() {
 
-    private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentDialogLoginBinding? = null
     private val binding get() = _binding!!
+    private var activityListener: HomeActivityListener? = null
     private val loginViewModel: LoginViewModel by activityViewModels {
         LoginVMFactory(Repository(RetrofitInstance.communityApi))
     }
@@ -73,6 +73,8 @@ class LoginDialogFragment : DialogFragment() {
         super.onAttach(context)
         if (context is HomeActivityListener) {
             activityListener = context
+        } else {
+            throw IllegalArgumentException("$context is not HomeActivityListener")
         }
     }
 

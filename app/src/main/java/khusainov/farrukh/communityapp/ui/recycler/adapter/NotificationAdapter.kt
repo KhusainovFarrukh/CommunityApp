@@ -2,24 +2,34 @@ package khusainov.farrukh.communityapp.ui.recycler.adapter
 
 import android.graphics.Typeface
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.ui.recycler.callback.NotificationCallback
-import khusainov.farrukh.communityapp.utils.clicklisteners.NotificationClickListener
 import khusainov.farrukh.communityapp.data.model.Notification
+import khusainov.farrukh.communityapp.databinding.ViewholderNotificationBinding
+import khusainov.farrukh.communityapp.utils.clicklisteners.NotificationClickListener
 
 class NotificationAdapter(private val notificationClickListener: NotificationClickListener) :
-    ListAdapter<Notification, NotificationViewHolder>(NotificationCallback()) {
+    ListAdapter<Notification, NotificationViewHolder>(object :
+        DiffUtil.ItemCallback<Notification>() {
+        override fun areItemsTheSame(oldItem: Notification, newItem: Notification): Boolean {
+            return oldItem.notificationId == newItem.notificationId
+        }
+
+        override fun areContentsTheSame(oldItem: Notification, newItem: Notification): Boolean {
+            return oldItem == newItem
+        }
+    }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
         return NotificationViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.viewholder_notification, parent, false)
+            ViewholderNotificationBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
         )
     }
 
@@ -31,87 +41,88 @@ class NotificationAdapter(private val notificationClickListener: NotificationCli
     }
 }
 
-class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    private val txvText = itemView.findViewById<TextView>(R.id.txv_notification_text)
-    private val imvIcon = itemView.findViewById<ImageView>(R.id.imv_icon)
+class NotificationViewHolder(private val binding: ViewholderNotificationBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun onBindArticle(notification: Notification) {
-        if (notification.read) {
-            txvText.typeface = Typeface.DEFAULT
-        } else {
-            txvText.typeface = Typeface.DEFAULT_BOLD
-        }
+        binding.apply {
+            if (notification.read) {
+                txvNotificationText.typeface = Typeface.DEFAULT
+            } else {
+                txvNotificationText.typeface = Typeface.DEFAULT_BOLD
+            }
 
-        when (notification.verb) {
-            "post" -> {
-                var tempString: String? = ""
-                if (notification.objects.isNotEmpty()) {
-                    tempString = notification.objects[0].title
+            when (notification.verb) {
+                "post" -> {
+                    var tempString: String? = ""
+                    if (notification.objects.isNotEmpty()) {
+                        tempString = notification.objects[0].title
+                    }
+                    txvNotificationText.text = itemView.context.getString(
+                        R.string.verb_post,
+                        notification.from[0].profile.name,
+                        tempString
+                    )
+                    imvIcon.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_create_post
+                        )
+                    )
                 }
-                txvText.text = itemView.context.getString(
-                    R.string.verb_post,
-                    notification.from[0].profile.name,
-                    tempString
-                )
-                imvIcon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_create_post
+                "post_upvote" -> {
+                    val tempString =
+                        notification.objects[0].title ?: notification.objects[0].summary
+                    txvNotificationText.text = itemView.context.getString(
+                        R.string.verb_post_upvote,
+                        notification.from[0].profile.name,
+                        tempString
                     )
-                )
-            }
-            "post_upvote" -> {
-                val tempString = notification.objects[0].title ?: notification.objects[0].summary
-                txvText.text = itemView.context.getString(
-                    R.string.verb_post_upvote,
-                    notification.from[0].profile.name,
-                    tempString
-                )
-                imvIcon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_favorite
+                    imvIcon.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_favorite
+                        )
                     )
-                )
-            }
-            "reply" -> {
-                txvText.text = itemView.context.getString(
-                    R.string.verb_reply,
-                    notification.from[0].profile.name,
-                    notification.objects[0].parent.title,
-                    notification.objects[0].summary
-                )
-                imvIcon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_comment
+                }
+                "reply" -> {
+                    txvNotificationText.text = itemView.context.getString(
+                        R.string.verb_reply,
+                        notification.from[0].profile.name,
+                        notification.objects[0].parent.title,
+                        notification.objects[0].summary
                     )
-                )
-            }
-            "follow_user" -> {
-                txvText.text = itemView.context.getString(
-                    R.string.verb_follow_user,
-                    notification.from[0].profile.name
-                )
-                imvIcon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_follower
+                    imvIcon.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_comment
+                        )
                     )
-                )
-            }
-            else -> {
-                txvText.text = itemView.context.getString(
-                    R.string.verb_else,
-                    notification.verb
-                )
-                imvIcon.setImageDrawable(
-                    ContextCompat.getDrawable(
-                        itemView.context,
-                        R.drawable.ic_view
+                }
+                "follow_user" -> {
+                    txvNotificationText.text = itemView.context.getString(
+                        R.string.verb_follow_user,
+                        notification.from[0].profile.name
                     )
-                )
+                    imvIcon.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_follower
+                        )
+                    )
+                }
+                else -> {
+                    txvNotificationText.text = itemView.context.getString(
+                        R.string.verb_else,
+                        notification.verb
+                    )
+                    imvIcon.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            itemView.context,
+                            R.drawable.ic_view
+                        )
+                    )
+                }
             }
         }
     }
