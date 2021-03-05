@@ -17,7 +17,6 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.model.Article
 import khusainov.farrukh.communityapp.data.model.User
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
@@ -27,8 +26,8 @@ import khusainov.farrukh.communityapp.ui.recycler.adapter.TopicAdapter
 import khusainov.farrukh.communityapp.utils.Constants.Companion.COOKIES_KEY
 import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
-import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticlesListViewModel
+import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
 import okhttp3.Cookie
 
 class ArticlesListFragment : Fragment(), ArticleClickListener {
@@ -210,7 +209,7 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
         binding.rvPosts.adapter = articleAdapter
     }
 
-    override fun onArticleClick(article: Article) {
-        activityListener?.showArticleFragment(article)
+    override fun onArticleClick(articleId: String) {
+        activityListener?.showArticleFragment(articleId)
     }
 }

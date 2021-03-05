@@ -33,21 +33,21 @@ class TopicAdapter : ListAdapter<Topic, TopicViewHolder>(object : DiffUtil.ItemC
         holder.itemView.setOnClickListener {
 //            articleClickListener.onArticleClick(getItem(position))
         }
-        holder.onBindArticle(getItem(position))
+        holder.onBindTopic(getItem(position))
     }
 }
 
 class TopicViewHolder(private val binding: ViewholderTopicBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun onBindArticle(topic: Topic) {
+    fun onBindTopic(topic: Topic) {
         binding.apply {
             txvTitle.text = topic.name
             txvPosts.text = topic.stats.posts.toString()
             imvIcon.load(topic.picture) {
                 crossfade(true)
                 placeholder(R.drawable.ic_launcher_foreground)
-                kotlin.error(R.drawable.no_image)
+//                kotlin.error(R.drawable.no_image)
             }
         }
     }

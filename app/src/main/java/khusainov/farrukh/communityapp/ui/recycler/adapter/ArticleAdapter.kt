@@ -34,7 +34,7 @@ class ArticleAdapter(private val articleClickListener: ArticleClickListener) :
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            articleClickListener.onArticleClick(getItem(position))
+            articleClickListener.onArticleClick(getItem(position).articleId)
         }
         holder.onBindArticle(getItem(position))
     }
@@ -54,7 +54,7 @@ class ArticleViewHolder(private val binding: ViewholderArticleBinding) :
                 imvImage.load(article.imagesList[0].imageLink) {
                     crossfade(true)
                     placeholder(R.drawable.ic_launcher_foreground)
-                    kotlin.error(R.drawable.no_image)
+//                    kotlin.error(R.drawable.no_image)
                 }
             } else {
                 imvImage.load(ContextCompat.getDrawable(itemView.context, R.drawable.no_image))

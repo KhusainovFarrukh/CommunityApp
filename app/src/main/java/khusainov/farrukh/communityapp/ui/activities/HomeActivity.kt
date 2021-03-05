@@ -11,10 +11,7 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
 import khusainov.farrukh.communityapp.data.model.Article
 import khusainov.farrukh.communityapp.data.model.SignInData
-import khusainov.farrukh.communityapp.ui.fragments.ArticleDetailsFragment
-import khusainov.farrukh.communityapp.ui.fragments.LoginDialogFragment
-import khusainov.farrukh.communityapp.ui.fragments.ArticlesListFragment
-import khusainov.farrukh.communityapp.ui.fragments.NotificationsFragment
+import khusainov.farrukh.communityapp.ui.fragments.*
 
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
@@ -58,10 +55,10 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
             .commit()
     }
 
-    override fun showArticleFragment(article: Article) {
+    override fun showArticleFragment(articleId: String) {
         val fragment = ArticleDetailsFragment()
         val bundle = Bundle()
-        bundle.putString("articleId", article.articleId)
+        bundle.putString("articleId", articleId)
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction()
             .replace(R.id.view_container, fragment)
@@ -91,6 +88,16 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
             object : TypeToken<Map<String, String>>() {}.type
         )
     }
+
+    override fun showUserFragment(userId: String) {
+        val fragment = FragmentUser()
+        val bundle = Bundle()
+        bundle.putString("userId", userId)
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.view_container, fragment)
+            .addToBackStack(null)
+            .commit()    }
 }
 
 interface HomeActivityListener {
@@ -98,9 +105,10 @@ interface HomeActivityListener {
     fun showMainFragment()
     fun goToBrowser(url: String)
     fun showNotificationsFragment()
-    fun showArticleFragment(article: Article)
+    fun showArticleFragment(articleId: String)
     fun saveSignInData(value: SignInData)
     fun getSignInData(): SignInData?
     fun saveCookies(value: Map<String, String>)
     fun getCookies(): Map<String, String>?
+    fun showUserFragment(userId: String)
 }

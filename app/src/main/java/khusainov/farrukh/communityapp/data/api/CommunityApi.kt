@@ -11,6 +11,11 @@ interface CommunityApi {
         @Path("articleId") articleId: String
     ): Response<Article>
 
+    @GET("api/v1/users/{userId}")
+    suspend fun getUserById(
+        @Path("userId") userId: String
+    ) : Response<User>
+
     @POST("api/v1/sessions")
     suspend fun signInWithEmail(
         @Body signInData: SignInData,

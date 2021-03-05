@@ -143,6 +143,10 @@ class ArticleDetailsFragment : Fragment() {
                 placeholder(R.drawable.ic_account_circle)
                 transformations(CircleCropTransformation())
             }
+
+            txvSeeProfile.setOnClickListener {
+                activityListener?.showUserFragment(article.user!!.userId)
+            }
         }
     }
 }

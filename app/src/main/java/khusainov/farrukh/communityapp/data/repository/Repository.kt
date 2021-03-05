@@ -11,6 +11,8 @@ class Repository(private val api: CommunityApi) {
 
     suspend fun getArticle(articleId: String) = api.getArticleById(articleId)
 
+    suspend fun getUser(userId: String) = api.getUserById(userId)
+
     suspend fun signIn(signInData: SignInData) = api.signInWithEmail(signInData)
 
     suspend fun getNotifications(cookie1: String, cookie2: String) =
