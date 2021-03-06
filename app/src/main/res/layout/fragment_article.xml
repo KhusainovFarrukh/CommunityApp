@@ -1,248 +1,307 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:overScrollMode="never"
+    android:scrollbars="none">
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="16dp"
-        android:elevation="1dp"
-        android:translationZ="4dp"
-        app:cardCornerRadius="20dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/gl_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="8dp" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/gl_end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_end="8dp" />
-
-            <ImageView
-                android:id="@+id/imv_profile_photo"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="@id/gl_start"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
-
-            <TextView
-                android:id="@+id/txv_user_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/txv_user_description"
-                app:layout_constraintEnd_toStartOf="@+id/txv_see_profile"
-                app:layout_constraintStart_toEndOf="@+id/imv_profile_photo"
-                app:layout_constraintTop_toTopOf="@+id/imv_profile_photo"
-                tools:text="John Smith" />
-
-            <TextView
-                android:id="@+id/txv_user_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:ellipsize="end"
-                android:lines="1"
-                app:layout_constraintBottom_toBottomOf="@+id/imv_profile_photo"
-                app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/imv_profile_photo"
-                app:layout_constraintTop_toBottomOf="@+id/txv_user_name"
-                tools:text="Junior Android Developer, Trader, Businessman" />
-
-            <TextView
-                android:id="@+id/txv_see_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="See profile"
-                android:textColor="#1400FF"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                app:layout_constraintBaseline_toBaselineOf="@+id/txv_user_name"
-                app:layout_constraintEnd_toStartOf="@+id/gl_end" />
-
-            <View
-                android:id="@+id/view_divider"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="4dp"
-                android:background="#DEBABA"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imv_profile_photo" />
-
-            <TextView
-                android:id="@+id/txv_see_stats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="See stats"
-                android:textColor="#1400FF"
-                android:textSize="12sp"
-                android:textStyle="italic"
-                app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                app:layout_constraintTop_toTopOf="@+id/txv_hashtags" />
-
-            <TextView
-                android:id="@+id/txv_hashtags"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="bottom"
-                android:textColor="#1B8AF2"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/txv_see_stats"
-                app:layout_constraintStart_toStartOf="@+id/gl_start"
-                app:layout_constraintTop_toBottomOf="@+id/view_divider"
-                tools:text="#android #broadcast #receiver" />
-
-            <TextView
-                android:id="@+id/txv_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="top"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                app:layout_constraintStart_toStartOf="@+id/gl_start"
-                app:layout_constraintTop_toBottomOf="@+id/txv_hashtags"
-                tools:text="How to use Broadcast Receiver to listen Network changes" />
-
-            <TextView
-                android:id="@+id/txv_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="4dp"
-                android:gravity="center_vertical"
-                android:text="Share"
-                app:drawableStartCompat="@drawable/ic_share"
-                app:layout_constraintBottom_toBottomOf="@+id/slv_stats"
-                app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                app:layout_constraintTop_toTopOf="@+id/slv_stats" />
-
-            <ScrollView
-                android:id="@+id/slv_stats"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toStartOf="@+id/txv_share"
-                app:layout_constraintStart_toStartOf="@id/gl_start"
-                app:layout_constraintTop_toBottomOf="@id/txv_title">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/txv_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:lines="1"
-                        android:textSize="10sp"
-                        android:visibility="gone"
-                        app:drawableStartCompat="@drawable/ic_time"
-                        tools:text="23 minutes ago" />
-
-                    <TextView
-                        android:id="@+id/txv_views"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:gravity="center_vertical"
-                        android:lines="1"
-                        android:textSize="10sp"
-                        app:drawableStartCompat="@drawable/ic_view"
-                        tools:text="3,274 views" />
-
-                    <TextView
-                        android:id="@+id/txv_likes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:gravity="center_vertical"
-                        android:lines="1"
-                        android:textSize="10sp"
-                        app:drawableStartCompat="@drawable/ic_favorite"
-                        tools:text="374 likes" />
-
-                    <TextView
-                        android:id="@+id/txv_comments"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:gravity="center_vertical"
-                        android:lines="1"
-                        android:textSize="10sp"
-                        app:drawableStartCompat="@drawable/ic_comment"
-                        tools:text="36 comments" />
-
-                    <TextView
-                        android:id="@+id/txv_followers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:gravity="center_vertical"
-                        android:lines="1"
-                        android:textSize="10sp"
-                        android:visibility="gone"
-                        app:drawableStartCompat="@drawable/ic_follower"
-                        tools:text="32 followers" />
-
-                </LinearLayout>
-            </ScrollView>
-
-            <WebView
-                android:id="@+id/wv_article"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/gl_end"
-                app:layout_constraintStart_toStartOf="@id/gl_start"
-                app:layout_constraintTop_toBottomOf="@+id/slv_stats" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_loading"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:layout_margin="16dp"
+            android:elevation="1dp"
+            android:translationZ="4dp"
+            app:cardCornerRadius="20dp">
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        </RelativeLayout>
-    </com.google.android.material.card.MaterialCardView>
-</FrameLayout>
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="8dp" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="8dp" />
+
+                <ImageView
+                    android:id="@+id/imv_profile_photo"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintStart_toStartOf="@id/gl_start"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/txv_user_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/txv_user_description"
+                    app:layout_constraintEnd_toStartOf="@+id/txv_see_profile"
+                    app:layout_constraintStart_toEndOf="@+id/imv_profile_photo"
+                    app:layout_constraintTop_toTopOf="@+id/imv_profile_photo"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    tools:text="John Smith" />
+
+                <TextView
+                    android:id="@+id/txv_user_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imv_profile_photo"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_end"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/imv_profile_photo"
+                    app:layout_constraintTop_toBottomOf="@+id/txv_user_name"
+                    tools:text="Junior Android Developer, Trader, Businessman" />
+
+                <TextView
+                    android:id="@+id/txv_see_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See profile"
+                    android:textColor="#1400FF"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/txv_user_name"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_end" />
+
+                <View
+                    android:id="@+id/view_divider"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="4dp"
+                    android:background="#DEBABA"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/imv_profile_photo" />
+
+                <TextView
+                    android:id="@+id/txv_see_stats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="See stats"
+                    android:textColor="#1400FF"
+                    android:textSize="12sp"
+                    android:textStyle="italic"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_end"
+                    app:layout_constraintTop_toTopOf="@+id/txv_hashtags" />
+
+                <TextView
+                    android:id="@+id/txv_hashtags"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="bottom"
+                    android:textColor="#1B8AF2"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/txv_see_stats"
+                    app:layout_constraintStart_toStartOf="@+id/gl_start"
+                    app:layout_constraintTop_toBottomOf="@+id/view_divider"
+                    tools:text="#android #broadcast #receiver" />
+
+                <TextView
+                    android:id="@+id/txv_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_end"
+                    app:layout_constraintStart_toStartOf="@+id/gl_start"
+                    app:layout_constraintTop_toBottomOf="@+id/txv_hashtags"
+                    tools:text="How to use Broadcast Receiver to listen Network changes" />
+
+                <TextView
+                    android:id="@+id/txv_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_btn_login"
+                    android:drawablePadding="4dp"
+                    android:drawableTint="@color/white"
+                    android:gravity="center_vertical"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
+                    android:text="Share"
+                    android:textColor="@color/white"
+                    app:drawableStartCompat="@drawable/ic_share"
+                    app:layout_constraintEnd_toStartOf="@+id/gl_end"
+                    app:layout_constraintTop_toTopOf="@+id/slv_stats" />
+
+                <HorizontalScrollView
+                    android:id="@+id/slv_stats"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="16dp"
+                    android:fillViewport="true"
+                    android:overScrollMode="never"
+                    android:requiresFadingEdge="horizontal"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toStartOf="@+id/txv_share"
+                    app:layout_constraintStart_toStartOf="@id/gl_start"
+                    app:layout_constraintTop_toBottomOf="@id/txv_title">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/txv_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:lines="1"
+                            android:textSize="10sp"
+                            app:drawableStartCompat="@drawable/ic_time"
+                            app:drawableTint="@color/black"
+                            tools:ignore="SmallSp"
+                            tools:text="23 minutes ago" />
+
+                        <TextView
+                            android:id="@+id/txv_views"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
+                            android:gravity="center_vertical"
+                            android:lines="1"
+                            android:textSize="10sp"
+                            app:drawableStartCompat="@drawable/ic_view"
+                            app:drawableTint="@color/black"
+                            tools:ignore="SmallSp"
+                            tools:text="3,274 views" />
+
+                        <TextView
+                            android:id="@+id/txv_likes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
+                            android:gravity="center_vertical"
+                            android:lines="1"
+                            android:textSize="10sp"
+                            app:drawableStartCompat="@drawable/ic_favorite"
+                            tools:ignore="SmallSp"
+                            tools:text="374 likes" />
+
+                        <TextView
+                            android:id="@+id/txv_comments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
+                            android:gravity="center_vertical"
+                            android:lines="1"
+                            android:textSize="10sp"
+                            app:drawableStartCompat="@drawable/ic_comment"
+                            app:drawableTint="@color/black"
+                            tools:ignore="SmallSp"
+                            tools:text="36 comments" />
+
+                        <TextView
+                            android:id="@+id/txv_followers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="8dp"
+                            android:gravity="center_vertical"
+                            android:lines="1"
+                            android:textSize="10sp"
+                            app:drawableStartCompat="@drawable/ic_follower"
+                            app:drawableTint="@color/black"
+                            tools:ignore="SmallSp"
+                            tools:text="32 followers" />
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <WebView
+                    android:id="@+id/wv_article"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never"
+                    android:requiresFadingEdge="vertical"
+                    android:scrollbars="none"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/gl_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_start"
+                    app:layout_constraintTop_toBottomOf="@+id/txv_share" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:elevation="1dp"
+            android:translationZ="4dp"
+            app:cardCornerRadius="20dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_comments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <RelativeLayout
+                android:id="@+id/rl_loading_comments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</ScrollView>
