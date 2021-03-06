@@ -16,6 +16,7 @@ data class ProfileInUser(
     val statsInUser: StatsInUser,
     val score: Int,
     val picture: String,
+    val banner: String,
     val name: String,
     val title: String,
     val description: String

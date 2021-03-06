@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.ArticleDetailsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleDetailsViewModel
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import java.util.*
 
 class ArticleDetailsFragment : Fragment() {
@@ -95,10 +97,16 @@ class ArticleDetailsFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     private fun setDataToViews(article: Article) {
         binding.apply {
-            val content = article.content.replace("#", Uri.encode("#"))
-            val doc = Jsoup.parse(content)
+            val content = article.content
+                .replace("#", Uri.encode("#"))
 
-            doc.select("img").attr("width", "100%")
+            val html = Jsoup.parse(content)
+
+            html.select("img")
+                .attr("width", "100%")
+            html.body()
+                .appendElement("style")
+                .appendText("* {margin-top:4px; margin-bottom:4px; margin-left:0; margin-right:0; padding:0; } ")
 
             wvArticle.settings.setSupportZoom(true)
             wvArticle.settings.builtInZoomControls = true
@@ -106,7 +114,7 @@ class ArticleDetailsFragment : Fragment() {
 
             wvArticle.settings.javaScriptEnabled = true
             wvArticle.loadData(
-                doc.html(),
+                html.html(),
                 "text/html",
                 "UTF-8"
             )

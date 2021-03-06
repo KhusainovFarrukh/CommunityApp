@@ -9,7 +9,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
-import khusainov.farrukh.communityapp.data.model.Article
 import khusainov.farrukh.communityapp.data.model.SignInData
 import khusainov.farrukh.communityapp.ui.fragments.*
 
@@ -90,7 +89,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
     }
 
     override fun showUserFragment(userId: String) {
-        val fragment = FragmentUser()
+        val fragment = UserFragment()
         val bundle = Bundle()
         bundle.putString("userId", userId)
         fragment.arguments = bundle

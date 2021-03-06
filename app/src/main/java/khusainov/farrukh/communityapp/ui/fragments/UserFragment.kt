@@ -24,7 +24,7 @@ import khusainov.farrukh.communityapp.vm.viewmodels.UserViewModel
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:55 PM
  **/
-class FragmentUser : Fragment() {
+class UserFragment : Fragment() {
 
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
@@ -108,6 +108,10 @@ class FragmentUser : Fragment() {
                 crossfade(true)
                 placeholder(R.drawable.ic_account_circle)
                 transformations(CircleCropTransformation())
+            }
+
+            imvBanner.load(user.profileInUser.banner) {
+                crossfade(true)
             }
         }
     }

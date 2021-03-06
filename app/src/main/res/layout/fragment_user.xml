@@ -20,6 +20,26 @@
         app:layout_constraintGuide_end="16dp" />
 
     <ImageView
+        android:id="@+id/imv_banner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@id/txv_reputation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#80000000"
+        app:layout_constraintBottom_toBottomOf="@id/imv_banner"
+        app:layout_constraintEnd_toEndOf="@id/imv_banner"
+        app:layout_constraintStart_toStartOf="@id/imv_banner"
+        app:layout_constraintTop_toTopOf="@id/imv_banner" />
+
+    <ImageView
         android:id="@+id/imv_profile"
         android:layout_width="128dp"
         android:layout_height="128dp"
@@ -37,13 +57,14 @@
         app:layout_constraintStart_toStartOf="@+id/gl_start"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_arrow_back"
-        app:tint="@color/purple_500" />
+        app:tint="@color/white" />
 
     <Button
         android:id="@+id/btn_follow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:background="@drawable/bg_btn_login"
         android:text="Follow"
         app:layout_constraintEnd_toStartOf="@+id/gl_end"
         app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/gl_end"
@@ -67,7 +88,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/gl_end"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
         app:layout_constraintTop_toBottomOf="@+id/txv_name"
@@ -150,7 +171,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:translationZ="2dp">
+        android:translationZ="2dp"
+        android:visibility="gone">
 
         <ProgressBar
             android:layout_width="wrap_content"
