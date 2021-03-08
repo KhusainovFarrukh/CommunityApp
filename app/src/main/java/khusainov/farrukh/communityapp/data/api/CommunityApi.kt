@@ -9,7 +9,7 @@ interface CommunityApi {
     @GET("api/v1/posts/{articleId}")
     suspend fun getArticleById(
         @Path("articleId") articleId: String
-    ): Response<Article>
+    ): Response<ArticleDetails>
 
     @GET("api/v1/users/{userId}")
     suspend fun getUserById(

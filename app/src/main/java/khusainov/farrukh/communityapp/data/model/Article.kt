@@ -18,6 +18,22 @@ data class Article(
     val topics: List<Topic>
 )
 
+data class ArticleDetails(
+    @SerializedName("_id")
+    val articleId: String,
+    val title: String?,
+    @SerializedName("images")
+    val imagesList: List<ImagesInArticle>,
+    @SerializedName("counts")
+    val stats: StatsInArticle,
+    val responses: List<String>?,
+    val content: String,
+    val user: UserModel?,
+    val url: String,
+    val summary: String,
+    val topics: List<Topic>
+)
+
 data class ImagesInArticle(
     @SerializedName("src")
     val imageLink: String

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,14 +15,14 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.model.Article
+import khusainov.farrukh.communityapp.data.model.ArticleDetails
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentArticleBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
+import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
 import khusainov.farrukh.communityapp.vm.factories.ArticleDetailsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleDetailsViewModel
 import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
 import java.util.*
 
 class ArticleDetailsFragment : Fragment() {
@@ -32,6 +31,7 @@ class ArticleDetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var articleViewModel: ArticleDetailsViewModel
+    private val commentAdapter = CommentAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +53,7 @@ class ArticleDetailsFragment : Fragment() {
             ArticleDetailsVMFactory(id, Repository(RetrofitInstance.communityApi))
         ).get(ArticleDetailsViewModel::class.java)
 
+        binding.rvComments.adapter = commentAdapter
         setObservers()
     }
 
@@ -79,6 +80,7 @@ class ArticleDetailsFragment : Fragment() {
         articleViewModel.responseArticle.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
                 setDataToViews(it.body()!!)
+                articleViewModel.getComments(it.body()?.responses!!)
             } else {
                 Toast.makeText(
                     requireActivity(),
@@ -87,15 +89,20 @@ class ArticleDetailsFragment : Fragment() {
                 ).show()
             }
         }
-
-        articleViewModel.isLoading.observe(viewLifecycleOwner) {
+        articleViewModel.responseComments.observe(viewLifecycleOwner) {
+            commentAdapter.submitList(it)
+        }
+        articleViewModel.isLoadingArticle.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
+        }
+        articleViewModel.isLoadingComments.observe(viewLifecycleOwner) {
+            binding.rlLoadingComments.isVisible = it
         }
     }
 
     //TODO remove this annotation in the future
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
-    private fun setDataToViews(article: Article) {
+    private fun setDataToViews(article: ArticleDetails) {
         binding.apply {
             val content = article.content
                 .replace("#", Uri.encode("#"))
