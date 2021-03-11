@@ -28,7 +28,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
         editor = sharedPreferences.edit()
 
         if (savedInstanceState == null) {
-            showMainFragment()
+            showArticlesListFragment()
         }
     }
 
@@ -36,7 +36,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
         LoginDialogFragment().show(supportFragmentManager, null)
     }
 
-    override fun showMainFragment() {
+    override fun showArticlesListFragment() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.view_container, ArticlesListFragment())
             .commit()
@@ -55,7 +55,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
             .commit()
     }
 
-    override fun showArticleFragment(articleId: String) {
+    override fun showArticleDetailsFragment(articleId: String) {
         val fragment = ArticleDetailsFragment()
         val bundle = Bundle()
         bundle.putString("articleId", articleId)
@@ -91,10 +91,10 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
 interface HomeActivityListener {
     fun showLoginDialog()
-    fun showMainFragment()
+    fun showArticlesListFragment()
     fun goToBrowser(url: String)
     fun showNotificationsFragment()
-    fun showArticleFragment(articleId: String)
+    fun showArticleDetailsFragment(articleId: String)
     fun saveSignInData(value: SignInData)
     fun getSignInData(): SignInData?
     fun showUserFragment(userId: String)

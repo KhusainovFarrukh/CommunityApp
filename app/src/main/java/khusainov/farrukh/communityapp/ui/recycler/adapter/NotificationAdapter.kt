@@ -10,6 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.model.Notification
 import khusainov.farrukh.communityapp.databinding.ViewholderNotificationBinding
+import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_FOLLOW_USER
+import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_POST
+import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_POST_UPVOTE
+import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_REPLY
 import khusainov.farrukh.communityapp.utils.clicklisteners.NotificationClickListener
 
 class NotificationAdapter(private val notificationClickListener: NotificationClickListener) :
@@ -51,7 +55,7 @@ class NotificationViewHolder(private val binding: ViewholderNotificationBinding)
             }
 
             when (notification.verb) {
-                "post" -> {
+                KEY_NOTIFICATION_POST -> {
                     var tempString: String? = ""
                     if (notification.objects.isNotEmpty()) {
                         tempString = notification.objects[0].title
@@ -68,7 +72,7 @@ class NotificationViewHolder(private val binding: ViewholderNotificationBinding)
                         )
                     )
                 }
-                "post_upvote" -> {
+                KEY_NOTIFICATION_POST_UPVOTE -> {
                     val tempString =
                         notification.objects[0].title ?: notification.objects[0].summary
                     txvNotificationText.text = itemView.context.getString(
@@ -83,7 +87,7 @@ class NotificationViewHolder(private val binding: ViewholderNotificationBinding)
                         )
                     )
                 }
-                "reply" -> {
+                KEY_NOTIFICATION_REPLY -> {
                     txvNotificationText.text = itemView.context.getString(
                         R.string.verb_reply,
                         notification.from[0].profile.name,
@@ -97,7 +101,7 @@ class NotificationViewHolder(private val binding: ViewholderNotificationBinding)
                         )
                     )
                 }
-                "follow_user" -> {
+                KEY_NOTIFICATION_FOLLOW_USER -> {
                     txvNotificationText.text = itemView.context.getString(
                         R.string.verb_follow_user,
                         notification.from[0].profile.name

@@ -23,11 +23,11 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     val isLoading: LiveData<Boolean> = _isLoading
     val responseUser: LiveData<Response<User>> = _responseUser
 
-    fun signIn(signInData: SignInData) {
+    fun signInWithEmail(signInData: SignInData) {
         loginJob = viewModelScope.launch {
             _isLoading.postValue(true)
 
-            _responseUser.postValue(repository.signIn(signInData))
+            _responseUser.postValue(repository.signInWithEmail(signInData))
 
             _isLoading.postValue(false)
         }

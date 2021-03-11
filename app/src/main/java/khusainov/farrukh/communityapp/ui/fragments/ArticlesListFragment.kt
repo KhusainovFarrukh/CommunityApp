@@ -181,12 +181,12 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
     private fun signInAutomatically() {
         if (loginViewModel.responseUser.value == null) {
             activityListener?.getSignInData()?.let {
-                loginViewModel.signIn(it)
+                loginViewModel.signInWithEmail(it)
             }
         }
     }
 
     override fun onArticleClick(articleId: String) {
-        activityListener?.showArticleFragment(articleId)
+        activityListener?.showArticleDetailsFragment(articleId)
     }
 }

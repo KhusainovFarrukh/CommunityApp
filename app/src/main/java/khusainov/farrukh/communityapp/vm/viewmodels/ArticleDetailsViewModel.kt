@@ -31,7 +31,7 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
         viewModelScope.launch {
             _isLoadingArticle.postValue(true)
 
-            _responseArticle.postValue(repository.getArticle(articleId))
+            _responseArticle.postValue(repository.getArticleById(articleId))
 
             _isLoadingArticle.postValue(false)
         }
@@ -56,15 +56,13 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
         }
     }
 
-    fun likeArticle(articleId: String) {
+    fun likeArticleById(articleId: String) {
         viewModelScope.launch {
-            _isLiked.postValue(repository.likeArticleById(articleId))
-        }
-    }
-
-    fun dislikeArticle(articleId: String) {
-        viewModelScope.launch {
-            _isLiked.postValue(repository.dislikeArticleById(articleId))
+            if (_isLiked.value == true) {
+                _isLiked.postValue(repository.removeLikeArticleById(articleId))
+            } else {
+                _isLiked.postValue(repository.likeArticleById(articleId))
+            }
         }
     }
 }

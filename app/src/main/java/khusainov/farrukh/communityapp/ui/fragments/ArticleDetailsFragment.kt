@@ -20,6 +20,7 @@ import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentArticleBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
+import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.vm.factories.ArticleDetailsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleDetailsViewModel
 import org.jsoup.Jsoup
@@ -32,7 +33,6 @@ class ArticleDetailsFragment : Fragment() {
     private var activityListener: HomeActivityListener? = null
     private lateinit var articleViewModel: ArticleDetailsViewModel
     private val commentAdapter = CommentAdapter()
-    private lateinit var id: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,7 +46,7 @@ class ArticleDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        id = arguments?.getString("articleId")
+        val id = arguments?.getString(KEY_ARTICLE_ID)
             ?: throw NullPointerException("There is no article ID")
 
         articleViewModel = ViewModelProvider(
@@ -108,14 +108,11 @@ class ArticleDetailsFragment : Fragment() {
         articleViewModel.isLoadingArticle.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
         }
-        articleViewModel.isLoadingComments.observe(viewLifecycleOwner) {
+        articleViewModel.isLoadingComments.observe(viewLifecycleOwner, {
             binding.rlLoadingComments.isVisible = it
-        }
+        })
         articleViewModel.isLiked.observe(viewLifecycleOwner) {
             if (it) {
-                binding.txvLikeArticle.setOnClickListener {
-                    articleViewModel.dislikeArticle(id)
-                }
                 binding.txvLikeArticle.text = "Liked already"
                 binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.ic_favorite,
@@ -124,9 +121,6 @@ class ArticleDetailsFragment : Fragment() {
                     0
                 )
             } else {
-                binding.txvLikeArticle.setOnClickListener {
-                    articleViewModel.likeArticle(id)
-                }
                 binding.txvLikeArticle.text = "Like"
                 binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.ic_favorite_border,
@@ -142,11 +136,16 @@ class ArticleDetailsFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     private fun setDataToViews(article: ArticleDetails) {
         binding.apply {
+            binding.txvLikeArticle.setOnClickListener {
+                articleViewModel.likeArticleById(article.articleId)
+            }
+            //Replacing '#' from encoded version. Because there is a bug with WebView
             val content = article.content
                 .replace("#", Uri.encode("#"))
 
             val html = Jsoup.parse(content)
 
+            //Changing some html and css attributes of image to make it match display width
             html.select("img")
                 .attr("width", "100%")
             html.body()

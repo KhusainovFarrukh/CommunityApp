@@ -19,6 +19,7 @@ import khusainov.farrukh.communityapp.data.model.User
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
+import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_USER_ID
 import khusainov.farrukh.communityapp.vm.factories.UserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.UserViewModel
 
@@ -44,7 +45,7 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val userId = arguments?.getString("userId")
+        val userId = arguments?.getString(KEY_USER_ID)
             ?: throw NullPointerException("There is no user ID")
 
         userViewModel =
@@ -80,7 +81,7 @@ class UserFragment : Fragment() {
         userViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
         }
-        userViewModel.userResponse.observe(viewLifecycleOwner) {
+        userViewModel.responseUser.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
                 setUserDataToViews(it.body()!!)
             } else {

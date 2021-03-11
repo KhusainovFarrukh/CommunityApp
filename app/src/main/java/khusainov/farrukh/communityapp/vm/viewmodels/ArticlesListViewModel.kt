@@ -26,7 +26,7 @@ class ArticlesListViewModel(repo: Repository) : ViewModel() {
         viewModelScope.launch {
             _isLoadingArticles.postValue(true)
 
-            _responseAllPosts.postValue(repo.getAllPosts(20))
+            _responseAllPosts.postValue(repo.getArticlesList(20))
 
             _isLoadingArticles.postValue(false)
         }

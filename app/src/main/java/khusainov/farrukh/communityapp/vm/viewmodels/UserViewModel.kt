@@ -16,17 +16,17 @@ import retrofit2.Response
 //TODO add userId to constructor
 class UserViewModel(userId: String, repository: Repository) : ViewModel() {
 
-    private val _userResponse = MutableLiveData<Response<User>>()
+    private val _responseUser = MutableLiveData<Response<User>>()
     private val _isLoading = MutableLiveData<Boolean>()
 
-    val userResponse : LiveData<Response<User>> = _userResponse
+    val responseUser : LiveData<Response<User>> = _responseUser
     val isLoading : LiveData<Boolean> = _isLoading
 
     init {
         viewModelScope.launch {
             _isLoading.postValue(true)
 
-            _userResponse.postValue(repository.getUser(userId))
+            _responseUser.postValue(repository.getUserById(userId))
 
             _isLoading.postValue(false)
         }

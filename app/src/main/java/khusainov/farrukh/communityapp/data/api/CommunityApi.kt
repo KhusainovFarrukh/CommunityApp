@@ -27,7 +27,7 @@ interface CommunityApi {
 
     //function to remove a like
     @DELETE("/api/v1/posts/{articleId}/votes")
-    suspend fun dislikeArticleById(
+    suspend fun removeLikeArticleById(
         @Path("articleId") articleId: String
     )
 
@@ -45,13 +45,13 @@ interface CommunityApi {
 
     //function to get last 20 articles
     @GET("api/v1/posts?type=article")
-    suspend fun getAllPosts(
-        @Query("limit") limit: Int
+    suspend fun getArticlesList(
+        @Query("limit") limit: Int = 20
     ): Response<List<Article>>
 
     //function to get topics
     @GET("api/v1/topics")
     suspend fun getTopics(
-        @Query("type") type: String
+        @Query("type") type: String = "collection"
     ): Response<List<Topic>>
 }

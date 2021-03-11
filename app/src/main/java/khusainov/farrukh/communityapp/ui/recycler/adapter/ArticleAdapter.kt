@@ -44,7 +44,7 @@ class ArticleViewHolder(private val binding: ViewholderArticleBinding) :
     fun onBindArticle(article: Article) {
         binding.apply {
             txvTitle.text = article.title?.trim()
-            txvAuthor.text = article.user?.profile?.name ?: "Noma`lum"
+            txvAuthor.text = article.user?.profile?.name ?: "Unknown"
             txvViews.text = article.stats.viewsCount.toString()
             txvLikes.text = article.stats.likesCount.toString()
             txvComments.text = article.stats.commentsCount.toString()

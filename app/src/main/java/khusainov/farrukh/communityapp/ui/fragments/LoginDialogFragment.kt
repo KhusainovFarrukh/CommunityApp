@@ -95,7 +95,7 @@ class LoginDialogFragment : DialogFragment() {
                 binding.etPassword.text.isEmpty() -> binding.etPassword.error =
                     "Parolingizni kiriting"
                 else -> {
-                    loginViewModel.signIn(
+                    loginViewModel.signInWithEmail(
                         SignInData(
                             binding.etEmail.text.toString(),
                             binding.etPassword.text.toString()

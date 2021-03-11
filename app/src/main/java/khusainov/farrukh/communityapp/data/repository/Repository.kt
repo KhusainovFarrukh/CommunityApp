@@ -7,11 +7,11 @@ import khusainov.farrukh.communityapp.data.model.SignInData
 
 class Repository(private val api: CommunityApi) {
 
-    suspend fun getAllPosts(limit: Int) = api.getAllPosts(limit)
+    suspend fun getArticlesList(limit: Int) = api.getArticlesList(limit)
 
-    suspend fun getTopics() = api.getTopics("collection")
+    suspend fun getTopics() = api.getTopics()
 
-    suspend fun getArticle(articleId: String) = api.getArticleById(articleId)
+    suspend fun getArticleById(articleId: String) = api.getArticleById(articleId)
 
     suspend fun getComments(idList: List<String>): List<ArticleDetails> {
         val comments = mutableListOf<ArticleDetails>()
@@ -21,9 +21,9 @@ class Repository(private val api: CommunityApi) {
         return comments
     }
 
-    suspend fun getUser(userId: String) = api.getUserById(userId)
+    suspend fun getUserById(userId: String) = api.getUserById(userId)
 
-    suspend fun signIn(signInData: SignInData) = api.signInWithEmail(signInData)
+    suspend fun signInWithEmail(signInData: SignInData) = api.signInWithEmail(signInData)
 
     suspend fun getNotifications() = api.getNotifications()
 
@@ -37,9 +37,9 @@ class Repository(private val api: CommunityApi) {
         }
     }
 
-    suspend fun dislikeArticleById(articleId: String): Boolean {
+    suspend fun removeLikeArticleById(articleId: String): Boolean {
         return try {
-            api.dislikeArticleById(articleId)
+            api.removeLikeArticleById(articleId)
             false
         } catch (e: Exception) {
             Log.e("ERROR", e.message.toString())
