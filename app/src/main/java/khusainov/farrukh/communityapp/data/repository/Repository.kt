@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.data.repository
 
+import android.util.Log
 import khusainov.farrukh.communityapp.data.api.CommunityApi
-import khusainov.farrukh.communityapp.data.model.Article
 import khusainov.farrukh.communityapp.data.model.ArticleDetails
 import khusainov.farrukh.communityapp.data.model.SignInData
 
@@ -15,11 +15,9 @@ class Repository(private val api: CommunityApi) {
 
     suspend fun getComments(idList: List<String>): List<ArticleDetails> {
         val comments = mutableListOf<ArticleDetails>()
-
         idList.forEach {
             comments.add(api.getArticleById(it).body()!!)
         }
-
         return comments
     }
 
@@ -27,6 +25,25 @@ class Repository(private val api: CommunityApi) {
 
     suspend fun signIn(signInData: SignInData) = api.signInWithEmail(signInData)
 
-    suspend fun getNotifications(cookie1: String, cookie2: String) =
-        api.getNotifications(cookie1, cookie2, 50)
+    suspend fun getNotifications() = api.getNotifications()
+
+    suspend fun likeArticleById(articleId: String): Boolean {
+        return try {
+            api.likeArticleById(articleId)
+            true
+        } catch (e: Exception) {
+            Log.e("ERROR", e.message.toString())
+            false
+        }
+    }
+
+    suspend fun dislikeArticleById(articleId: String): Boolean {
+        return try {
+            api.dislikeArticleById(articleId)
+            false
+        } catch (e: Exception) {
+            Log.e("ERROR", e.message.toString())
+            true
+        }
+    }
 }

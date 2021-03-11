@@ -50,7 +50,7 @@
         android:drawablePadding="4dp"
         android:text="0"
         android:textColor="@color/black"
-        app:drawableStartCompat="@drawable/ic_favorite"
+        app:drawableStartCompat="@drawable/ic_favorite_border"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/txv_comment"
         app:layout_constraintTop_toBottomOf="@+id/txv_comment" />

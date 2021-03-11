@@ -6,33 +6,50 @@ import retrofit2.http.*
 
 interface CommunityApi {
 
+    //function to get a article
     @GET("api/v1/posts/{articleId}")
     suspend fun getArticleById(
         @Path("articleId") articleId: String
     ): Response<ArticleDetails>
 
+    //function to get a user
     @GET("api/v1/users/{userId}")
     suspend fun getUserById(
         @Path("userId") userId: String
-    ) : Response<User>
+    ): Response<User>
 
+    //function to like a article
+    @POST("/api/v1/posts/{articleId}/votes")
+    suspend fun likeArticleById(
+        @Path("articleId") articleId: String,
+        @Body like: LikeValue = LikeValue(1)
+    )
+
+    //function to remove a like
+    @DELETE("/api/v1/posts/{articleId}/votes")
+    suspend fun dislikeArticleById(
+        @Path("articleId") articleId: String
+    )
+
+    //function to sign in user
     @POST("api/v1/sessions")
     suspend fun signInWithEmail(
         @Body signInData: SignInData,
     ): Response<User>
 
+    //function to get notifications of signed user
     @GET("api/v1/notifications")
     suspend fun getNotifications(
-        @Header("Cookie") cookie1: String,
-        @Header("Cookie") cookie2: String,
-        @Query("limit") limit: Int
+        @Query("limit") limit: Int = 50
     ): Response<List<Notification>>
 
+    //function to get last 20 articles
     @GET("api/v1/posts?type=article")
     suspend fun getAllPosts(
         @Query("limit") limit: Int
     ): Response<List<Article>>
 
+    //function to get topics
     @GET("api/v1/topics")
     suspend fun getTopics(
         @Query("type") type: String

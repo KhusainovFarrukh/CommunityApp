@@ -108,7 +108,7 @@
                 android:gravity="center"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                app:drawableStartCompat="@drawable/ic_favorite"
+                app:drawableStartCompat="@drawable/ic_favorite_border"
                 app:drawableTint="@color/white"
                 app:layout_constraintEnd_toStartOf="@id/txv_views"
                 app:layout_constraintTop_toTopOf="@id/gl_top"

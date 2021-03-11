@@ -1,5 +1,6 @@
 package khusainov.farrukh.communityapp.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Html
@@ -49,10 +50,8 @@ class UserFragment : Fragment() {
         userViewModel =
             ViewModelProvider(
                 this,
-                UserVMFactory(userId, Repository(RetrofitInstance.communityApi))
-            ).get(
-                UserViewModel::class.java
-            )
+                UserVMFactory(userId, Repository(RetrofitInstance(requireContext()).communityApi))
+            ).get(UserViewModel::class.java)
 
         setObservers()
         setClickListeners()
@@ -94,6 +93,7 @@ class UserFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setUserDataToViews(user: User) {
         binding.apply {
             txvName.text = user.profileInUser.name

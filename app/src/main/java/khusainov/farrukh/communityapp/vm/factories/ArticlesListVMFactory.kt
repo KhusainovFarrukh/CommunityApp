@@ -3,15 +3,13 @@ package khusainov.farrukh.communityapp.vm.factories
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import khusainov.farrukh.communityapp.data.repository.Repository
-import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel
+import khusainov.farrukh.communityapp.vm.viewmodels.ArticlesListViewModel
 
 /**
- *Created by FarrukhKhusainov on 3/4/21 11:02 PM
+ *Created by FarrukhKhusainov on 3/11/21 1:48 AM
  **/
-class NotificationsVMFactory(
-    private val repository: Repository
-) : ViewModelProvider.Factory {
+class ArticlesListVMFactory(private val repository: Repository) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return NotificationsViewModel(repository) as T
+        return ArticlesListViewModel(repository) as T
     }
 }

@@ -27,6 +27,8 @@ data class ArticleDetails(
     @SerializedName("counts")
     val stats: StatsInArticle,
     val responses: List<String>?,
+    @SerializedName("upvotes")
+    val likes: List<UserModel>,
     val content: String,
     val user: UserModel?,
     val url: String,

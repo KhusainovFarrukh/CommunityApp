@@ -15,7 +15,6 @@ import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.NotificationAdapter
-import khusainov.farrukh.communityapp.utils.Constants
 import khusainov.farrukh.communityapp.utils.clicklisteners.NotificationClickListener
 import khusainov.farrukh.communityapp.vm.factories.NotificationsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel
@@ -40,16 +39,9 @@ class NotificationsFragment : Fragment(), NotificationClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val cookies = activityListener?.getCookies()!!
-
-        val cookiesList = mutableListOf<String>()
-
-        cookiesList[0] = Constants.REMEMBER_ME_KEY + "=" + cookies[Constants.REMEMBER_ME_KEY]
-        cookiesList[1] = Constants.SESSION_ID_KEY + "=" + cookies[Constants.SESSION_ID_KEY]
-
         notificationsViewModel = ViewModelProvider(
             this,
-            NotificationsVMFactory(cookiesList, Repository(RetrofitInstance.communityApi))
+            NotificationsVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
         ).get(NotificationsViewModel::class.java)
 
         initRecyclerView()
@@ -87,7 +79,7 @@ class NotificationsFragment : Fragment(), NotificationClickListener {
     }
 
     private fun setObservers() {
-        notificationsViewModel.responseNotification.observe(viewLifecycleOwner, { responseList ->
+        notificationsViewModel.responseNotification.observe(viewLifecycleOwner) { responseList ->
             if (responseList.isSuccessful) {
                 if (responseList.body()?.isNotEmpty() == true) {
                     notificationAdapter.submitList(responseList.body())
@@ -105,11 +97,10 @@ class NotificationsFragment : Fragment(), NotificationClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
 
-        })
-
-        notificationsViewModel.isLoading.observe(viewLifecycleOwner, {
+        notificationsViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.pbLoadingNotification.isVisible = it
-        })
+        }
     }
 }

@@ -212,7 +212,7 @@
                             android:gravity="center_vertical"
                             android:lines="1"
                             android:textSize="10sp"
-                            app:drawableStartCompat="@drawable/ic_favorite"
+                            app:drawableStartCompat="@drawable/ic_favorite_border"
                             tools:ignore="SmallSp"
                             tools:text="374 likes" />
 
@@ -252,10 +252,30 @@
                     android:overScrollMode="never"
                     android:requiresFadingEdge="vertical"
                     android:scrollbars="none"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/gl_end"
                     app:layout_constraintStart_toStartOf="@id/gl_start"
                     app:layout_constraintTop_toBottomOf="@+id/txv_share" />
+
+                <TextView
+                    android:id="@+id/txv_like_article"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_et_login"
+                    android:drawablePadding="4dp"
+                    android:textColor="@color/purple_700"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="4dp"
+                    android:text="Like"
+                    android:textAllCaps="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/gl_start"
+                    app:layout_constraintTop_toBottomOf="@id/wv_article"
+                    app:drawableStartCompat="@drawable/ic_favorite_border" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -291,6 +311,15 @@
                 android:overScrollMode="never"
                 android:scrollbars="none"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            <TextView
+                android:id="@+id/txv_no_comments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="There is no comments yet..."
+                android:textColor="@color/black"
+                android:visibility="gone" />
 
             <RelativeLayout
                 android:id="@+id/rl_loading_comments"

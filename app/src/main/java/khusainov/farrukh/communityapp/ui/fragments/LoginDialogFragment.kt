@@ -24,7 +24,7 @@ class LoginDialogFragment : DialogFragment() {
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private val loginViewModel: LoginViewModel by activityViewModels {
-        LoginVMFactory(Repository(RetrofitInstance.communityApi))
+        LoginVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
     }
 
     override fun onCreateView(
@@ -107,7 +107,7 @@ class LoginDialogFragment : DialogFragment() {
     }
 
     private fun setObservers() {
-        loginViewModel.responseUser.observe(this, { response ->
+        loginViewModel.responseUser.observe(viewLifecycleOwner) { response ->
             if (response.isSuccessful) {
 
                 activityListener?.saveSignInData(
@@ -129,11 +129,11 @@ class LoginDialogFragment : DialogFragment() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        })
+        }
 
-        loginViewModel.isLoading.observe(this, {
+        loginViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.btnLogin.isEnabled = !it
             binding.pbLoading.isVisible = it
-        })
+        }
     }
 }

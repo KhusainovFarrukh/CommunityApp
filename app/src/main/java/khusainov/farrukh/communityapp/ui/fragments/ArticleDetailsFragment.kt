@@ -32,6 +32,7 @@ class ArticleDetailsFragment : Fragment() {
     private var activityListener: HomeActivityListener? = null
     private lateinit var articleViewModel: ArticleDetailsViewModel
     private val commentAdapter = CommentAdapter()
+    private lateinit var id: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,12 +46,15 @@ class ArticleDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val id = arguments?.getString("articleId")
+        id = arguments?.getString("articleId")
             ?: throw NullPointerException("There is no article ID")
 
         articleViewModel = ViewModelProvider(
             this,
-            ArticleDetailsVMFactory(id, Repository(RetrofitInstance.communityApi))
+            ArticleDetailsVMFactory(
+                id,
+                Repository(RetrofitInstance(requireContext()).communityApi)
+            )
         ).get(ArticleDetailsViewModel::class.java)
 
         binding.rvComments.adapter = commentAdapter
@@ -77,26 +81,60 @@ class ArticleDetailsFragment : Fragment() {
     }
 
     private fun setObservers() {
-        articleViewModel.responseArticle.observe(viewLifecycleOwner) {
-            if (it.isSuccessful) {
-                setDataToViews(it.body()!!)
-                articleViewModel.getComments(it.body()?.responses!!)
+        articleViewModel.responseArticle.observe(viewLifecycleOwner) { response ->
+            if (response.isSuccessful) {
+                articleViewModel.getComments(response.body()?.responses!!)
+                articleViewModel.isLiked(
+                    response.body()!!.user?.userId ?: "",
+                    response.body()?.likes!!
+                )
+                setDataToViews(response.body()!!)
             } else {
                 Toast.makeText(
                     requireActivity(),
-                    "${it.code()}: ${it.errorBody()}",
+                    "${response.code()}: ${response.errorBody()}",
                     Toast.LENGTH_LONG
                 ).show()
             }
         }
         articleViewModel.responseComments.observe(viewLifecycleOwner) {
-            commentAdapter.submitList(it)
+            if (it.isNotEmpty()) {
+                commentAdapter.submitList(it)
+                binding.txvNoComments.isVisible = false
+            } else {
+                binding.txvNoComments.isVisible = true
+            }
         }
         articleViewModel.isLoadingArticle.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
         }
         articleViewModel.isLoadingComments.observe(viewLifecycleOwner) {
             binding.rlLoadingComments.isVisible = it
+        }
+        articleViewModel.isLiked.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.txvLikeArticle.setOnClickListener {
+                    articleViewModel.dislikeArticle(id)
+                }
+                binding.txvLikeArticle.text = "Liked already"
+                binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_favorite,
+                    0,
+                    0,
+                    0
+                )
+            } else {
+                binding.txvLikeArticle.setOnClickListener {
+                    articleViewModel.likeArticle(id)
+                }
+                binding.txvLikeArticle.text = "Like"
+                binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_favorite_border,
+                    0,
+                    0,
+                    0
+                )
+            }
         }
     }
 

@@ -14,13 +14,11 @@ import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
 
 class ArticleAdapter(private val articleClickListener: ArticleClickListener) :
     ListAdapter<Article, ArticleViewHolder>(object : DiffUtil.ItemCallback<Article>() {
-        override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return oldItem.articleId == newItem.articleId
-        }
+        override fun areItemsTheSame(oldItem: Article, newItem: Article) =
+            oldItem.articleId == newItem.articleId
 
-        override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: Article, newItem: Article) =
+            oldItem == newItem
     }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         return ArticleViewHolder(

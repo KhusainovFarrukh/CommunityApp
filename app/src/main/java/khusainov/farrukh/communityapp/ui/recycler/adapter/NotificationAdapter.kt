@@ -15,13 +15,11 @@ import khusainov.farrukh.communityapp.utils.clicklisteners.NotificationClickList
 class NotificationAdapter(private val notificationClickListener: NotificationClickListener) :
     ListAdapter<Notification, NotificationViewHolder>(object :
         DiffUtil.ItemCallback<Notification>() {
-        override fun areItemsTheSame(oldItem: Notification, newItem: Notification): Boolean {
-            return oldItem.notificationId == newItem.notificationId
-        }
+        override fun areItemsTheSame(oldItem: Notification, newItem: Notification) =
+            oldItem.notificationId == newItem.notificationId
 
-        override fun areContentsTheSame(oldItem: Notification, newItem: Notification): Boolean {
-            return oldItem == newItem
-        }
+        override fun areContentsTheSame(oldItem: Notification, newItem: Notification) =
+            oldItem == newItem
     }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
         return NotificationViewHolder(
@@ -60,7 +58,7 @@ class NotificationViewHolder(private val binding: ViewholderNotificationBinding)
                     }
                     txvNotificationText.text = itemView.context.getString(
                         R.string.verb_post,
-                        notification.from[0].profile.name,
+                        if (notification.from.isNotEmpty()) notification.from[0].profile.name else "Unknown",
                         tempString
                     )
                     imvIcon.setImageDrawable(

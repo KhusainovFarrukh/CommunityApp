@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.data.model.ArticleDetails
+import khusainov.farrukh.communityapp.data.model.UserModel
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -18,11 +19,13 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
     private val _isLoadingComments = MutableLiveData<Boolean>()
     private val _responseArticle = MutableLiveData<Response<ArticleDetails>>()
     private val _responseComments = MutableLiveData<List<ArticleDetails>>()
+    private val _isLiked = MutableLiveData(false)
 
     val isLoadingArticle: LiveData<Boolean> = _isLoadingArticle
     val isLoadingComments: LiveData<Boolean> = _isLoadingComments
     val responseArticle: LiveData<Response<ArticleDetails>> = _responseArticle
     val responseComments: LiveData<List<ArticleDetails>> = _responseComments
+    val isLiked: LiveData<Boolean> = _isLiked
 
     init {
         viewModelScope.launch {
@@ -41,6 +44,27 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
             _responseComments.postValue(repository.getComments(idList))
 
             _isLoadingComments.postValue(false)
+        }
+    }
+
+    fun isLiked(id: String, idList: List<UserModel>) {
+        idList.forEach {
+            if (it.userId == id) {
+                _isLiked.postValue(true)
+                return@forEach
+            }
+        }
+    }
+
+    fun likeArticle(articleId: String) {
+        viewModelScope.launch {
+            _isLiked.postValue(repository.likeArticleById(articleId))
+        }
+    }
+
+    fun dislikeArticle(articleId: String) {
+        viewModelScope.launch {
+            _isLiked.postValue(repository.dislikeArticleById(articleId))
         }
     }
 }

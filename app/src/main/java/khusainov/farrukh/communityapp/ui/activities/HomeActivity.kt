@@ -1,17 +1,18 @@
 package khusainov.farrukh.communityapp.ui.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
 import khusainov.farrukh.communityapp.data.model.SignInData
+import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
 import khusainov.farrukh.communityapp.ui.fragments.*
 
+@SuppressLint("CommitPrefEdits")
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
     private lateinit var sharedPreferences: SharedPreferences
@@ -76,18 +77,6 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
         )
     }
 
-    override fun saveCookies(value: Map<String, String>) {
-        editor.putString("cookies", Gson().toJson(value)).apply()
-    }
-
-    //TODO change it
-    override fun getCookies(): Map<String, String>? {
-        return Gson().fromJson(
-            sharedPreferences.getString("cookies", null),
-            object : TypeToken<Map<String, String>>() {}.type
-        )
-    }
-
     override fun showUserFragment(userId: String) {
         val fragment = UserFragment()
         val bundle = Bundle()
@@ -96,7 +85,8 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
         supportFragmentManager.beginTransaction()
             .replace(R.id.view_container, fragment)
             .addToBackStack(null)
-            .commit()    }
+            .commit()
+    }
 }
 
 interface HomeActivityListener {
@@ -107,7 +97,5 @@ interface HomeActivityListener {
     fun showArticleFragment(articleId: String)
     fun saveSignInData(value: SignInData)
     fun getSignInData(): SignInData?
-    fun saveCookies(value: Map<String, String>)
-    fun getCookies(): Map<String, String>?
     fun showUserFragment(userId: String)
 }

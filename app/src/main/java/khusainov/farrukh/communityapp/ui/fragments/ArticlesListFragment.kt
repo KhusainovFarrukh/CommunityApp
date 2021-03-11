@@ -2,7 +2,6 @@ package khusainov.farrukh.communityapp.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,12 +22,11 @@ import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.TopicAdapter
-import khusainov.farrukh.communityapp.utils.Constants.Companion.COOKIES_KEY
 import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
+import khusainov.farrukh.communityapp.vm.factories.ArticlesListVMFactory
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticlesListViewModel
 import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
-import okhttp3.Cookie
 
 class ArticlesListFragment : Fragment(), ArticleClickListener {
 
@@ -39,7 +37,7 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
     private val topicAdapter = TopicAdapter()
     private lateinit var articlesListViewModel: ArticlesListViewModel
     private val loginViewModel: LoginViewModel by activityViewModels {
-        LoginVMFactory(Repository(RetrofitInstance.communityApi))
+        LoginVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
     }
 
     override fun onCreateView(
@@ -54,17 +52,15 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        articlesListViewModel = ViewModelProvider(this).get(ArticlesListViewModel::class.java)
+        articlesListViewModel = ViewModelProvider(
+            this,
+            ArticlesListVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
+        ).get(ArticlesListViewModel::class.java)
 
         initRecyclerView()
         setClickListeners()
         setObservers()
-
-        if (loginViewModel.responseUser.value == null) {
-            activityListener?.getSignInData()?.let {
-                loginViewModel.signIn(it)
-            }
-        }
+        signInAutomatically()
     }
 
     override fun onDestroyView() {
@@ -87,33 +83,9 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
     }
 
     private fun setObservers() {
-        loginViewModel.responseUser.observe(viewLifecycleOwner, { response ->
+        loginViewModel.responseUser.observe(viewLifecycleOwner) { response ->
             if (response.isSuccessful) {
-
-                if (response.raw().headers(COOKIES_KEY).isNotEmpty()) {
-
-                    val cookies = HashMap<String, String>()
-
-                    response.raw().headers(COOKIES_KEY).forEach {
-                        val cookie = Cookie.Companion.parse(
-                            response.raw().request.url,
-                            it
-                        )!!
-                        cookies[cookie.name] = cookie.value
-                    }
-
-                    activityListener?.saveCookies(cookies)
-
-                } else {
-                    Toast.makeText(
-                        context,
-                        "There is no cookies",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
                 setUserToViews(response.body()!!)
-
             } else {
                 Toast.makeText(
                     context,
@@ -121,9 +93,9 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-        })
+        }
 
-        articlesListViewModel.responseAllPosts.observe(viewLifecycleOwner, { responseList ->
+        articlesListViewModel.responseAllPosts.observe(viewLifecycleOwner) { responseList ->
             if (responseList.isSuccessful) {
                 if (responseList.body()?.isNotEmpty() == true) {
                     articleAdapter.submitList(responseList.body())
@@ -141,14 +113,12 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+        }
 
-        })
-
-        articlesListViewModel.responseTopics.observe(viewLifecycleOwner, { responseTopics ->
+        articlesListViewModel.responseTopics.observe(viewLifecycleOwner) { responseTopics ->
             if (responseTopics.isSuccessful) {
                 if (responseTopics.body()?.isNotEmpty() == true) {
                     topicAdapter.submitList(responseTopics.body())
-                    Log.wtf("submitList:", responseTopics.body()?.toString())
                 } else {
                     Toast.makeText(
                         context,
@@ -163,8 +133,7 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-
-        })
+        }
 
         articlesListViewModel.isLoadingArticles.observe(viewLifecycleOwner) {
             binding.pbLoadingArticles.isVisible = it
@@ -207,6 +176,14 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
         binding.rvTopics.adapter = topicAdapter
         binding.rvPosts.setHasFixedSize(true)
         binding.rvPosts.adapter = articleAdapter
+    }
+
+    private fun signInAutomatically() {
+        if (loginViewModel.responseUser.value == null) {
+            activityListener?.getSignInData()?.let {
+                loginViewModel.signIn(it)
+            }
+        }
     }
 
     override fun onArticleClick(articleId: String) {

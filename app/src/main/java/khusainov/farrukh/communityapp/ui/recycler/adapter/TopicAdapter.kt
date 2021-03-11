@@ -11,13 +11,11 @@ import khusainov.farrukh.communityapp.data.model.Topic
 import khusainov.farrukh.communityapp.databinding.ViewholderTopicBinding
 
 class TopicAdapter : ListAdapter<Topic, TopicViewHolder>(object : DiffUtil.ItemCallback<Topic>() {
-    override fun areItemsTheSame(oldItem: Topic, newItem: Topic): Boolean {
-        return oldItem.topicId == newItem.topicId
-    }
+    override fun areItemsTheSame(oldItem: Topic, newItem: Topic) =
+        oldItem.topicId == newItem.topicId
 
-    override fun areContentsTheSame(oldItem: Topic, newItem: Topic): Boolean {
-        return oldItem == newItem
-    }
+    override fun areContentsTheSame(oldItem: Topic, newItem: Topic) =
+        oldItem == newItem
 }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopicViewHolder {
         return TopicViewHolder(
