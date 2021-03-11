@@ -85,6 +85,7 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
     private fun setObservers() {
         loginViewModel.responseUser.observe(viewLifecycleOwner) { response ->
             if (response.isSuccessful) {
+                activityListener?.saveUserId(response.body()!!.id)
                 setUserToViews(response.body()!!)
             } else {
                 Toast.makeText(

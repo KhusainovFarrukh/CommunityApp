@@ -5,12 +5,14 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.model.SignInData
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
 import khusainov.farrukh.communityapp.ui.fragments.*
+import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_USER_ID
 
 @SuppressLint("CommitPrefEdits")
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
@@ -77,10 +79,16 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
         )
     }
 
+    override fun saveUserId(userId: String) {
+        editor.putString(KEY_USER_ID, userId).commit()
+    }
+
+    override fun getUserId() = sharedPreferences.getString(KEY_USER_ID, "") ?: ""
+
     override fun showUserFragment(userId: String) {
         val fragment = UserFragment()
         val bundle = Bundle()
-        bundle.putString("userId", userId)
+        bundle.putString(KEY_USER_ID, userId)
         fragment.arguments = bundle
         supportFragmentManager.beginTransaction()
             .replace(R.id.view_container, fragment)
@@ -97,5 +105,7 @@ interface HomeActivityListener {
     fun showArticleDetailsFragment(articleId: String)
     fun saveSignInData(value: SignInData)
     fun getSignInData(): SignInData?
+    fun saveUserId(userId: String)
+    fun getUserId(): String
     fun showUserFragment(userId: String)
 }

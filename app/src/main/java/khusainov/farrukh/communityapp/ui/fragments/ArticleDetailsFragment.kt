@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,18 +22,19 @@ import khusainov.farrukh.communityapp.databinding.FragmentArticleBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_ARTICLE_ID
+import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickInterface
 import khusainov.farrukh.communityapp.vm.factories.ArticleDetailsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleDetailsViewModel
 import org.jsoup.Jsoup
 import java.util.*
 
-class ArticleDetailsFragment : Fragment() {
+class ArticleDetailsFragment : Fragment(), CommentClickInterface {
 
     private var _binding: FragmentArticleBinding? = null
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var articleViewModel: ArticleDetailsViewModel
-    private val commentAdapter = CommentAdapter()
+    private val commentAdapter = CommentAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -85,7 +87,7 @@ class ArticleDetailsFragment : Fragment() {
             if (response.isSuccessful) {
                 articleViewModel.getComments(response.body()?.responses!!)
                 articleViewModel.isLiked(
-                    response.body()!!.user?.userId ?: "",
+                    activityListener?.getUserId() ?: "",
                     response.body()?.likes!!
                 )
                 setDataToViews(response.body()!!)
@@ -201,4 +203,18 @@ class ArticleDetailsFragment : Fragment() {
             }
         }
     }
+
+    override fun onLikeCommentClick(commentId: String, isLiked: Boolean) {
+        articleViewModel.likeCommentById(commentId, isLiked)
+    }
+
+    override fun onCommentAuthorClick(userId: String) {
+        activityListener?.showUserFragment(userId)
+    }
+
+    override fun onReplyCommentClick() {
+        //TODO implement it
+    }
+
+    override fun getUserId() = activityListener?.getUserId() ?: ""
 }

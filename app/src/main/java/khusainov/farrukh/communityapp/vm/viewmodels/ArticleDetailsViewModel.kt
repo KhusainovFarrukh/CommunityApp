@@ -65,4 +65,14 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
             }
         }
     }
+
+    fun likeCommentById(commentId: String, isLiked: Boolean) {
+        viewModelScope.launch {
+            if (isLiked) {
+                repository.removeLikeArticleById(commentId)
+            } else {
+                repository.likeArticleById(commentId)
+            }
+        }
+    }
 }
