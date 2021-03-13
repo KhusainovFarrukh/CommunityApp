@@ -1,6 +1,7 @@
 package khusainov.farrukh.communityapp.ui.recycler.adapter
 
 import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -16,14 +17,29 @@ import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickInterface
 /**
  *Created by FarrukhKhusainov on 3/8/21 9:59 PM
  **/
+
+//TODO remove it
+@Suppress("DEPRECATION")
 class CommentAdapter(private val commentClickInterface: CommentClickInterface) :
     ListAdapter<ArticleDetails, CommentAdapter.CommentViewHolder>(object :
         DiffUtil.ItemCallback<ArticleDetails>() {
-        override fun areItemsTheSame(oldItem: ArticleDetails, newItem: ArticleDetails) =
-            oldItem.articleId == newItem.articleId
+        override fun getChangePayload(oldItem: ArticleDetails, newItem: ArticleDetails) = false
 
-        override fun areContentsTheSame(oldItem: ArticleDetails, newItem: ArticleDetails) =
-            oldItem == newItem
+        override fun areItemsTheSame(oldItem: ArticleDetails, newItem: ArticleDetails): Boolean {
+            Log.wtf(
+                "${oldItem.articleId} and ${newItem.articleId} itemSame:",
+                (oldItem.articleId == newItem.articleId).toString()
+            )
+            return oldItem.articleId == newItem.articleId
+        }
+
+        override fun areContentsTheSame(oldItem: ArticleDetails, newItem: ArticleDetails): Boolean {
+            Log.wtf(
+                "${oldItem.articleId} and ${newItem.articleId} contentSame:",
+                (oldItem == newItem).toString()
+            )
+            return oldItem == newItem
+        }
     }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(
@@ -52,22 +68,21 @@ class CommentAdapter(private val commentClickInterface: CommentClickInterface) :
                 txvName.setOnClickListener {
                     commentClickInterface.onCommentAuthorClick(comment.user?.userId ?: "")
                 }
-                comment.likes.forEach {
-                    if (it.userId == commentClickInterface.getUserId()) {
-                        txvLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite, 0, 0, 0)
-                        txvLike.setOnClickListener {
-                            commentClickInterface.onLikeCommentClick(comment.articleId, true)
-                        }
-                    } else {
-                        txvLike.setCompoundDrawablesWithIntrinsicBounds(
-                            R.drawable.ic_favorite_border,
-                            0,
-                            0,
-                            0
-                        )
-                        txvLike.setOnClickListener {
-                            commentClickInterface.onLikeCommentClick(comment.articleId, false)
-                        }
+
+                if (comment.isLiked(commentClickInterface.getUserId())) {
+                    txvLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite, 0, 0, 0)
+                    txvLike.setOnClickListener {
+                        commentClickInterface.onLikeCommentClick(comment.articleId, true)
+                    }
+                } else {
+                    txvLike.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_favorite_border,
+                        0,
+                        0,
+                        0
+                    )
+                    txvLike.setOnClickListener {
+                        commentClickInterface.onLikeCommentClick(comment.articleId, false)
                     }
                 }
             }

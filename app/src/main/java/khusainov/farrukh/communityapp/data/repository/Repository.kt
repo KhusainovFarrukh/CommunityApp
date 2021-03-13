@@ -27,23 +27,21 @@ class Repository(private val api: CommunityApi) {
 
     suspend fun getNotifications() = api.getNotifications()
 
-    suspend fun likeArticleById(articleId: String): Boolean {
+    suspend fun likeArticleById(articleId: String): ArticleDetails {
         return try {
-            api.likeArticleById(articleId)
-            true
+            api.likeArticleById(articleId).body()!!
         } catch (e: Exception) {
-            Log.e("ERROR", e.message.toString())
-            false
+            Log.wtf("ERROR IN REPO", e.message)
+            throw Exception("WTF")
         }
     }
 
-    suspend fun removeLikeArticleById(articleId: String): Boolean {
+    suspend fun removeLikeArticleById(articleId: String): ArticleDetails {
         return try {
-            api.removeLikeArticleById(articleId)
-            false
+            api.removeLikeArticleById(articleId).body()!!
         } catch (e: Exception) {
-            Log.e("ERROR", e.message.toString())
-            true
+            Log.wtf("ERROR IN REPO", e.message)
+            throw Exception("WTF")
         }
     }
 }

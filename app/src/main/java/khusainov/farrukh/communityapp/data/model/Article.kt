@@ -33,8 +33,17 @@ data class ArticleDetails(
     val user: UserModel?,
     val url: String,
     val summary: String,
-    val topics: List<Topic>
-)
+    val topics: List<Topic>,
+) {
+    fun isLiked(userId: String): Boolean {
+        likes.forEach {
+            if (it.userId == userId) {
+                return true
+            }
+        }
+        return false
+    }
+}
 
 data class ImagesInArticle(
     @SerializedName("src")

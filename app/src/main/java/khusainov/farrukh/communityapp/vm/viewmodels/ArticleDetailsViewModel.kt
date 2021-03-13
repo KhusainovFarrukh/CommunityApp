@@ -1,5 +1,6 @@
 package khusainov.farrukh.communityapp.vm.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,13 +19,13 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
     private val _isLoadingArticle = MutableLiveData<Boolean>()
     private val _isLoadingComments = MutableLiveData<Boolean>()
     private val _responseArticle = MutableLiveData<Response<ArticleDetails>>()
-    private val _responseComments = MutableLiveData<List<ArticleDetails>>()
+    private val _responseComments = MutableLiveData<MutableList<ArticleDetails>>()
     private val _isLiked = MutableLiveData(false)
 
     val isLoadingArticle: LiveData<Boolean> = _isLoadingArticle
     val isLoadingComments: LiveData<Boolean> = _isLoadingComments
     val responseArticle: LiveData<Response<ArticleDetails>> = _responseArticle
-    val responseComments: LiveData<List<ArticleDetails>> = _responseComments
+    val responseComments: MutableLiveData<MutableList<ArticleDetails>> = _responseComments
     val isLiked: LiveData<Boolean> = _isLiked
 
     init {
@@ -41,7 +42,7 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
         viewModelScope.launch {
             _isLoadingComments.postValue(true)
 
-            _responseComments.postValue(repository.getComments(idList))
+            _responseComments.postValue(repository.getComments(idList) as MutableList<ArticleDetails>?)
 
             _isLoadingComments.postValue(false)
         }
@@ -58,21 +59,34 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
 
     fun likeArticleById(articleId: String) {
         viewModelScope.launch {
-            if (_isLiked.value == true) {
-                _isLiked.postValue(repository.removeLikeArticleById(articleId))
-            } else {
-                _isLiked.postValue(repository.likeArticleById(articleId))
+            try {
+                if (_isLiked.value == true) {
+                    repository.removeLikeArticleById(articleId)
+                    _isLiked.postValue(false)
+                } else {
+                    repository.likeArticleById(articleId)
+                    _isLiked.postValue(true)
+                }
+            } catch (e: Exception) {
+                Log.wtf("error", e.message)
             }
         }
     }
 
     fun likeCommentById(commentId: String, isLiked: Boolean) {
         viewModelScope.launch {
-            if (isLiked) {
-                repository.removeLikeArticleById(commentId)
-            } else {
-                repository.likeArticleById(commentId)
+            _responseComments.value?.forEach {
+                if (it.articleId == commentId) {
+                    if (isLiked) {
+                        _responseComments.value!![_responseComments.value!!.indexOf(it)] =
+                            repository.removeLikeArticleById(commentId)
+                    } else {
+                        _responseComments.value!![_responseComments.value!!.indexOf(it)] =
+                            repository.likeArticleById(commentId)
+                    }
+                }
             }
+            _responseComments.postValue(_responseComments.value)
         }
     }
 }

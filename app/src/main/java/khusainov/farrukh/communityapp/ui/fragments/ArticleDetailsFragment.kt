@@ -101,7 +101,8 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
         }
         articleViewModel.responseComments.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                commentAdapter.submitList(it)
+                Log.wtf("changed UI", "someId")
+                commentAdapter.submitList(it.toMutableList())
                 binding.txvNoComments.isVisible = false
             } else {
                 binding.txvNoComments.isVisible = true

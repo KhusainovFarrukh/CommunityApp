@@ -23,13 +23,13 @@ interface CommunityApi {
     suspend fun likeArticleById(
         @Path("articleId") articleId: String,
         @Body like: LikeValue = LikeValue(1)
-    )
+    ): Response<ArticleDetails>
 
     //function to remove a like
     @DELETE("/api/v1/posts/{articleId}/votes")
     suspend fun removeLikeArticleById(
         @Path("articleId") articleId: String
-    )
+    ): Response<ArticleDetails>
 
     //function to sign in user
     @POST("api/v1/sessions")
