@@ -6,6 +6,12 @@ import retrofit2.http.*
 
 interface CommunityApi {
 
+    //function to add a comment (as a post)
+    @POST("api/v1/posts")
+    suspend fun addComment(
+        @Body comment: SampleAddComment
+    ): Response<ArticleDetailsWithResponses>
+
     //function to get a article
     @GET("api/v1/posts/{articleId}")
     suspend fun getArticleById(
@@ -16,7 +22,7 @@ interface CommunityApi {
     @GET("api/v1/posts/{articleId}/responses")
     suspend fun getCommentsOfArticle(
         @Path("articleId") articleId: String
-    ): Response<List<ArticleDetails>>
+    ): Response<List<ArticleDetailsWithResponses>>
 
     //function to get a user
     @GET("api/v1/users/{userId}")
@@ -25,17 +31,17 @@ interface CommunityApi {
     ): Response<User>
 
     //function to like a article
-    @POST("/api/v1/posts/{articleId}/votes")
+    @POST("api/v1/posts/{articleId}/votes")
     suspend fun likeArticleById(
         @Path("articleId") articleId: String,
         @Body like: LikeValue = LikeValue(1)
-    ): Response<ArticleDetails>
+    ): Response<ArticleDetailsWithResponses>
 
     //function to remove a like
-    @DELETE("/api/v1/posts/{articleId}/votes")
+    @DELETE("api/v1/posts/{articleId}/votes")
     suspend fun removeLikeArticleById(
         @Path("articleId") articleId: String
-    ): Response<ArticleDetails>
+    ): Response<ArticleDetailsWithResponses>
 
     //function to sign in user
     @POST("api/v1/sessions")

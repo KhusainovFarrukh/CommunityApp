@@ -16,9 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="16dp"
-            android:elevation="1dp"
-            android:translationZ="4dp"
-            app:cardCornerRadius="20dp">
+            android:translationZ="8dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -148,15 +148,13 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_btn_login"
                     android:drawablePadding="4dp"
-                    android:drawableTint="@color/white"
                     android:gravity="center_vertical"
-                    android:paddingStart="8dp"
-                    android:paddingTop="4dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="4dp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
                     android:text="Share"
                     android:textColor="@color/white"
                     app:drawableStartCompat="@drawable/ic_share"
+                    app:drawableTint="@color/white"
                     app:layout_constraintEnd_toStartOf="@+id/gl_end"
                     app:layout_constraintTop_toTopOf="@+id/slv_stats" />
 
@@ -264,7 +262,6 @@
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/bg_et_login"
                     android:drawablePadding="4dp"
-                    android:textColor="@color/purple_700"
                     android:gravity="center"
                     android:paddingStart="16dp"
                     android:paddingTop="4dp"
@@ -272,10 +269,11 @@
                     android:paddingBottom="4dp"
                     android:text="Like"
                     android:textAllCaps="false"
+                    android:textColor="@color/purple_700"
+                    app:drawableStartCompat="@drawable/ic_favorite_border"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/gl_start"
-                    app:layout_constraintTop_toBottomOf="@id/wv_article"
-                    app:drawableStartCompat="@drawable/ic_favorite_border" />
+                    app:layout_constraintTop_toBottomOf="@id/wv_article" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -298,9 +296,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:elevation="1dp"
-            android:translationZ="4dp"
-            app:cardCornerRadius="20dp">
+            android:translationZ="8dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_comments"
@@ -333,6 +331,56 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true" />
             </RelativeLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_send_comment"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:translationZ="8dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/et_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@null"
+                    android:hint="Type something..."
+                    android:textColor="@color/black"
+                    android:textColorHint="#99201C1C"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txv_send_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/bg_btn_login"
+                    android:paddingHorizontal="24dp"
+                    android:paddingVertical="4dp"
+                    android:text="Send"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_comment" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 </ScrollView>

@@ -34,16 +34,29 @@ data class ArticleDetails(
     val url: String,
     val summary: String,
     val topics: List<Topic>,
-) {
-    fun isLiked(userId: String): Boolean {
-        likes.forEach {
-            if (it.userId == userId) {
-                return true
-            }
-        }
-        return false
-    }
-}
+    @SerializedName("upvoted")
+    var isLiked: Boolean
+)
+
+data class ArticleDetailsWithResponses(
+    @SerializedName("_id")
+    val articleId: String,
+    val title: String?,
+    @SerializedName("images")
+    val imagesList: List<ImagesInArticle>,
+    @SerializedName("counts")
+    val stats: StatsInArticle,
+    val responses: List<ArticleDetailsWithResponses>?,
+    @SerializedName("upvotes")
+    val likes: List<UserModel>,
+    val content: String,
+    val user: UserModel?,
+    val url: String,
+    val summary: String,
+    val topics: List<Topic>,
+    @SerializedName("upvoted")
+    var isLiked: Boolean
+)
 
 data class ImagesInArticle(
     @SerializedName("src")

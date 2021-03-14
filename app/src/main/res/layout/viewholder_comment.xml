@@ -46,12 +46,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:drawablePadding="4dp"
         android:text="0"
         android:textColor="@color/black"
         app:drawableStartCompat="@drawable/ic_favorite_border"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/txv_comment"
         app:layout_constraintTop_toBottomOf="@+id/txv_comment" />
 
@@ -64,5 +62,19 @@
         app:layout_constraintStart_toEndOf="@+id/txv_like"
         app:layout_constraintTop_toTopOf="@+id/txv_like"
         app:srcCompat="@drawable/ic_comment" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_responses"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txv_like" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

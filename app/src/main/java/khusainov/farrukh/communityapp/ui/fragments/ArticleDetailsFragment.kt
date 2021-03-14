@@ -18,7 +18,7 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.model.ArticleDetails
 import khusainov.farrukh.communityapp.data.repository.Repository
-import khusainov.farrukh.communityapp.databinding.FragmentArticleBinding
+import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_ARTICLE_ID
@@ -30,7 +30,7 @@ import java.util.*
 
 class ArticleDetailsFragment : Fragment(), CommentClickInterface {
 
-    private var _binding: FragmentArticleBinding? = null
+    private var _binding: FragmentArticleDetailsBinding? = null
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var articleViewModel: ArticleDetailsViewModel
@@ -41,7 +41,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentArticleBinding.inflate(inflater)
+        _binding = FragmentArticleDetailsBinding.inflate(inflater)
         return binding.root
     }
 
@@ -61,6 +61,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
 
         binding.rvComments.adapter = commentAdapter
         setObservers()
+        setClickListeners()
     }
 
     override fun onDestroyView() {
@@ -80,6 +81,23 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
     override fun onDetach() {
         super.onDetach()
         activityListener = null
+    }
+
+    private fun setClickListeners() {
+        binding.apply {
+            txvSendComment.setOnClickListener {
+                if (etComment.text.isNotEmpty()) {
+                    articleViewModel.addCommentToArticle(etComment.text.toString())
+                    etComment.text.clear()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Empty body",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 
     private fun setObservers() {
@@ -109,6 +127,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
         }
         articleViewModel.isLoadingArticle.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
+            binding.mcvSendComment.isVisible = !it
         }
         articleViewModel.isLoadingComments.observe(viewLifecycleOwner, {
             binding.rlLoadingComments.isVisible = it

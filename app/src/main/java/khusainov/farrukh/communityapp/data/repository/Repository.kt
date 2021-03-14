@@ -3,6 +3,8 @@ package khusainov.farrukh.communityapp.data.repository
 import android.util.Log
 import khusainov.farrukh.communityapp.data.api.CommunityApi
 import khusainov.farrukh.communityapp.data.model.ArticleDetails
+import khusainov.farrukh.communityapp.data.model.ArticleDetailsWithResponses
+import khusainov.farrukh.communityapp.data.model.SampleAddComment
 import khusainov.farrukh.communityapp.data.model.SignInData
 
 class Repository(private val api: CommunityApi) {
@@ -21,7 +23,7 @@ class Repository(private val api: CommunityApi) {
 
     suspend fun getNotifications() = api.getNotifications()
 
-    suspend fun likeArticleById(articleId: String): ArticleDetails {
+    suspend fun likeArticleById(articleId: String): ArticleDetailsWithResponses {
         return try {
             api.likeArticleById(articleId).body()!!
         } catch (e: Exception) {
@@ -30,7 +32,7 @@ class Repository(private val api: CommunityApi) {
         }
     }
 
-    suspend fun removeLikeArticleById(articleId: String): ArticleDetails {
+    suspend fun removeLikeArticleById(articleId: String): ArticleDetailsWithResponses {
         return try {
             api.removeLikeArticleById(articleId).body()!!
         } catch (e: Exception) {
@@ -38,4 +40,7 @@ class Repository(private val api: CommunityApi) {
             throw Exception("WTF")
         }
     }
+
+    suspend fun addCommentToArticle(body: String, parent: ArticleDetails) =
+        api.addComment(SampleAddComment(content = body, parent = parent))
 }

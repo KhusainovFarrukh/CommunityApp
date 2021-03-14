@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.data.model.ArticleDetails
+import khusainov.farrukh.communityapp.data.model.ArticleDetailsWithResponses
 import khusainov.farrukh.communityapp.data.model.UserModel
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.launch
@@ -14,18 +15,20 @@ import retrofit2.Response
 /**
  *Created by FarrukhKhusainov on 3/4/21 10:53 PM
  **/
-class ArticleDetailsViewModel(articleId: String, private val repository: Repository) : ViewModel() {
+class ArticleDetailsViewModel(private val articleId: String, private val repository: Repository) :
+    ViewModel() {
 
     private val _isLoadingArticle = MutableLiveData<Boolean>()
     private val _isLoadingComments = MutableLiveData<Boolean>()
     private val _responseArticle = MutableLiveData<Response<ArticleDetails>>()
-    private val _responseComments = MutableLiveData<Response<List<ArticleDetails>>>()
+    private val _responseComments = MutableLiveData<Response<List<ArticleDetailsWithResponses>>>()
     private val _isLiked = MutableLiveData(false)
 
     val isLoadingArticle: LiveData<Boolean> = _isLoadingArticle
     val isLoadingComments: LiveData<Boolean> = _isLoadingComments
     val responseArticle: LiveData<Response<ArticleDetails>> = _responseArticle
-    val responseComments: MutableLiveData<Response<List<ArticleDetails>>> = _responseComments
+    val responseComments: MutableLiveData<Response<List<ArticleDetailsWithResponses>>> =
+        _responseComments
     val isLiked: LiveData<Boolean> = _isLiked
 
     init {
@@ -72,7 +75,7 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
 
     fun likeCommentById(commentId: String, isLiked: Boolean) {
         viewModelScope.launch {
-            (_responseComments.value?.body() as MutableList<ArticleDetails>).let {
+            (_responseComments.value?.body() as MutableList<ArticleDetailsWithResponses>).let {
                 it.forEach { currentItem ->
                     if (currentItem.articleId == commentId) {
                         if (isLiked) {
@@ -84,6 +87,18 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
                         return@forEach
                     }
                 }
+            }
+            _responseComments.postValue(_responseComments.value)
+        }
+    }
+
+    fun addCommentToArticle(comment: String) {
+        viewModelScope.launch {
+            (_responseComments.value?.body() as MutableList<ArticleDetailsWithResponses>).let { list ->
+                repository.addCommentToArticle(comment, _responseArticle.value!!.body()!!).body()
+                    ?.let {
+                        list.add(it)
+                    }
             }
             _responseComments.postValue(_responseComments.value)
         }

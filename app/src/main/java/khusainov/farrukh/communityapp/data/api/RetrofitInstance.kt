@@ -10,8 +10,6 @@ import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_COOKIES_REQU
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_COOKIES_RESPONSE
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_CSRF
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_CSRF_TOKEN
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_LIKE_REQUEST
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATIONS_REQUEST
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_REMEMBER_ME
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_SESSION_ID
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_USER_ID
@@ -68,30 +66,23 @@ class RetrofitInstance(context: Context) {
             val originalRequest = chain.request()
             val requestBuilder = originalRequest.newBuilder()
 
-            if (originalRequest.url.toString().contains(KEY_LIKE_REQUEST)) {
-                requestBuilder.addHeader(
-                    KEY_COOKIES_REQUEST,
-                    sharedPref.getString(KEY_USER_ID, "") + ";" +
-                    sharedPref.getString(KEY_REMEMBER_ME, "") + ";" +
-                            sharedPref.getString(KEY_CSRF, "") + ";" +
-                            sharedPref.getString(KEY_SESSION_ID, "") + ";" +
-                            sharedPref.getString("CSRF-Token", "")
-                )
-                requestBuilder.addHeader(
-                    KEY_CSRF_TOKEN,
-                    (sharedPref.getString(KEY_CSRF_TOKEN, "") ?: "").split(DELIMITER_CSRF)[1]
-                )
+            requestBuilder.addHeader(
+                KEY_COOKIES_REQUEST,
+                sharedPref.getString(KEY_USER_ID, "") + DELIMITER_COOKIES +
+                        sharedPref.getString(KEY_REMEMBER_ME, "") + DELIMITER_COOKIES +
+                        sharedPref.getString(KEY_CSRF, "") + DELIMITER_COOKIES +
+                        sharedPref.getString(KEY_SESSION_ID, "") + DELIMITER_COOKIES +
+                        sharedPref.getString(KEY_CSRF_TOKEN, "")
+            )
+            requestBuilder.addHeader(
+                KEY_CSRF_TOKEN,
+                (sharedPref.getString(KEY_CSRF_TOKEN, "") ?: "").split(DELIMITER_CSRF)[1]
+            )
+
+            requestBuilder.build().headers.forEach {
+                Log.wtf(requestBuilder.build().url.toString(), it.toString())
             }
 
-            if (originalRequest.url.toString().contains(KEY_NOTIFICATIONS_REQUEST)) {
-                requestBuilder.addHeader(
-                    KEY_COOKIES_REQUEST,
-                    sharedPref.getString(KEY_SESSION_ID, "") + DELIMITER_COOKIES +
-                            sharedPref.getString(KEY_REMEMBER_ME, "")
-                )
-            }
-
-            requestBuilder.build().body.toString()
             return chain.proceed(requestBuilder.build())
         }
     }
