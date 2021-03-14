@@ -85,7 +85,6 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
     private fun setObservers() {
         articleViewModel.responseArticle.observe(viewLifecycleOwner) { response ->
             if (response.isSuccessful) {
-                articleViewModel.getComments(response.body()?.responses!!)
                 articleViewModel.isLiked(
                     activityListener?.getUserId() ?: "",
                     response.body()?.likes!!
@@ -100,9 +99,9 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
             }
         }
         articleViewModel.responseComments.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty()) {
+            if (it.isSuccessful && it.body()!!.isNotEmpty()) {
                 Log.wtf("changed UI", "someId")
-                commentAdapter.submitList(it.toMutableList())
+                commentAdapter.submitList(it.body()!!.toMutableList())
                 binding.txvNoComments.isVisible = false
             } else {
                 binding.txvNoComments.isVisible = true

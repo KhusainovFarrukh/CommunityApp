@@ -12,6 +12,12 @@ interface CommunityApi {
         @Path("articleId") articleId: String
     ): Response<ArticleDetails>
 
+    //function to get comments of article
+    @GET("api/v1/posts/{articleId}/responses")
+    suspend fun getCommentsOfArticle(
+        @Path("articleId") articleId: String
+    ): Response<List<ArticleDetails>>
+
     //function to get a user
     @GET("api/v1/users/{userId}")
     suspend fun getUserById(

@@ -19,13 +19,13 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
     private val _isLoadingArticle = MutableLiveData<Boolean>()
     private val _isLoadingComments = MutableLiveData<Boolean>()
     private val _responseArticle = MutableLiveData<Response<ArticleDetails>>()
-    private val _responseComments = MutableLiveData<MutableList<ArticleDetails>>()
+    private val _responseComments = MutableLiveData<Response<List<ArticleDetails>>>()
     private val _isLiked = MutableLiveData(false)
 
     val isLoadingArticle: LiveData<Boolean> = _isLoadingArticle
     val isLoadingComments: LiveData<Boolean> = _isLoadingComments
     val responseArticle: LiveData<Response<ArticleDetails>> = _responseArticle
-    val responseComments: MutableLiveData<MutableList<ArticleDetails>> = _responseComments
+    val responseComments: MutableLiveData<Response<List<ArticleDetails>>> = _responseComments
     val isLiked: LiveData<Boolean> = _isLiked
 
     init {
@@ -36,13 +36,10 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
 
             _isLoadingArticle.postValue(false)
         }
-    }
-
-    fun getComments(idList: List<String>) {
         viewModelScope.launch {
             _isLoadingComments.postValue(true)
 
-            _responseComments.postValue(repository.getComments(idList) as MutableList<ArticleDetails>?)
+            _responseComments.postValue(repository.getComments(articleId))
 
             _isLoadingComments.postValue(false)
         }
@@ -75,14 +72,16 @@ class ArticleDetailsViewModel(articleId: String, private val repository: Reposit
 
     fun likeCommentById(commentId: String, isLiked: Boolean) {
         viewModelScope.launch {
-            _responseComments.value?.forEach {
-                if (it.articleId == commentId) {
-                    if (isLiked) {
-                        _responseComments.value!![_responseComments.value!!.indexOf(it)] =
-                            repository.removeLikeArticleById(commentId)
-                    } else {
-                        _responseComments.value!![_responseComments.value!!.indexOf(it)] =
-                            repository.likeArticleById(commentId)
+            (_responseComments.value?.body() as MutableList<ArticleDetails>).let {
+                it.forEach { currentItem ->
+                    if (currentItem.articleId == commentId) {
+                        if (isLiked) {
+                            it[it.indexOf(currentItem)] =
+                                repository.removeLikeArticleById(commentId)
+                        } else {
+                            it[it.indexOf(currentItem)] = repository.likeArticleById(commentId)
+                        }
+                        return@forEach
                     }
                 }
             }

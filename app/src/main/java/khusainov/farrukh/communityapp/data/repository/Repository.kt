@@ -13,13 +13,7 @@ class Repository(private val api: CommunityApi) {
 
     suspend fun getArticleById(articleId: String) = api.getArticleById(articleId)
 
-    suspend fun getComments(idList: List<String>): List<ArticleDetails> {
-        val comments = mutableListOf<ArticleDetails>()
-        idList.forEach {
-            comments.add(api.getArticleById(it).body()!!)
-        }
-        return comments
-    }
+    suspend fun getComments(articleId: String) = api.getCommentsOfArticle(articleId)
 
     suspend fun getUserById(userId: String) = api.getUserById(userId)
 
