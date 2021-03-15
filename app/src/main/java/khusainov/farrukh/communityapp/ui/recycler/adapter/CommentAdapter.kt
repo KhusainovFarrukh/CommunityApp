@@ -19,7 +19,7 @@ import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickInterface
 
 //TODO remove it
 @Suppress("DEPRECATION")
-class CommentAdapter(private val commentClickInterface: CommentClickInterface) :
+open class CommentAdapter(private val commentClickInterface: CommentClickInterface) :
     ListAdapter<ArticleDetailsWithResponses, CommentAdapter.CommentViewHolder>(object :
         DiffUtil.ItemCallback<ArticleDetailsWithResponses>() {
         override fun getChangePayload(
@@ -68,10 +68,12 @@ class CommentAdapter(private val commentClickInterface: CommentClickInterface) :
                 }
 
                 if (comment.isLiked) {
-                    txvLike.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_favorite, 0, 0, 0)
-                    txvLike.setOnClickListener {
-                        commentClickInterface.onLikeCommentClick(comment.articleId, true)
-                    }
+                    txvLike.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_favorite,
+                        0,
+                        0,
+                        0
+                    )
                 } else {
                     txvLike.setCompoundDrawablesWithIntrinsicBounds(
                         R.drawable.ic_favorite_border,
@@ -79,14 +81,36 @@ class CommentAdapter(private val commentClickInterface: CommentClickInterface) :
                         0,
                         0
                     )
-                    txvLike.setOnClickListener {
-                        commentClickInterface.onLikeCommentClick(comment.articleId, false)
-                    }
                 }
-                val adapter = CommentAdapter(commentClickInterface)
+
+                txvLike.setOnClickListener {
+                    onLikeClick(comment)
+                }
+
+                txvComment.setOnClickListener {
+                    onReplyClick("test comment to comment", comment)
+                }
+
+                val adapter = SubCommentAdapter(commentClickInterface)
                 rvResponses.adapter = adapter
                 adapter.submitList(comment.responses)
             }
         }
+    }
+
+    open fun onLikeClick(comment: ArticleDetailsWithResponses) {
+        commentClickInterface.onLikeCommentClick(comment.articleId, comment.isLiked)
+    }
+
+    open fun onReplyClick(body: String, parentComment: ArticleDetailsWithResponses) {
+        commentClickInterface.onWriteSubCommentClick(body, parentComment)
+    }
+
+}
+
+class SubCommentAdapter(private val commentClickInterface: CommentClickInterface) :
+    CommentAdapter(commentClickInterface) {
+    override fun onLikeClick(comment: ArticleDetailsWithResponses) {
+        commentClickInterface.onLikeSubCommentClick(comment.articleId, comment.isLiked)
     }
 }

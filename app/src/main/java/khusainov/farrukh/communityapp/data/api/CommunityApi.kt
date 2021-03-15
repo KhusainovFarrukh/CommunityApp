@@ -6,11 +6,29 @@ import retrofit2.http.*
 
 interface CommunityApi {
 
-    //function to add a comment (as a post)
-    @POST("api/v1/posts")
-    suspend fun addComment(
-        @Body comment: SampleAddComment
-    ): Response<ArticleDetailsWithResponses>
+    //function to sign in user
+    @POST("api/v1/sessions")
+    suspend fun signInWithEmail(
+        @Body signInData: SignInData,
+    ): Response<User>
+
+    //function to get topics
+    @GET("api/v1/topics")
+    suspend fun getTopics(
+        @Query("type") type: String = "collection"
+    ): Response<List<Topic>>
+
+    //function to get last 20 articles
+    @GET("api/v1/posts?type=article")
+    suspend fun getArticlesList(
+        @Query("limit") limit: Int = 20
+    ): Response<List<Article>>
+
+    //function to get notifications of signed user
+    @GET("api/v1/notifications")
+    suspend fun getNotifications(
+        @Query("limit") limit: Int = 50
+    ): Response<List<Notification>>
 
     //function to get a article
     @GET("api/v1/posts/{articleId}")
@@ -35,35 +53,23 @@ interface CommunityApi {
     suspend fun likeArticleById(
         @Path("articleId") articleId: String,
         @Body like: LikeValue = LikeValue(1)
-    ): Response<ArticleDetailsWithResponses>
+    ): Response<ArticleDetails>
 
     //function to remove a like
     @DELETE("api/v1/posts/{articleId}/votes")
     suspend fun removeLikeArticleById(
         @Path("articleId") articleId: String
+    ): Response<ArticleDetails>
+
+    //function to add a comment (as a post)
+    @POST("api/v1/posts")
+    suspend fun addComment(
+        @Body comment: SampleAddComment
     ): Response<ArticleDetailsWithResponses>
 
-    //function to sign in user
-    @POST("api/v1/sessions")
-    suspend fun signInWithEmail(
-        @Body signInData: SignInData,
-    ): Response<User>
-
-    //function to get notifications of signed user
-    @GET("api/v1/notifications")
-    suspend fun getNotifications(
-        @Query("limit") limit: Int = 50
-    ): Response<List<Notification>>
-
-    //function to get last 20 articles
-    @GET("api/v1/posts?type=article")
-    suspend fun getArticlesList(
-        @Query("limit") limit: Int = 20
-    ): Response<List<Article>>
-
-    //function to get topics
-    @GET("api/v1/topics")
-    suspend fun getTopics(
-        @Query("type") type: String = "collection"
-    ): Response<List<Topic>>
+    //function to add a comment to comment (as a post)
+    @POST("api/v1/posts")
+    suspend fun addCommentToComment(
+        @Body comment: SampleAddCommentToComment
+    ): Response<ArticleDetailsWithResponses>
 }

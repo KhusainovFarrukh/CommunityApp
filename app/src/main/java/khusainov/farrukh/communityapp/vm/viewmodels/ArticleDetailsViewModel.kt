@@ -79,10 +79,19 @@ class ArticleDetailsViewModel(private val articleId: String, private val reposit
                 it.forEach { currentItem ->
                     if (currentItem.articleId == commentId) {
                         if (isLiked) {
-                            it[it.indexOf(currentItem)] =
-                                repository.removeLikeArticleById(commentId)
+                            repository.removeLikeArticleById(commentId).let { likedComment ->
+                                it[it.indexOf(currentItem)] = currentItem.copy(
+                                    stats = likedComment.stats,
+                                    isLiked = likedComment.isLiked
+                                )
+                            }
                         } else {
-                            it[it.indexOf(currentItem)] = repository.likeArticleById(commentId)
+                            repository.likeArticleById(commentId).let { likedComment ->
+                                it[it.indexOf(currentItem)] = currentItem.copy(
+                                    stats = likedComment.stats,
+                                    isLiked = likedComment.isLiked
+                                )
+                            }
                         }
                         return@forEach
                     }
@@ -92,15 +101,34 @@ class ArticleDetailsViewModel(private val articleId: String, private val reposit
         }
     }
 
-    fun addCommentToArticle(comment: String) {
+    fun likeSubCommentById(commentId: String, isLiked: Boolean) {
+        viewModelScope.launch {
+            if (isLiked) {
+                repository.removeLikeArticleById(commentId)
+            } else {
+                repository.likeArticleById(commentId)
+            }
+
+            _responseComments.postValue(repository.getComments(articleId))
+        }
+    }
+
+    fun addCommentToArticle(body: String) {
         viewModelScope.launch {
             (_responseComments.value?.body() as MutableList<ArticleDetailsWithResponses>).let { list ->
-                repository.addCommentToArticle(comment, _responseArticle.value!!.body()!!).body()
+                repository.addComment(body, _responseArticle.value!!.body()!!).body()
                     ?.let {
                         list.add(it)
                     }
             }
             _responseComments.postValue(_responseComments.value)
+        }
+    }
+
+    fun addCommentToComment(body: String, parentComment: ArticleDetailsWithResponses) {
+        viewModelScope.launch {
+            repository.addCommentToComment(body, parentComment)
+            _responseComments.postValue(repository.getComments(articleId))
         }
     }
 }

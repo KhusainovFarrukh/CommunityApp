@@ -17,6 +17,7 @@ import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.model.ArticleDetails
+import khusainov.farrukh.communityapp.data.model.ArticleDetailsWithResponses
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
@@ -227,12 +228,16 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
         articleViewModel.likeCommentById(commentId, isLiked)
     }
 
+    override fun onLikeSubCommentClick(commentId: String, isLiked: Boolean) {
+        articleViewModel.likeSubCommentById(commentId, isLiked)
+    }
+
     override fun onCommentAuthorClick(userId: String) {
         activityListener?.showUserFragment(userId)
     }
 
-    override fun onReplyCommentClick() {
-        //TODO implement it
+    override fun onWriteSubCommentClick(body: String, parentComment: ArticleDetailsWithResponses) {
+        articleViewModel.addCommentToComment(body, parentComment)
     }
 
     override fun getUserId() = activityListener?.getUserId() ?: ""

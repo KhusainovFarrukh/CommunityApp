@@ -2,16 +2,17 @@ package khusainov.farrukh.communityapp.data.repository
 
 import android.util.Log
 import khusainov.farrukh.communityapp.data.api.CommunityApi
-import khusainov.farrukh.communityapp.data.model.ArticleDetails
-import khusainov.farrukh.communityapp.data.model.ArticleDetailsWithResponses
-import khusainov.farrukh.communityapp.data.model.SampleAddComment
-import khusainov.farrukh.communityapp.data.model.SignInData
+import khusainov.farrukh.communityapp.data.model.*
 
 class Repository(private val api: CommunityApi) {
 
-    suspend fun getArticlesList(limit: Int) = api.getArticlesList(limit)
+    suspend fun signInWithEmail(signInData: SignInData) = api.signInWithEmail(signInData)
 
     suspend fun getTopics() = api.getTopics()
+
+    suspend fun getArticlesList(limit: Int) = api.getArticlesList(limit)
+
+    suspend fun getNotifications() = api.getNotifications()
 
     suspend fun getArticleById(articleId: String) = api.getArticleById(articleId)
 
@@ -19,11 +20,7 @@ class Repository(private val api: CommunityApi) {
 
     suspend fun getUserById(userId: String) = api.getUserById(userId)
 
-    suspend fun signInWithEmail(signInData: SignInData) = api.signInWithEmail(signInData)
-
-    suspend fun getNotifications() = api.getNotifications()
-
-    suspend fun likeArticleById(articleId: String): ArticleDetailsWithResponses {
+    suspend fun likeArticleById(articleId: String): ArticleDetails {
         return try {
             api.likeArticleById(articleId).body()!!
         } catch (e: Exception) {
@@ -32,7 +29,7 @@ class Repository(private val api: CommunityApi) {
         }
     }
 
-    suspend fun removeLikeArticleById(articleId: String): ArticleDetailsWithResponses {
+    suspend fun removeLikeArticleById(articleId: String): ArticleDetails {
         return try {
             api.removeLikeArticleById(articleId).body()!!
         } catch (e: Exception) {
@@ -41,6 +38,9 @@ class Repository(private val api: CommunityApi) {
         }
     }
 
-    suspend fun addCommentToArticle(body: String, parent: ArticleDetails) =
+    suspend fun addComment(body: String, parent: ArticleDetails) =
         api.addComment(SampleAddComment(content = body, parent = parent))
+
+    suspend fun addCommentToComment(body: String, parent: ArticleDetailsWithResponses) =
+        api.addCommentToComment(SampleAddCommentToComment(content = body, parent = parent))
 }
