@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -119,7 +118,6 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
         }
         articleViewModel.responseComments.observe(viewLifecycleOwner) {
             if (it.isSuccessful && it.body()!!.isNotEmpty()) {
-                Log.wtf("changed UI", "someId")
                 commentAdapter.submitList(it.body()!!.toMutableList())
                 binding.txvNoComments.isVisible = false
             } else {

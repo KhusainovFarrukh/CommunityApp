@@ -1,5 +1,6 @@
 package khusainov.farrukh.communityapp.data.model
 
+import com.google.gson.JsonArray
 import com.google.gson.annotations.SerializedName
 
 data class Article(
@@ -46,7 +47,7 @@ data class ArticleDetailsWithResponses(
     val imagesList: List<ImagesInArticle>,
     @SerializedName("counts")
     val stats: StatsInArticle,
-    val responses: List<ArticleDetailsWithResponses>?,
+    val responses: JsonArray,
     @SerializedName("upvotes")
     val likes: List<UserModel>,
     val content: String,
@@ -56,7 +57,17 @@ data class ArticleDetailsWithResponses(
     val topics: List<Topic>,
     @SerializedName("upvoted")
     var isLiked: Boolean
-)
+) {
+    fun onlyResponsesId(): Boolean {
+        responses.asJsonArray.let {
+            return if (it.size() > 0) {
+                it[0].isJsonPrimitive
+            } else {
+                true
+            }
+        }
+    }
+}
 
 data class ImagesInArticle(
     @SerializedName("src")

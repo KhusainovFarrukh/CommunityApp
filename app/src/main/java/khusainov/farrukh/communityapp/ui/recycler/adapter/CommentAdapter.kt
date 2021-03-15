@@ -3,11 +3,13 @@ package khusainov.farrukh.communityapp.ui.recycler.adapter
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.model.ArticleDetailsWithResponses
 import khusainov.farrukh.communityapp.databinding.ViewholderCommentBinding
@@ -87,23 +89,34 @@ open class CommentAdapter(private val commentClickInterface: CommentClickInterfa
                     onLikeClick(comment)
                 }
 
-                txvComment.setOnClickListener {
-                    onReplyClick("test comment to comment", comment)
+                imvReply.setOnClickListener {
+                    commentClickInterface.onWriteSubCommentClick("delete this comment", comment)
                 }
 
                 val adapter = SubCommentAdapter(commentClickInterface)
                 rvResponses.adapter = adapter
-                adapter.submitList(comment.responses)
+                if (comment.onlyResponsesId()) {
+                    if (comment.responses.size() > 0) {
+                        txvAnotherComments.text =
+                            "There is another ${comment.responses.size()} comments..."
+                        txvAnotherComments.isVisible = true
+                    } else {
+                        txvAnotherComments.isVisible = false
+                    }
+                } else {
+                    txvAnotherComments.isVisible = false
+                    val list: MutableList<ArticleDetailsWithResponses> = mutableListOf()
+                    comment.responses.forEach {
+                        list.add(Gson().fromJson(it, ArticleDetailsWithResponses::class.java))
+                    }
+                    adapter.submitList(list)
+                }
             }
         }
     }
 
     open fun onLikeClick(comment: ArticleDetailsWithResponses) {
         commentClickInterface.onLikeCommentClick(comment.articleId, comment.isLiked)
-    }
-
-    open fun onReplyClick(body: String, parentComment: ArticleDetailsWithResponses) {
-        commentClickInterface.onWriteSubCommentClick(body, parentComment)
     }
 
 }
