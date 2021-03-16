@@ -5,13 +5,15 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
+import khusainov.farrukh.communityapp.data.model.ArticleDetails
 import khusainov.farrukh.communityapp.data.model.SignInData
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
 import khusainov.farrukh.communityapp.ui.fragments.*
+import khusainov.farrukh.communityapp.utils.Constants.Companion.BASE_URL
+import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_USER_ID
 
 @SuppressLint("CommitPrefEdits")
@@ -95,10 +97,34 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
             .addToBackStack(null)
             .commit()
     }
+
+    override fun shareIntent(article: ArticleDetails) {
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.type = "text/plain"
+        shareIntent.putExtra(
+            Intent.EXTRA_TEXT,
+            "${article.user?.profile?.name ?: "Noma`lum muallif"} yozgan \"${
+                article.title
+            }\" nomli maqolani o`qib ko`ring: \n${
+                BASE_URL + article.url
+            }"
+        )
+        startActivity(Intent.createChooser(shareIntent, "Share this article with..."))
+    }
+
+    override fun showReportDialog(articleId: String) {
+        val fragment = ReportDialogFragment()
+        val bundle = Bundle()
+        bundle.putString(KEY_ARTICLE_ID, articleId)
+        fragment.arguments = bundle
+
+        fragment.show(supportFragmentManager, null)
+    }
 }
 
 interface HomeActivityListener {
     fun showLoginDialog()
+    fun showReportDialog(articleId: String)
     fun showArticlesListFragment()
     fun goToBrowser(url: String)
     fun showNotificationsFragment()
@@ -108,4 +134,5 @@ interface HomeActivityListener {
     fun saveUserId(userId: String)
     fun getUserId(): String
     fun showUserFragment(userId: String)
+    fun shareIntent(article: ArticleDetails)
 }

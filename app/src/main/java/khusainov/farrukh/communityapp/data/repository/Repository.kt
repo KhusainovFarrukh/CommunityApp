@@ -43,4 +43,8 @@ class Repository(private val api: CommunityApi) {
 
     suspend fun addCommentToComment(body: String, parent: ArticleDetailsWithResponses) =
         api.addCommentToComment(SampleAddCommentToComment(content = body, parent = parent))
+
+    suspend fun reportArticle(articleId: String, reportValue: ReportValue) {
+        api.reportArticleById(articleId, reportValue)
+    }
 }

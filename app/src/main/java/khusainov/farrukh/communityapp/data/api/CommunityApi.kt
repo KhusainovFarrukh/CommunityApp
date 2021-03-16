@@ -6,6 +6,13 @@ import retrofit2.http.*
 
 interface CommunityApi {
 
+    //function to report a article
+    @POST("api/v1/posts/{articleId}/reports")
+    suspend fun reportArticleById(
+        @Path("articleId") articleId: String,
+        @Body reportValue: ReportValue
+    )
+
     //function to sign in user
     @POST("api/v1/sessions")
     suspend fun signInWithEmail(

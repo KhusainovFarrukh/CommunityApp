@@ -263,17 +263,31 @@
                     android:background="@drawable/bg_et_login"
                     android:drawablePadding="4dp"
                     android:gravity="center"
-                    android:paddingStart="16dp"
-                    android:paddingTop="4dp"
-                    android:paddingEnd="16dp"
-                    android:paddingBottom="4dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="4dp"
                     android:text="Like"
-                    android:textAllCaps="false"
                     android:textColor="@color/purple_700"
                     app:drawableStartCompat="@drawable/ic_favorite_border"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/gl_start"
                     app:layout_constraintTop_toBottomOf="@id/wv_article" />
+
+                <TextView
+                    android:id="@+id/txv_report_article"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_et_login"
+                    android:drawableStart="@drawable/ic_report"
+                    android:drawablePadding="4dp"
+                    android:gravity="center"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="4dp"
+                    android:text="Report"
+                    android:textColor="@color/purple_700"
+                    app:layout_constraintBaseline_toBaselineOf="@id/txv_like_article"
+                    app:layout_constraintEnd_toEndOf="@id/gl_end" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -336,10 +350,10 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_send_comment"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:translationZ="8dp"
+            android:visibility="gone"
             app:cardCornerRadius="20dp"
             app:cardElevation="8dp">
 

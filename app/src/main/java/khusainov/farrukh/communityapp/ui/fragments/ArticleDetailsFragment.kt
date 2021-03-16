@@ -156,9 +156,19 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     private fun setDataToViews(article: ArticleDetails) {
         binding.apply {
-            binding.txvLikeArticle.setOnClickListener {
+            txvLikeArticle.setOnClickListener {
                 articleViewModel.likeArticleById(article.articleId)
             }
+            txvShare.setOnClickListener {
+                activityListener?.shareIntent(article)
+            }
+            txvReportArticle.setOnClickListener {
+                activityListener?.showReportDialog(article.articleId)
+            }
+            txvSeeProfile.setOnClickListener {
+                activityListener?.showUserFragment(article.user!!.userId)
+            }
+
             //Replacing '#' from encoded version. Because there is a bug with WebView
             val content = article.content
                 .replace("#", Uri.encode("#"))
@@ -214,10 +224,6 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
                 crossfade(true)
                 placeholder(R.drawable.ic_account_circle)
                 transformations(CircleCropTransformation())
-            }
-
-            txvSeeProfile.setOnClickListener {
-                activityListener?.showUserFragment(article.user!!.userId)
             }
         }
     }
