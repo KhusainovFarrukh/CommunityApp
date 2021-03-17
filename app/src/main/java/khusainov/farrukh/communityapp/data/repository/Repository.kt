@@ -47,4 +47,6 @@ class Repository(private val api: CommunityApi) {
     suspend fun reportArticle(articleId: String, reportValue: ReportValue) {
         api.reportArticleById(articleId, reportValue)
     }
+
+    suspend fun deleteArticleById(articleId: String) = api.deleteArticleById(articleId)
 }

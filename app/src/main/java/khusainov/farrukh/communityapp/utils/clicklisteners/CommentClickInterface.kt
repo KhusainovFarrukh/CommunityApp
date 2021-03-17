@@ -11,4 +11,7 @@ interface CommentClickInterface {
     fun onWriteSubCommentClick(body: String, parentComment: ArticleDetailsWithResponses)
     fun onCommentAuthorClick(userId: String)
     fun getUserId(): String
+    fun showReportDialog(commentId: String)
+    fun onDeleteCommentClick(commentId: String)
+    fun onDeleteSubCommentClick(commentId: String)
 }

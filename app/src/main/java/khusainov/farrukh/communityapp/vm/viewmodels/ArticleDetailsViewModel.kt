@@ -131,4 +131,26 @@ class ArticleDetailsViewModel(private val articleId: String, private val reposit
             _responseComments.postValue(repository.getComments(articleId))
         }
     }
+
+    fun deleteCommentById(commentId: String) {
+        viewModelScope.launch {
+            repository.deleteArticleById(commentId)
+            (_responseComments.value?.body() as MutableList<ArticleDetailsWithResponses>).let {
+                it.forEach { currentItem ->
+                    if (currentItem.articleId == commentId) {
+                        it.remove(currentItem)
+                        return@forEach
+                    }
+                }
+            }
+            _responseComments.postValue(_responseComments.value)
+        }
+    }
+
+    fun deleteSubCommentById(commentId: String) {
+        viewModelScope.launch {
+            repository.deleteArticleById(commentId)
+            _responseComments.postValue(repository.getComments(articleId))
+        }
+    }
 }

@@ -53,15 +53,67 @@
         app:layout_constraintStart_toStartOf="@+id/txv_comment"
         app:layout_constraintTop_toBottomOf="@+id/txv_comment" />
 
-    <ImageView
-        android:id="@+id/imv_reply"
+    <TextView
+        android:id="@+id/txv_reply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/txv_like"
-        app:layout_constraintStart_toEndOf="@+id/txv_like"
-        app:layout_constraintTop_toTopOf="@+id/txv_like"
-        app:srcCompat="@drawable/ic_comment" />
+        android:drawablePadding="4dp"
+        android:text="0"
+        android:textColor="@color/black"
+        app:drawableStartCompat="@drawable/ic_comment"
+        app:drawableTint="@color/black"
+        app:layout_constraintBaseline_toBaselineOf="@id/txv_like"
+        app:layout_constraintStart_toEndOf="@+id/txv_like" />
+
+    <TextView
+        android:id="@+id/txv_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:drawableEndCompat="@drawable/ic_baseline_more_vert_24"
+        app:drawableTint="@color/black"
+        app:layout_constraintBaseline_toBaselineOf="@id/txv_like"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/et_comment"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:hint="Type your response..."
+        android:textSize="16sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@id/txv_more"
+        app:layout_constraintStart_toStartOf="@id/txv_like"
+        app:layout_constraintTop_toBottomOf="@id/txv_like" />
+
+    <TextView
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        android:id="@+id/txv_send_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_btn_login"
+        android:text="Send"
+        android:textSize="16sp"
+        android:paddingVertical="4dp"
+        android:paddingHorizontal="16dp"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="@id/et_comment"
+        app:layout_constraintTop_toBottomOf="@id/et_comment" />
+
+    <View
+        android:layout_width="3dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:background="#92000000"
+        app:layout_constraintBottom_toBottomOf="@id/rv_responses"
+        app:layout_constraintEnd_toStartOf="@id/rv_responses"
+        app:layout_constraintStart_toStartOf="@id/txv_like"
+        app:layout_constraintTop_toTopOf="@id/rv_responses" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_responses"
@@ -69,13 +121,12 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="8dp"
         android:layout_marginStart="64dp"
-        android:layout_marginEnd="16dp"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txv_like" />
+        app:layout_constraintTop_toBottomOf="@id/txv_send_comment" />
 
     <TextView
         android:id="@+id/txv_another_comments"

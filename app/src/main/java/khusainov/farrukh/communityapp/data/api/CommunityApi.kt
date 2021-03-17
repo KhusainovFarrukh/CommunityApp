@@ -6,6 +6,11 @@ import retrofit2.http.*
 
 interface CommunityApi {
 
+    @DELETE("api/v1/posts/{articleId}")
+    suspend fun deleteArticleById(
+        @Path("articleId") articleId: String
+    )
+
     //function to report a article
     @POST("api/v1/posts/{articleId}/reports")
     suspend fun reportArticleById(

@@ -245,4 +245,16 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
     }
 
     override fun getUserId() = activityListener?.getUserId() ?: ""
+
+    override fun showReportDialog(commentId: String) {
+        activityListener?.showReportDialog(commentId)
+    }
+
+    override fun onDeleteCommentClick(commentId: String) {
+        articleViewModel.deleteCommentById(commentId)
+    }
+
+    override fun onDeleteSubCommentClick(commentId: String) {
+        articleViewModel.deleteSubCommentById(commentId)
+    }
 }

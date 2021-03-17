@@ -6,14 +6,6 @@
     <string name="verb_reply">%s %s ni sharhladi: \n%s.</string>
     <string name="verb_else">%s turidagi xabarnoma. Dastur muallifiga xabar bering.</string>
 
-    <string-array name="report_types_title">
-        <item>Harassment</item>
-        <item>Spam</item>
-        <item>Poorly written</item>
-        <item>Incorrect topics</item>
-        <item>Against rules</item>
-    </string-array>
-
     <string-array name="report_types_values">
         <item>Harrasment</item>
         <item>Spam</item>

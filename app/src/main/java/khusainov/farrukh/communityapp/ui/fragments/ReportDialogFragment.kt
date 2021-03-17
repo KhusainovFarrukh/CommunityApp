@@ -108,6 +108,7 @@ class ReportDialogFragment : DialogFragment() {
                     "Done",
                     Toast.LENGTH_SHORT
                 ).show()
+                this@ReportDialogFragment.dismiss()
             }
         }
     }

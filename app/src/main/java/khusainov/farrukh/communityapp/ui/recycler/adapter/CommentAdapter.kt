@@ -3,6 +3,8 @@ package khusainov.farrukh.communityapp.ui.recycler.adapter
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -57,6 +59,7 @@ open class CommentAdapter(private val commentClickInterface: CommentClickInterfa
                 txvName.text = comment.user?.profile?.name ?: "Unknown"
                 txvComment.text = Html.fromHtml(comment.content).trim()
                 txvLike.text = comment.stats.likesCount.toString()
+                txvReply.text = comment.stats.commentsCount.toString()
                 imvProfile.load(comment.user?.profile?.profilePhoto) {
                     crossfade(true)
                     placeholder(R.drawable.ic_account_circle)
@@ -67,6 +70,52 @@ open class CommentAdapter(private val commentClickInterface: CommentClickInterfa
                 }
                 txvName.setOnClickListener {
                     commentClickInterface.onCommentAuthorClick(comment.user?.userId ?: "")
+                }
+                txvLike.setOnClickListener {
+                    onLikeClick(comment)
+                }
+                txvReply.setOnClickListener {
+                    etComment.isVisible = true
+                    txvSendComment.isVisible = true
+                }
+                txvSendComment.setOnClickListener {
+                    if (etComment.text.isNotEmpty()) {
+                        commentClickInterface.onWriteSubCommentClick(
+                            etComment.text.toString(),
+                            comment
+                        )
+                        etComment.text.clear()
+                        etComment.isVisible = false
+                        txvSendComment.isVisible = false
+                    } else {
+                        Toast.makeText(
+                            itemView.context,
+                            "Type your response!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                txvMore.setOnClickListener {
+                    val popUp = PopupMenu(itemView.context, txvMore)
+                    if (comment.user?.userId == commentClickInterface.getUserId()) {
+                        popUp.inflate(R.menu.popup_menu_author)
+                    } else {
+                        popUp.inflate((R.menu.popup_menu_not_author))
+                    }
+
+                    popUp.setOnMenuItemClickListener {
+                        when (it.itemId) {
+                            R.id.item_report -> {
+                                commentClickInterface.showReportDialog(comment.articleId)
+                            }
+                            R.id.item_delete -> {
+                                onDeleteClick(comment.articleId)
+                            }
+                        }
+                        true
+                    }
+
+                    popUp.show()
                 }
 
                 if (comment.isLiked) {
@@ -83,14 +132,6 @@ open class CommentAdapter(private val commentClickInterface: CommentClickInterfa
                         0,
                         0
                     )
-                }
-
-                txvLike.setOnClickListener {
-                    onLikeClick(comment)
-                }
-
-                imvReply.setOnClickListener {
-                    commentClickInterface.onWriteSubCommentClick("delete this comment", comment)
                 }
 
                 val adapter = SubCommentAdapter(commentClickInterface)
@@ -119,11 +160,18 @@ open class CommentAdapter(private val commentClickInterface: CommentClickInterfa
         commentClickInterface.onLikeCommentClick(comment.articleId, comment.isLiked)
     }
 
+    open fun onDeleteClick(commentId: String) {
+        commentClickInterface.onDeleteCommentClick(commentId)
+    }
 }
 
 class SubCommentAdapter(private val commentClickInterface: CommentClickInterface) :
     CommentAdapter(commentClickInterface) {
     override fun onLikeClick(comment: ArticleDetailsWithResponses) {
         commentClickInterface.onLikeSubCommentClick(comment.articleId, comment.isLiked)
+    }
+
+    override fun onDeleteClick(commentId: String) {
+        commentClickInterface.onDeleteSubCommentClick(commentId)
     }
 }
