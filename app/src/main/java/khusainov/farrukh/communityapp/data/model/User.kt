@@ -8,7 +8,8 @@ data class User(
     @SerializedName("email")
     val email: String,
     @SerializedName("profile")
-    val profileInUser: ProfileInUser
+    val profileInUser: ProfileInUser,
+    val followed: Boolean
 )
 
 data class ProfileInUser(

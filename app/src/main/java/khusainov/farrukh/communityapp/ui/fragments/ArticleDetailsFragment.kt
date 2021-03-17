@@ -206,7 +206,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
 
             txvUserDescription.text = article.user?.profile?.title
 
-            txvHashtags.text = ""
+            txvHashtags.text = article.getHashtags()
             article.topics.forEach {
                 txvHashtags.append(
                     "#${

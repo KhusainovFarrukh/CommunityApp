@@ -6,6 +6,15 @@ import khusainov.farrukh.communityapp.data.model.*
 
 class Repository(private val api: CommunityApi) {
 
+    suspend fun getPostsOfUserById(userId: String, type: String) =
+        api.getPostsOfUserById(userId = userId, type = type)
+
+    //TODO edit this to return User data class
+    suspend fun followUserById(userId: String) = api.followUserById(userId)
+
+    //TODO edit this to return User data class
+    suspend fun unFollowUserById(userId: String) = api.unFollowUserById(userId)
+
     suspend fun signInWithEmail(signInData: SignInData) = api.signInWithEmail(signInData)
 
     suspend fun getTopics() = api.getTopics()

@@ -82,7 +82,7 @@
         android:layout_marginEnd="8dp"
         android:textColor="@color/black"
         android:textSize="12sp"
-        app:drawableEndCompat="@drawable/ic_baseline_more_vert_24"
+        app:drawableEndCompat="@drawable/ic_more"
         app:drawableTint="@color/black"
         app:layout_constraintBaseline_toBaselineOf="@id/txv_like"
         app:layout_constraintEnd_toEndOf="parent" />

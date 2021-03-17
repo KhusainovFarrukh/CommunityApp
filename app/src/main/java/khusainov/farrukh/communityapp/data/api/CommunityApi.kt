@@ -6,6 +6,25 @@ import retrofit2.http.*
 
 interface CommunityApi {
 
+    @POST("api/v1/users/{userId}/followers")
+    suspend fun followUserById(
+        @Path("userId") userId: String
+    )
+
+    //TODO edit this to return User data class
+    @DELETE("api/v1/users/{userId}/followers")
+    suspend fun unFollowUserById(
+        @Path("userId") userId: String
+    )
+
+    //TODO edit this to return User data class
+    @GET("api/v1/users/{userId}/posts")
+    suspend fun getPostsOfUserById(
+        @Path("userId") userId: String,
+        @Query("limit") limit: Int = 50,
+        @Query("type") type: String
+    ): Response<List<Article>>
+
     @DELETE("api/v1/posts/{articleId}")
     suspend fun deleteArticleById(
         @Path("articleId") articleId: String
