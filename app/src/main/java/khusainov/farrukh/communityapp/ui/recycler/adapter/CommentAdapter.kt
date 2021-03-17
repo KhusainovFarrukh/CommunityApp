@@ -57,6 +57,7 @@ open class CommentAdapter(private val commentClickInterface: CommentClickInterfa
         fun onBind(comment: ArticleDetailsWithResponses) {
             binding.apply {
                 txvName.text = comment.user?.profile?.name ?: "Unknown"
+                txvTime.text = comment.getDifference()
                 txvComment.text = Html.fromHtml(comment.content).trim()
                 txvLike.text = comment.stats.likesCount.toString()
                 txvReply.text = comment.stats.commentsCount.toString()

@@ -64,4 +64,7 @@ dependencies {
 
     //jsoup
     implementation 'org.jsoup:jsoup:1.13.1'
+
+    //jodatime
+    implementation 'joda-time:joda-time:2.10.10'
 }

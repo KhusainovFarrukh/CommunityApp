@@ -24,11 +24,20 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imv_profile"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imv_profile"
         app:layout_constraintTop_toTopOf="@+id/imv_profile"
         tools:text="John Wayne Smith" />
+
+    <TextView
+        android:id="@+id/txv_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="0 soniya avval"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/txv_name"
+        app:layout_constraintStart_toStartOf="@id/txv_name"
+        app:layout_constraintTop_toBottomOf="@id/txv_name" />
 
     <TextView
         android:id="@+id/txv_comment"
@@ -38,7 +47,7 @@
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@+id/txv_name"
         app:layout_constraintStart_toStartOf="@+id/imv_profile"
-        app:layout_constraintTop_toBottomOf="@+id/imv_profile"
+        app:layout_constraintTop_toBottomOf="@+id/txv_time"
         tools:text="Some great comment..." />
 
     <TextView
@@ -81,27 +90,27 @@
     <EditText
         android:id="@+id/et_comment"
         android:layout_width="0dp"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:hint="Type your response..."
         android:textSize="16sp"
         android:textStyle="italic"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/txv_more"
         app:layout_constraintStart_toStartOf="@id/txv_like"
         app:layout_constraintTop_toBottomOf="@id/txv_like" />
 
     <TextView
-        android:layout_marginTop="8dp"
-        android:visibility="gone"
         android:id="@+id/txv_send_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:background="@drawable/bg_btn_login"
-        android:text="Send"
-        android:textSize="16sp"
-        android:paddingVertical="4dp"
         android:paddingHorizontal="16dp"
+        android:paddingVertical="4dp"
+        android:text="Send"
         android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/et_comment"
         app:layout_constraintTop_toBottomOf="@id/et_comment" />
 

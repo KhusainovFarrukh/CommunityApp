@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +26,11 @@ import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickInterface
 import khusainov.farrukh.communityapp.vm.factories.ArticleDetailsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleDetailsViewModel
+import org.joda.time.DateTime
+import org.joda.time.Period
+import org.joda.time.format.ISODateTimeFormat
 import org.jsoup.Jsoup
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ArticleDetailsFragment : Fragment(), CommentClickInterface {
@@ -197,7 +202,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
             txvFollowers.text = "${article.stats.followersCount} followers"
             txvLikes.text = "${article.stats.likesCount} likes"
             txvViews.text = "${article.stats.viewsCount} views"
-            txvTime.text = "00 seconds ago"
+            txvTime.text = article.getDifference()
 
             txvUserDescription.text = article.user?.profile?.title
 
