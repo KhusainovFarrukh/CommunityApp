@@ -44,7 +44,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentArticleDetailsBinding.inflate(inflater)
         return binding.root
@@ -207,19 +207,6 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
             txvUserDescription.text = article.user?.profile?.title
 
             txvHashtags.text = article.getHashtags()
-            article.topics.forEach {
-                txvHashtags.append(
-                    "#${
-                        it.name
-                            .trim()
-                            .toLowerCase(Locale.ROOT)
-                            .replace(" ", "_")
-                    }"
-                )
-                if (it != article.topics.last()) {
-                    txvHashtags.append(" ")
-                }
-            }
 
             txvUserName.text = article.user?.profile?.name ?: "Unknown"
 

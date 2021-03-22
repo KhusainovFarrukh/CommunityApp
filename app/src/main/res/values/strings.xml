@@ -13,4 +13,10 @@
         <item>IncorrectTopics</item>
         <item>AgainstRules</item>
     </string-array>
+
+    <string-array name="sort_by">
+        <item>Yangiligi bo`yicha</item>
+        <item>Eskiligi bo`yicha</item>
+        <item>Layklar bo`yicha</item>
+    </string-array>
 </resources>

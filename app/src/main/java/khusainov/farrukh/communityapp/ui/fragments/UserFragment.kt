@@ -7,6 +7,7 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,7 +20,7 @@ import khusainov.farrukh.communityapp.data.model.User
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleInUserAdapter
+import khusainov.farrukh.communityapp.ui.viewpager.adapter.FragmentPagerAdapter
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_USER_ID
 import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
 import khusainov.farrukh.communityapp.vm.factories.UserVMFactory
@@ -34,12 +35,11 @@ class UserFragment : Fragment(), ArticleClickListener {
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var userViewModel: UserViewModel
-    private val articlesAdapter = ArticleInUserAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentUserBinding.inflate(layoutInflater, container, false)
         return binding.root
@@ -57,8 +57,29 @@ class UserFragment : Fragment(), ArticleClickListener {
                 UserVMFactory(userId, Repository(RetrofitInstance(requireContext()).communityApi))
             ).get(UserViewModel::class.java)
 
-        binding.rvPostsOfUser.adapter = articlesAdapter
+        val pagerAdapter = FragmentPagerAdapter(userId, childFragmentManager)
 
+        binding.vpPosts.adapter = pagerAdapter
+        binding.tlPosts.setupWithViewPager(binding.vpPosts)
+
+        binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long,
+            ) {
+                when (position) {
+                    0 -> pagerAdapter.sortBy = "createdAt.desc"
+                    1 -> pagerAdapter.sortBy = "createdAt.asc"
+                    2 -> pagerAdapter.sortBy = "upvotes"
+                }
+                pagerAdapter.notifyDataSetChanged()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
         setObservers()
         setClickListeners()
     }
@@ -97,17 +118,7 @@ class UserFragment : Fragment(), ArticleClickListener {
                 ).show()
             }
         }
-        userViewModel.usersArticles.observe(viewLifecycleOwner) {
-            if (it.isSuccessful) {
-                articlesAdapter.submitList(it.body()!!)
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "${it.code()}: ${it.errorBody()}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
+
         //TODO edit this to return User data class
         userViewModel.isFollowed.observe(viewLifecycleOwner) {
             if (it) {

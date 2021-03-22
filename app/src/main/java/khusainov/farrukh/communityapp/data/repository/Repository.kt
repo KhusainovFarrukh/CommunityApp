@@ -6,8 +6,8 @@ import khusainov.farrukh.communityapp.data.model.*
 
 class Repository(private val api: CommunityApi) {
 
-    suspend fun getPostsOfUserById(userId: String, type: String) =
-        api.getPostsOfUserById(userId = userId, type = type)
+    suspend fun getPostsOfUserById(userId: String, type: String, sortBy: String) =
+        api.getPostsOfUserById(userId = userId, type = type, sort = sortBy)
 
     //TODO edit this to return User data class
     suspend fun followUserById(userId: String) = api.followUserById(userId)

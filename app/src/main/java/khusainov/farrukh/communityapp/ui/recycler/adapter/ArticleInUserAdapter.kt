@@ -41,7 +41,11 @@ class ArticleInUserViewHolder(private val binding: ViewholderArticleOfUserBindin
 
     fun onBindArticle(article: Article) {
         binding.apply {
-            txvTitle.text = article.title?.trim()
+            if (article.title.isNullOrEmpty()) {
+                txvTitle.text = "\"${article.parent.title ?: "Komment"}\" ga javoban:"
+            } else {
+                txvTitle.text = article.title.trim()
+            }
             txvViews.text = article.stats.viewsCount.toString()
             txvLikes.text = article.stats.likesCount.toString()
             txvComments.text = article.stats.commentsCount.toString()

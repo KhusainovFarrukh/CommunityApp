@@ -22,7 +22,8 @@ interface CommunityApi {
     suspend fun getPostsOfUserById(
         @Path("userId") userId: String,
         @Query("limit") limit: Int = 50,
-        @Query("type") type: String
+        @Query("type") type: String,
+        @Query("sort") sort: String = "upvotes"
     ): Response<List<Article>>
 
     @DELETE("api/v1/posts/{articleId}")
