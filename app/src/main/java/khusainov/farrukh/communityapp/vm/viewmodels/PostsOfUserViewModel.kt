@@ -29,7 +29,7 @@ class PostsOfUserViewModel(
         viewModelScope.launch {
             _isLoading.postValue(true)
 
-            _usersPosts.postValue(repository.getPostsOfUserById(userId, type, sortBy))
+            _usersPosts.postValue(repository.getPostsOfUser(userId, type, sortBy))
 
             _isLoading.postValue(false)
         }

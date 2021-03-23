@@ -160,7 +160,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface, TopicClickList
     private fun setDataToViews(article: ArticleDetails) {
         binding.apply {
             txvLikeArticle.setOnClickListener {
-                articleViewModel.likeArticleById(article.articleId)
+                articleViewModel.likeArticle(article.articleId)
             }
             txvShare.setOnClickListener {
                 activityListener?.shareIntent(article)
@@ -219,11 +219,11 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface, TopicClickList
     }
 
     override fun onLikeCommentClick(commentId: String, isLiked: Boolean) {
-        articleViewModel.likeCommentById(commentId, isLiked)
+        articleViewModel.likeComment(commentId, isLiked)
     }
 
     override fun onLikeSubCommentClick(commentId: String, isLiked: Boolean) {
-        articleViewModel.likeSubCommentById(commentId, isLiked)
+        articleViewModel.likeSubComment(commentId, isLiked)
     }
 
     override fun onCommentAuthorClick(userId: String) {
@@ -241,11 +241,11 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface, TopicClickList
     }
 
     override fun onDeleteCommentClick(commentId: String) {
-        articleViewModel.deleteCommentById(commentId)
+        articleViewModel.deleteComment(commentId)
     }
 
     override fun onDeleteSubCommentClick(commentId: String) {
-        articleViewModel.deleteSubCommentById(commentId)
+        articleViewModel.deleteSubComment(commentId)
     }
 
     override fun onTopicClick(topicId: String) {

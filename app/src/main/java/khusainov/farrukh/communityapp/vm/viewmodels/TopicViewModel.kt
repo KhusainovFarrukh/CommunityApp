@@ -1,12 +1,10 @@
 package khusainov.farrukh.communityapp.vm.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.data.model.Article
-import khusainov.farrukh.communityapp.data.model.ArticleDetails
 import khusainov.farrukh.communityapp.data.model.Topic
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.launch
@@ -31,14 +29,14 @@ class TopicViewModel(private val repository: Repository, private val topicId: St
         viewModelScope.launch {
             _isLoading.postValue(true)
 
-            _responseTopic.postValue(repository.getTopicById(topicId))
+            _responseTopic.postValue(repository.getTopic(topicId))
 
             _isLoading.postValue(false)
         }
-        getTopicPosts()
+        getPostsOfTopic()
     }
 
-    fun getTopicPosts(sortBy: String = "createdAt.desc") {
+    fun getPostsOfTopic(sortBy: String = "createdAt.desc") {
         viewModelScope.launch {
             _isLoadingPosts.postValue(true)
 

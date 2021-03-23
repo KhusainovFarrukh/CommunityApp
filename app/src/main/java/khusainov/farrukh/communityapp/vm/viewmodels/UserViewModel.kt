@@ -12,7 +12,6 @@ import retrofit2.Response
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:58 PM
  **/
-
 class UserViewModel(private val userId: String, private val repository: Repository) : ViewModel() {
 
     private val _responseUser = MutableLiveData<Response<User>>()
@@ -27,7 +26,7 @@ class UserViewModel(private val userId: String, private val repository: Reposito
         viewModelScope.launch {
             _isLoading.postValue(true)
 
-            _responseUser.postValue(repository.getUserById(userId))
+            _responseUser.postValue(repository.getUser(userId))
 
             _isLoading.postValue(false)
 
@@ -38,13 +37,13 @@ class UserViewModel(private val userId: String, private val repository: Reposito
     }
 
     //TODO edit this to return User data class
-    fun followUserById() {
+    fun followUser() {
         viewModelScope.launch {
             if (_isFollowed.value == true) {
-                repository.unFollowUserById(userId)
+                repository.unFollowUser(userId)
                 _isFollowed.postValue(false)
             } else {
-                repository.followUserById(userId)
+                repository.followUser(userId)
                 _isFollowed.postValue(true)
             }
         }

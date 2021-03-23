@@ -142,7 +142,7 @@ class UserFragment : Fragment(), ArticleClickListener {
 
             txvFollow.setOnClickListener {
                 //TODO edit this to return User data class
-                userViewModel.followUserById()
+                userViewModel.followUser()
             }
             imvProfile.load(user.profileInUser.picture) {
                 crossfade(true)

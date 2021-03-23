@@ -35,7 +35,7 @@ class ArticleDetailsViewModel(private val articleId: String, private val reposit
         viewModelScope.launch {
             _isLoadingArticle.postValue(true)
 
-            _responseArticle.postValue(repository.getArticleById(articleId))
+            _responseArticle.postValue(repository.getArticle(articleId))
 
             _isLoadingArticle.postValue(false)
         }
@@ -57,14 +57,14 @@ class ArticleDetailsViewModel(private val articleId: String, private val reposit
         }
     }
 
-    fun likeArticleById(articleId: String) {
+    fun likeArticle(articleId: String) {
         viewModelScope.launch {
             try {
                 if (_isLiked.value == true) {
-                    repository.removeLikeArticleById(articleId)
+                    repository.removeLikeArticle(articleId)
                     _isLiked.postValue(false)
                 } else {
-                    repository.likeArticleById(articleId)
+                    repository.likeArticle(articleId)
                     _isLiked.postValue(true)
                 }
             } catch (e: Exception) {
@@ -73,20 +73,20 @@ class ArticleDetailsViewModel(private val articleId: String, private val reposit
         }
     }
 
-    fun likeCommentById(commentId: String, isLiked: Boolean) {
+    fun likeComment(commentId: String, isLiked: Boolean) {
         viewModelScope.launch {
             (_responseComments.value?.body() as MutableList<ArticleDetailsWithResponses>).let {
                 it.forEach { currentItem ->
                     if (currentItem.articleId == commentId) {
                         if (isLiked) {
-                            repository.removeLikeArticleById(commentId).let { likedComment ->
+                            repository.removeLikeArticle(commentId).let { likedComment ->
                                 it[it.indexOf(currentItem)] = currentItem.copy(
                                     stats = likedComment.stats,
                                     isLiked = likedComment.isLiked
                                 )
                             }
                         } else {
-                            repository.likeArticleById(commentId).let { likedComment ->
+                            repository.likeArticle(commentId).let { likedComment ->
                                 it[it.indexOf(currentItem)] = currentItem.copy(
                                     stats = likedComment.stats,
                                     isLiked = likedComment.isLiked
@@ -101,12 +101,12 @@ class ArticleDetailsViewModel(private val articleId: String, private val reposit
         }
     }
 
-    fun likeSubCommentById(commentId: String, isLiked: Boolean) {
+    fun likeSubComment(commentId: String, isLiked: Boolean) {
         viewModelScope.launch {
             if (isLiked) {
-                repository.removeLikeArticleById(commentId)
+                repository.removeLikeArticle(commentId)
             } else {
-                repository.likeArticleById(commentId)
+                repository.likeArticle(commentId)
             }
 
             _responseComments.postValue(repository.getComments(articleId))
@@ -132,9 +132,9 @@ class ArticleDetailsViewModel(private val articleId: String, private val reposit
         }
     }
 
-    fun deleteCommentById(commentId: String) {
+    fun deleteComment(commentId: String) {
         viewModelScope.launch {
-            repository.deleteArticleById(commentId)
+            repository.deleteArticle(commentId)
             (_responseComments.value?.body() as MutableList<ArticleDetailsWithResponses>).let {
                 it.forEach { currentItem ->
                     if (currentItem.articleId == commentId) {
@@ -147,9 +147,9 @@ class ArticleDetailsViewModel(private val articleId: String, private val reposit
         }
     }
 
-    fun deleteSubCommentById(commentId: String) {
+    fun deleteSubComment(commentId: String) {
         viewModelScope.launch {
-            repository.deleteArticleById(commentId)
+            repository.deleteArticle(commentId)
             _responseComments.postValue(repository.getComments(articleId))
         }
     }

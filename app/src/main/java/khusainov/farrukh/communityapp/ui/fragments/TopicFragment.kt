@@ -64,9 +64,9 @@ class TopicFragment : Fragment(), ArticleClickListener, TopicClickListener {
                 id: Long,
             ) {
                 when (position) {
-                    0 -> topicViewModel.getTopicPosts("createdAt.desc")
-                    1 -> topicViewModel.getTopicPosts("createdAt.asc")
-                    2 -> topicViewModel.getTopicPosts("upvotes")
+                    0 -> topicViewModel.getPostsOfTopic("createdAt.desc")
+                    1 -> topicViewModel.getPostsOfTopic("createdAt.asc")
+                    2 -> topicViewModel.getPostsOfTopic("upvotes")
                 }
             }
 

@@ -27,7 +27,7 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
         loginJob = viewModelScope.launch {
             _isLoading.postValue(true)
 
-            _responseUser.postValue(repository.signInWithEmail(signInData))
+            _responseUser.postValue(repository.signIn(signInData))
 
             _isLoading.postValue(false)
         }
