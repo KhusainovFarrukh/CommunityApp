@@ -112,6 +112,17 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
         startActivity(Intent.createChooser(shareIntent, "Share this article with..."))
     }
 
+    override fun showTopicFragment(topicId: String) {
+        val fragment = TopicFragment()
+        val bundle = Bundle()
+        bundle.putString("topicId", topicId)
+        fragment.arguments = bundle
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.view_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     override fun showReportDialog(articleId: String) {
         val fragment = ReportDialogFragment()
         val bundle = Bundle()
@@ -135,4 +146,5 @@ interface HomeActivityListener {
     fun getUserId(): String
     fun showUserFragment(userId: String)
     fun shareIntent(article: ArticleDetails)
+    fun showTopicFragment(topicId: String)
 }

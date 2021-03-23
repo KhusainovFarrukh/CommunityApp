@@ -15,18 +15,19 @@ import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleInUserAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
+import khusainov.farrukh.communityapp.utils.clicklisteners.TopicClickListener
 import khusainov.farrukh.communityapp.vm.factories.PostsOfUserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.PostsOfUserViewModel
 
 /**
  *Created by FarrukhKhusainov on 3/17/21 11:14 PM
  **/
-class PostsOfUserListFragment : Fragment(), ArticleClickListener {
+class PostsOfUserListFragment : Fragment(), ArticleClickListener, TopicClickListener {
 
     private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentListPostsOfUserBinding? = null
     private lateinit var postsViewModel: PostsOfUserViewModel
-    val adapter = ArticleInUserAdapter(this)
+    val adapter = ArticleInUserAdapter(this, this)
     private val binding get() = _binding!!
 
     fun newInstance(userId: String, postsType: String, sortBy: String): PostsOfUserListFragment {
@@ -108,5 +109,9 @@ class PostsOfUserListFragment : Fragment(), ArticleClickListener {
 
     override fun onArticleClick(articleId: String) {
         activityListener?.showArticleDetailsFragment(articleId)
+    }
+
+    override fun onTopicClick(topicId: String) {
+        activityListener?.showTopicFragment(topicId)
     }
 }

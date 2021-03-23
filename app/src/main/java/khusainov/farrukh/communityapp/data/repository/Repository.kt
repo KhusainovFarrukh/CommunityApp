@@ -6,6 +6,10 @@ import khusainov.farrukh.communityapp.data.model.*
 
 class Repository(private val api: CommunityApi) {
 
+    suspend fun getTopicById(topicId: String) = api.getTopicById(topicId)
+
+    suspend fun getPostsOfTopic(topicId: String, sortBy: String) = api.getPostsOfTopic(topicId, sortBy)
+
     suspend fun getPostsOfUserById(userId: String, type: String, sortBy: String) =
         api.getPostsOfUserById(userId = userId, type = type, sort = sortBy)
 

@@ -23,18 +23,19 @@ import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.TopicAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
+import khusainov.farrukh.communityapp.utils.clicklisteners.TopicClickListener
 import khusainov.farrukh.communityapp.vm.factories.ArticlesListVMFactory
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticlesListViewModel
 import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
 
-class ArticlesListFragment : Fragment(), ArticleClickListener {
+class ArticlesListFragment : Fragment(), ArticleClickListener, TopicClickListener {
 
     private var _binding: FragmentArticlesListBinding? = null
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private val articleAdapter = ArticleAdapter(this)
-    private val topicAdapter = TopicAdapter()
+    private val topicAdapter = TopicAdapter(this)
     private lateinit var articlesListViewModel: ArticlesListViewModel
     private val loginViewModel: LoginViewModel by activityViewModels {
         LoginVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
@@ -43,7 +44,7 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentArticlesListBinding.inflate(inflater)
         return binding.root
@@ -189,5 +190,9 @@ class ArticlesListFragment : Fragment(), ArticleClickListener {
 
     override fun onArticleClick(articleId: String) {
         activityListener?.showArticleDetailsFragment(articleId)
+    }
+
+    override fun onTopicClick(topicId: String) {
+        activityListener?.showTopicFragment(topicId)
     }
 }

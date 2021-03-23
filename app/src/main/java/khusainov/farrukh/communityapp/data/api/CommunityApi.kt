@@ -6,6 +6,17 @@ import retrofit2.http.*
 
 interface CommunityApi {
 
+    @GET("api/v1/topics/{topicId}")
+    suspend fun getTopicById(
+        @Path("topicId") topicId: String
+    ): Response<Topic>
+
+    @GET("api/v1/topics/{topicId}/posts?limit=20")
+    suspend fun getPostsOfTopic(
+        @Path("topicId") topicId: String,
+        @Query("sort") sortBy: String
+    ): Response<List<Article>>
+
     @POST("api/v1/users/{userId}/followers")
     suspend fun followUserById(
         @Path("userId") userId: String
