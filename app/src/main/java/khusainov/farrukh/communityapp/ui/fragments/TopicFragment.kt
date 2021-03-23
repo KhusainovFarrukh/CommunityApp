@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import coil.load
+import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.model.Topic
 import khusainov.farrukh.communityapp.data.repository.Repository
@@ -132,8 +134,12 @@ class TopicFragment : Fragment(), ArticleClickListener, TopicClickListener {
     private fun setTopicDataToViews(topic: Topic) {
         binding.apply {
             txvTopicTitle.text = topic.name
-            txvFollowersCount.text = topic.stats.followers.toString()
-            txvPostsCount.text = topic.stats.posts.toString()
+            txvFollowersCount.text = "${topic.stats.followers} followers"
+            txvPostsCount.text = "${topic.stats.posts} posts"
+            imvTopicIcon.load(topic.picture) {
+                crossfade(true)
+                placeholder(R.drawable.ic_account_circle)
+            }
         }
     }
 

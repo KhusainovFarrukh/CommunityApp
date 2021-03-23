@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,24 +21,22 @@ import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
+import khusainov.farrukh.communityapp.ui.recycler.adapter.HashtagAdapter
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickInterface
+import khusainov.farrukh.communityapp.utils.clicklisteners.TopicClickListener
 import khusainov.farrukh.communityapp.vm.factories.ArticleDetailsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleDetailsViewModel
-import org.joda.time.DateTime
-import org.joda.time.Period
-import org.joda.time.format.ISODateTimeFormat
 import org.jsoup.Jsoup
-import java.text.SimpleDateFormat
-import java.util.*
 
-class ArticleDetailsFragment : Fragment(), CommentClickInterface {
+class ArticleDetailsFragment : Fragment(), CommentClickInterface, TopicClickListener {
 
     private var _binding: FragmentArticleDetailsBinding? = null
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var articleViewModel: ArticleDetailsViewModel
     private val commentAdapter = CommentAdapter(this)
+    private val hashtagAdapter = HashtagAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,6 +61,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
             )
         ).get(ArticleDetailsViewModel::class.java)
 
+        binding.rvHashtags.adapter = hashtagAdapter
         binding.rvComments.adapter = commentAdapter
         setObservers()
         setClickListeners()
@@ -206,7 +204,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
 
             txvUserDescription.text = article.user?.profile?.title
 
-            txvHashtags.text = article.getHashtags()
+            hashtagAdapter.submitList(article.topics)
 
             txvUserName.text = article.user?.profile?.name ?: "Unknown"
 
@@ -248,5 +246,9 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
 
     override fun onDeleteSubCommentClick(commentId: String) {
         articleViewModel.deleteSubCommentById(commentId)
+    }
+
+    override fun onTopicClick(topicId: String) {
+        activityListener?.showTopicFragment(topicId)
     }
 }

@@ -19,20 +19,18 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="8dp" />
 
-    <TextView
-        android:id="@+id/txv_hashtags"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_hashtags"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="bottom"
-        android:textColor="#1B8AF2"
-        android:textSize="12sp"
-        android:textStyle="bold"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toStartOf="@id/txv_views"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="#android #broadcast #receiver" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txv_title"
@@ -44,7 +42,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/gl_end"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
-        app:layout_constraintTop_toBottomOf="@+id/txv_hashtags"
+        app:layout_constraintTop_toBottomOf="@+id/rv_hashtags"
         tools:text="How to use Broadcast Receiver to listen Network changes" />
 
     <TextView
@@ -73,11 +71,12 @@
         android:textSize="10sp"
         app:drawableStartCompat="@drawable/ic_view"
         app:drawableTint="@color/black"
-        app:layout_constraintBaseline_toBaselineOf="@id/txv_hashtags"
+        app:layout_constraintBottom_toBottomOf="@id/rv_hashtags"
+        app:layout_constraintTop_toTopOf="@id/rv_hashtags"
         app:layout_constraintEnd_toStartOf="@+id/txv_likes"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toEndOf="@+id/txv_hashtags"
+        app:layout_constraintStart_toEndOf="@+id/rv_hashtags"
         tools:ignore="SmallSp"
         tools:text="3,274" />
 
@@ -90,7 +89,7 @@
         android:lines="1"
         android:textSize="10sp"
         app:drawableStartCompat="@drawable/ic_favorite_border"
-        app:layout_constraintBaseline_toBaselineOf="@id/txv_hashtags"
+        app:layout_constraintBaseline_toBaselineOf="@id/txv_views"
         app:layout_constraintEnd_toStartOf="@+id/txv_comments"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/txv_views"
@@ -107,7 +106,7 @@
         android:textSize="10sp"
         app:drawableStartCompat="@drawable/ic_comment"
         app:drawableTint="@color/black"
-        app:layout_constraintBaseline_toBaselineOf="@id/txv_hashtags"
+        app:layout_constraintBaseline_toBaselineOf="@id/txv_views"
         app:layout_constraintEnd_toEndOf="@id/gl_end"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/txv_likes"

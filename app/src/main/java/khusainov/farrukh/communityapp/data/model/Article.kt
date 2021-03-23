@@ -5,7 +5,6 @@ import com.google.gson.annotations.SerializedName
 import org.joda.time.DateTime
 import org.joda.time.Period
 import org.joda.time.format.ISODateTimeFormat
-import java.util.*
 
 data class Article(
     @SerializedName("_id")
@@ -23,17 +22,6 @@ data class Article(
     val summary: String,
     val topics: List<Topic>
 ) {
-    fun getHashtags(): String {
-        var hashtags = ""
-        topics.forEach {
-            hashtags += "#" + it.name.trim().toLowerCase(Locale.ROOT).replace(" ", "_")
-            if (it != topics.last()) {
-                hashtags += " "
-            }
-        }
-        return hashtags
-    }
-
     fun getDifference(): String {
         val formatter = ISODateTimeFormat.dateTime()
         val createdAtDate = formatter.parseDateTime(createdAt)
@@ -89,17 +77,6 @@ data class ArticleDetails(
             difference.seconds > 0 -> "${difference.seconds} soniya avval"
             else -> "hozir?"
         }
-    }
-
-    fun getHashtags(): String {
-        var hashtags = ""
-        topics.forEach {
-            hashtags += "#" + it.name.trim().toLowerCase(Locale.ROOT).replace(" ", "_")
-            if (it != topics.last()) {
-                hashtags += " "
-            }
-        }
-        return hashtags
     }
 }
 

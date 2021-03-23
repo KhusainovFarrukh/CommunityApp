@@ -23,6 +23,7 @@ class ArticleInUserAdapter(
         override fun areContentsTheSame(oldItem: Article, newItem: Article) =
             oldItem == newItem
     }) {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleInUserViewHolder {
         return ArticleInUserViewHolder(
             ViewholderArticleOfUserBinding.inflate(
@@ -54,11 +55,9 @@ class ArticleInUserAdapter(
                 txvLikes.text = article.stats.likesCount.toString()
                 txvComments.text = article.stats.commentsCount.toString()
                 txvSummary.text = Html.fromHtml(article.summary)
-                txvHashtags.text = article.getHashtags()
-                txvHashtags.setOnClickListener {
-                    //TODO now getting only first topic
-                    topicClickListener.onTopicClick(article.topics[0].topicId)
-                }
+                val hashtagAdapter = HashtagAdapter(topicClickListener)
+                rvHashtags.adapter = hashtagAdapter
+                hashtagAdapter.submitList(article.topics)
                 txvTime.text = article.getDifference()
             }
         }

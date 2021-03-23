@@ -112,22 +112,22 @@
                     android:textSize="12sp"
                     android:textStyle="italic"
                     app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                    app:layout_constraintTop_toTopOf="@+id/txv_hashtags" />
+                    app:layout_constraintTop_toTopOf="@+id/rv_hashtags" />
 
-                <TextView
-                    android:id="@+id/txv_hashtags"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_hashtags"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="16dp"
-                    android:gravity="bottom"
-                    android:textColor="#1B8AF2"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
+                    android:orientation="horizontal"
+                    android:overScrollMode="never"
+                    android:requiresFadingEdge="horizontal"
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toStartOf="@+id/txv_see_stats"
                     app:layout_constraintStart_toStartOf="@+id/gl_start"
-                    app:layout_constraintTop_toBottomOf="@+id/view_divider"
-                    tools:text="#android #broadcast #receiver" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_divider" />
 
                 <TextView
                     android:id="@+id/txv_title"
@@ -139,7 +139,7 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toStartOf="@+id/gl_end"
                     app:layout_constraintStart_toStartOf="@+id/gl_start"
-                    app:layout_constraintTop_toBottomOf="@+id/txv_hashtags"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_hashtags"
                     tools:text="How to use Broadcast Receiver to listen Network changes" />
 
                 <TextView
