@@ -27,11 +27,20 @@
         android:background="@color/white"
         android:orientation="horizontal"
         android:overScrollMode="never"
+        android:requiresFadingEdge="horizontal"
         android:scrollbars="none"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toStartOf="@id/txv_views"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="rv_hashtags, txv_views" />
 
     <TextView
         android:id="@+id/txv_title"
@@ -43,7 +52,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/gl_end"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
-        app:layout_constraintTop_toBottomOf="@+id/rv_hashtags"
+        app:layout_constraintTop_toBottomOf="@+id/barrier_top"
         tools:text="How to use Broadcast Receiver to listen Network changes" />
 
     <TextView
@@ -72,7 +81,6 @@
         android:textSize="10sp"
         app:drawableStartCompat="@drawable/ic_view"
         app:drawableTint="@color/black"
-        app:layout_constraintBottom_toBottomOf="@id/rv_hashtags"
         app:layout_constraintEnd_toStartOf="@+id/txv_likes"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintHorizontal_chainStyle="packed"
