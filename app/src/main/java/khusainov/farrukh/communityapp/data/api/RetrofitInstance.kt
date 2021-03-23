@@ -2,17 +2,16 @@ package khusainov.farrukh.communityapp.data.api
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
-import android.util.Log
-import khusainov.farrukh.communityapp.utils.Constants.Companion.BASE_URL
-import khusainov.farrukh.communityapp.utils.Constants.Companion.DELIMITER_COOKIES
-import khusainov.farrukh.communityapp.utils.Constants.Companion.DELIMITER_CSRF
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_COOKIES_REQUEST
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_COOKIES_RESPONSE
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_CSRF
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_CSRF_TOKEN
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_REMEMBER_ME
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_SESSION_ID
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_USER_ID
+import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
+import khusainov.farrukh.communityapp.utils.Constants.DELIMITER_COOKIES
+import khusainov.farrukh.communityapp.utils.Constants.DELIMITER_CSRF
+import khusainov.farrukh.communityapp.utils.Constants.KEY_COOKIES_REQUEST
+import khusainov.farrukh.communityapp.utils.Constants.KEY_COOKIES_RESPONSE
+import khusainov.farrukh.communityapp.utils.Constants.KEY_CSRF
+import khusainov.farrukh.communityapp.utils.Constants.KEY_CSRF_TOKEN
+import khusainov.farrukh.communityapp.utils.Constants.KEY_REMEMBER_ME
+import khusainov.farrukh.communityapp.utils.Constants.KEY_SESSION_ID
+import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -52,7 +51,6 @@ class RetrofitInstance(context: Context) {
                 response.headers(KEY_COOKIES_RESPONSE).forEach {
                     val cookie = Cookie.parse(chain.request().url, it)!!
                     editor.putString(cookie.name, it.split(DELIMITER_COOKIES)[0]).commit()
-                    Log.i(chain.request().url.toString(), it)
                 }
                 return response
             }
@@ -78,10 +76,6 @@ class RetrofitInstance(context: Context) {
                 KEY_CSRF_TOKEN,
                 (sharedPref.getString(KEY_CSRF_TOKEN, "") ?: "").split(DELIMITER_CSRF)[1]
             )
-
-            requestBuilder.build().headers.forEach {
-                Log.wtf(requestBuilder.build().url.toString(), it.toString())
-            }
 
             return chain.proceed(requestBuilder.build())
         }

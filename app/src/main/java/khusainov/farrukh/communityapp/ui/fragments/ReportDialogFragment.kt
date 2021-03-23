@@ -14,7 +14,7 @@ import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.model.ReportValue
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentDialogReportBinding
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_ARTICLE_ID
+import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.vm.factories.ReportVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ReportViewModel
 

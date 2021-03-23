@@ -4,7 +4,10 @@ import android.widget.Toast
 import khusainov.farrukh.communityapp.data.model.Notification
 import khusainov.farrukh.communityapp.ui.activities.HomeActivity
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.utils.Constants
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_USER
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST_UPVOTE
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_REPLY
 
 /**
  *Created by FarrukhKhusainov on 3/23/21 11:23 PM
@@ -16,17 +19,17 @@ class ItemClickListener(private val activityListener: HomeActivityListener?) {
 
     fun onNotificationClick(notification: Notification) {
         when (notification.verb) {
-            Constants.KEY_NOTIFICATION_POST -> {
+            KEY_NOTIFICATION_POST -> {
                 activityListener?.showArticleDetailsFragment(notification.objects[0].articleId)
             }
-            Constants.KEY_NOTIFICATION_POST_UPVOTE -> {
+            KEY_NOTIFICATION_POST_UPVOTE -> {
                 activityListener?.showUserFragment(notification.from[0].userId)
             }
-            Constants.KEY_NOTIFICATION_REPLY -> {
+            KEY_NOTIFICATION_REPLY -> {
                 //TODO replace to show comment on article details screen
                 activityListener?.showArticleDetailsFragment(notification.objects[0].parent.articleId)
             }
-            Constants.KEY_NOTIFICATION_FOLLOW_USER -> {
+            KEY_NOTIFICATION_FOLLOW_USER -> {
                 activityListener?.showUserFragment(notification.from[0].userId)
             }
             else -> {

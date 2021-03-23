@@ -12,9 +12,9 @@ import khusainov.farrukh.communityapp.data.model.ArticleDetails
 import khusainov.farrukh.communityapp.data.model.SignInData
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
 import khusainov.farrukh.communityapp.ui.fragments.*
-import khusainov.farrukh.communityapp.utils.Constants.Companion.BASE_URL
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_ARTICLE_ID
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_USER_ID
+import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
+import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
+import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
 
 @SuppressLint("CommitPrefEdits")
 class HomeActivity : AppCompatActivity(), HomeActivityListener {

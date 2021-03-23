@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.model.Notification
 import khusainov.farrukh.communityapp.databinding.ViewholderNotificationBinding
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_FOLLOW_USER
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_POST
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_POST_UPVOTE
-import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_REPLY
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_USER
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST_UPVOTE
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_REPLY
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 
 class NotificationAdapter(private val notificationClickListener: ItemClickListener) :
