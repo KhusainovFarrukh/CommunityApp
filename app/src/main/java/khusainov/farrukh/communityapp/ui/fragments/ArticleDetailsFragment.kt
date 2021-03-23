@@ -24,19 +24,19 @@ import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.HashtagAdapter
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickInterface
-import khusainov.farrukh.communityapp.utils.clicklisteners.TopicClickListener
+import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.ArticleDetailsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleDetailsViewModel
 import org.jsoup.Jsoup
 
-class ArticleDetailsFragment : Fragment(), CommentClickInterface, TopicClickListener {
+class ArticleDetailsFragment : Fragment(), CommentClickInterface {
 
     private var _binding: FragmentArticleDetailsBinding? = null
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var articleViewModel: ArticleDetailsViewModel
     private val commentAdapter = CommentAdapter(this)
-    private val hashtagAdapter = HashtagAdapter(this)
+    private lateinit var hashtagAdapter: HashtagAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,6 +76,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface, TopicClickList
         super.onAttach(context)
         if (context is HomeActivityListener) {
             activityListener = context
+            hashtagAdapter = HashtagAdapter(ItemClickListener(activityListener))
         } else {
             throw IllegalArgumentException("$context is not HomeActivityListener")
         }
@@ -246,9 +247,5 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface, TopicClickList
 
     override fun onDeleteSubCommentClick(commentId: String) {
         articleViewModel.deleteSubComment(commentId)
-    }
-
-    override fun onTopicClick(topicId: String) {
-        activityListener?.showTopicFragment(topicId)
     }
 }

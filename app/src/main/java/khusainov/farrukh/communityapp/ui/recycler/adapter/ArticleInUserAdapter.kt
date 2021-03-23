@@ -8,12 +8,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import khusainov.farrukh.communityapp.data.model.Article
 import khusainov.farrukh.communityapp.databinding.ViewholderArticleOfUserBinding
-import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
-import khusainov.farrukh.communityapp.utils.clicklisteners.TopicClickListener
+import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 
 class ArticleInUserAdapter(
-    private val articleClickListener: ArticleClickListener,
-    private val topicClickListener: TopicClickListener,
+    private val clickListener: ItemClickListener,
 ) :
     ListAdapter<Article, ArticleInUserAdapter.ArticleInUserViewHolder>(object :
         DiffUtil.ItemCallback<Article>() {
@@ -36,7 +34,7 @@ class ArticleInUserAdapter(
 
     override fun onBindViewHolder(holder: ArticleInUserViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            articleClickListener.onArticleClick(getItem(position).articleId)
+            clickListener.onArticleClick(getItem(position).articleId)
         }
         holder.onBindArticle(getItem(position))
     }
@@ -55,7 +53,7 @@ class ArticleInUserAdapter(
                 txvLikes.text = article.stats.likesCount.toString()
                 txvComments.text = article.stats.commentsCount.toString()
                 txvSummary.text = Html.fromHtml(article.summary)
-                val hashtagAdapter = HashtagAdapter(topicClickListener)
+                val hashtagAdapter = HashtagAdapter(clickListener)
                 rvHashtags.adapter = hashtagAdapter
                 hashtagAdapter.submitList(article.topics)
                 txvTime.text = article.getDifference()

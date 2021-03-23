@@ -14,9 +14,9 @@ import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_POST
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_POST_UPVOTE
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_NOTIFICATION_REPLY
-import khusainov.farrukh.communityapp.utils.clicklisteners.NotificationClickListener
+import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 
-class NotificationAdapter(private val notificationClickListener: NotificationClickListener) :
+class NotificationAdapter(private val notificationClickListener: ItemClickListener) :
     ListAdapter<Notification, NotificationViewHolder>(object :
         DiffUtil.ItemCallback<Notification>() {
         override fun areItemsTheSame(oldItem: Notification, newItem: Notification) =

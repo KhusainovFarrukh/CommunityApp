@@ -22,14 +22,13 @@ import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.viewpager.adapter.FragmentPagerAdapter
 import khusainov.farrukh.communityapp.utils.Constants.Companion.KEY_USER_ID
-import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
 import khusainov.farrukh.communityapp.vm.factories.UserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.UserViewModel
 
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:55 PM
  **/
-class UserFragment : Fragment(), ArticleClickListener {
+class UserFragment : Fragment() {
 
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
@@ -158,9 +157,5 @@ class UserFragment : Fragment(), ArticleClickListener {
 
     private fun setClickListeners() {
         //TODO set all click listeners in the fragment
-    }
-
-    override fun onArticleClick(articleId: String) {
-        activityListener?.showArticleDetailsFragment(articleId)
     }
 }

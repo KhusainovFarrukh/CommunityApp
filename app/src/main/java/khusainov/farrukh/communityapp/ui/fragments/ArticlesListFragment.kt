@@ -22,20 +22,19 @@ import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.TopicAdapter
-import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
-import khusainov.farrukh.communityapp.utils.clicklisteners.TopicClickListener
+import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.ArticlesListVMFactory
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticlesListViewModel
 import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
 
-class ArticlesListFragment : Fragment(), ArticleClickListener, TopicClickListener {
+class ArticlesListFragment : Fragment() {
 
     private var _binding: FragmentArticlesListBinding? = null
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
-    private val articleAdapter = ArticleAdapter(this)
-    private val topicAdapter = TopicAdapter(this)
+    private lateinit var articleAdapter: ArticleAdapter
+    private lateinit var topicAdapter: TopicAdapter
     private lateinit var articlesListViewModel: ArticlesListViewModel
     private val loginViewModel: LoginViewModel by activityViewModels {
         LoginVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
@@ -73,6 +72,8 @@ class ArticlesListFragment : Fragment(), ArticleClickListener, TopicClickListene
         super.onAttach(context)
         if (context is HomeActivityListener) {
             activityListener = context
+            topicAdapter = TopicAdapter(ItemClickListener(activityListener))
+            articleAdapter = ArticleAdapter(ItemClickListener(activityListener))
         } else {
             throw IllegalArgumentException("$context is not HomeActivityListener")
         }
@@ -186,13 +187,5 @@ class ArticlesListFragment : Fragment(), ArticleClickListener, TopicClickListene
                 loginViewModel.signInWithEmail(it)
             }
         }
-    }
-
-    override fun onArticleClick(articleId: String) {
-        activityListener?.showArticleDetailsFragment(articleId)
-    }
-
-    override fun onTopicClick(topicId: String) {
-        activityListener?.showTopicFragment(topicId)
     }
 }

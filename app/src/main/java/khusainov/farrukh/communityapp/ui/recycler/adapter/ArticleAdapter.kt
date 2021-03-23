@@ -10,9 +10,9 @@ import coil.load
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.model.Article
 import khusainov.farrukh.communityapp.databinding.ViewholderArticleBinding
-import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
+import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 
-class ArticleAdapter(private val articleClickListener: ArticleClickListener) :
+class ArticleAdapter(private val articleClickListener: ItemClickListener) :
     ListAdapter<Article, ArticleViewHolder>(object : DiffUtil.ItemCallback<Article>() {
         override fun areItemsTheSame(oldItem: Article, newItem: Article) =
             oldItem.articleId == newItem.articleId

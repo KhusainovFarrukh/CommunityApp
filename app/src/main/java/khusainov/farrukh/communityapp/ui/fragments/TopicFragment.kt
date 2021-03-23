@@ -19,21 +19,20 @@ import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleInUserAdapter
-import khusainov.farrukh.communityapp.utils.clicklisteners.ArticleClickListener
-import khusainov.farrukh.communityapp.utils.clicklisteners.TopicClickListener
+import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.TopicVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.TopicViewModel
 
 /**
  *Created by FarrukhKhusainov on 3/22/21 11:31 PM
  **/
-class TopicFragment : Fragment(), ArticleClickListener, TopicClickListener {
+class TopicFragment : Fragment() {
 
     private var _binding: FragmentTopicBinding? = null
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var topicViewModel: TopicViewModel
-    val adapter = ArticleInUserAdapter(this, this)
+    private lateinit var articleInUserAdapter: ArticleInUserAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,7 +73,7 @@ class TopicFragment : Fragment(), ArticleClickListener, TopicClickListener {
             }
         }
 
-        binding.rvPosts.adapter = adapter
+        binding.rvPosts.adapter = articleInUserAdapter
 
         setObservers()
         setClickListeners()
@@ -89,6 +88,7 @@ class TopicFragment : Fragment(), ArticleClickListener, TopicClickListener {
         super.onAttach(context)
         if (context is HomeActivityListener) {
             activityListener = context
+            articleInUserAdapter = ArticleInUserAdapter(ItemClickListener(activityListener))
         } else {
             throw IllegalArgumentException("$context is not HomeActivityListener")
         }
@@ -119,7 +119,7 @@ class TopicFragment : Fragment(), ArticleClickListener, TopicClickListener {
         }
         topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
-                adapter.submitList(it.body()!!)
+                articleInUserAdapter.submitList(it.body()!!)
             } else {
                 Toast.makeText(
                     requireActivity(),
@@ -145,13 +145,5 @@ class TopicFragment : Fragment(), ArticleClickListener, TopicClickListener {
 
     private fun setClickListeners() {
         //TODO set all click listeners in the fragment
-    }
-
-    override fun onArticleClick(articleId: String) {
-        activityListener?.showArticleDetailsFragment(articleId)
-    }
-
-    override fun onTopicClick(topicId: String) {
-        activityListener?.showTopicFragment(topicId)
     }
 }
