@@ -15,6 +15,7 @@ import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.NotificationAdapter
+import khusainov.farrukh.communityapp.utils.Constants
 import khusainov.farrukh.communityapp.utils.clicklisteners.NotificationClickListener
 import khusainov.farrukh.communityapp.vm.factories.NotificationsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel
@@ -30,7 +31,7 @@ class NotificationsFragment : Fragment(), NotificationClickListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentNotificationsBinding.inflate(inflater)
         return binding.root
@@ -66,11 +67,28 @@ class NotificationsFragment : Fragment(), NotificationClickListener {
     }
 
     override fun onNotificationClick(notification: Notification) {
-        Toast.makeText(
-            context,
-            "NotificationID: ${notification.notificationId}",
-            Toast.LENGTH_SHORT
-        ).show()
+        when (notification.verb) {
+            Constants.KEY_NOTIFICATION_POST -> {
+                activityListener?.showArticleDetailsFragment(notification.objects[0].articleId)
+            }
+            Constants.KEY_NOTIFICATION_POST_UPVOTE -> {
+                activityListener?.showUserFragment(notification.from[0].userId)
+            }
+            Constants.KEY_NOTIFICATION_REPLY -> {
+                //TODO replace to show comment on article details screen
+                activityListener?.showArticleDetailsFragment(notification.objects[0].parent.articleId)
+            }
+            Constants.KEY_NOTIFICATION_FOLLOW_USER -> {
+                activityListener?.showUserFragment(notification.from[0].userId)
+            }
+            else -> {
+                Toast.makeText(
+                    context,
+                    "${notification.verb} turidagi noma`lum xabarnoma. Dastur muallifiga xabar bering",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun initRecyclerView() {

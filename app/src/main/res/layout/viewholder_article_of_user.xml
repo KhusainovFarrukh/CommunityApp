@@ -24,6 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:background="@color/white"
         android:orientation="horizontal"
         android:overScrollMode="never"
         android:scrollbars="none"
@@ -72,11 +73,11 @@
         app:drawableStartCompat="@drawable/ic_view"
         app:drawableTint="@color/black"
         app:layout_constraintBottom_toBottomOf="@id/rv_hashtags"
-        app:layout_constraintTop_toTopOf="@id/rv_hashtags"
         app:layout_constraintEnd_toStartOf="@+id/txv_likes"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/rv_hashtags"
+        app:layout_constraintTop_toTopOf="@id/rv_hashtags"
         tools:ignore="SmallSp"
         tools:text="3,274" />
 
