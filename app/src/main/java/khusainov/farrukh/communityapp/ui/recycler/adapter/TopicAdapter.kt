@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.model.Topic
+import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.databinding.ViewholderTopicBinding
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 

@@ -10,9 +10,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.model.SignInData
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.models.SignInData
 import khusainov.farrukh.communityapp.databinding.FragmentDialogLoginBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
@@ -24,13 +22,13 @@ class LoginDialogFragment : DialogFragment() {
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private val loginViewModel: LoginViewModel by activityViewModels {
-        LoginVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
+        LoginVMFactory(requireContext())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentDialogLoginBinding.inflate(inflater)
         return binding.root

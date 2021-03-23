@@ -15,29 +15,27 @@ import androidx.lifecycle.ViewModelProvider
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.model.User
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.TopicAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
-import khusainov.farrukh.communityapp.vm.factories.ArticlesListVMFactory
+import khusainov.farrukh.communityapp.vm.factories.MainVMFactory
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
-import khusainov.farrukh.communityapp.vm.viewmodels.ArticlesListViewModel
+import khusainov.farrukh.communityapp.vm.viewmodels.MainViewModel
 import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
 
-class ArticlesListFragment : Fragment() {
+class MainFragment : Fragment() {
 
     private var _binding: FragmentArticlesListBinding? = null
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var articleAdapter: ArticleAdapter
     private lateinit var topicAdapter: TopicAdapter
-    private lateinit var articlesListViewModel: ArticlesListViewModel
+    private lateinit var mainViewModel: MainViewModel
     private val loginViewModel: LoginViewModel by activityViewModels {
-        LoginVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
+        LoginVMFactory(requireContext())
     }
 
     override fun onCreateView(
@@ -52,10 +50,10 @@ class ArticlesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        articlesListViewModel = ViewModelProvider(
+        mainViewModel = ViewModelProvider(
             this,
-            ArticlesListVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
-        ).get(ArticlesListViewModel::class.java)
+            MainVMFactory(requireContext())
+        ).get(MainViewModel::class.java)
 
         initRecyclerView()
         setClickListeners()
@@ -98,7 +96,7 @@ class ArticlesListFragment : Fragment() {
             }
         }
 
-        articlesListViewModel.responseAllPosts.observe(viewLifecycleOwner) { responseList ->
+        mainViewModel.responseAllPosts.observe(viewLifecycleOwner) { responseList ->
             if (responseList.isSuccessful) {
                 if (responseList.body()?.isNotEmpty() == true) {
                     articleAdapter.submitList(responseList.body())
@@ -118,7 +116,7 @@ class ArticlesListFragment : Fragment() {
             }
         }
 
-        articlesListViewModel.responseTopics.observe(viewLifecycleOwner) { responseTopics ->
+        mainViewModel.responseTopics.observe(viewLifecycleOwner) { responseTopics ->
             if (responseTopics.isSuccessful) {
                 if (responseTopics.body()?.isNotEmpty() == true) {
                     topicAdapter.submitList(responseTopics.body())
@@ -138,11 +136,11 @@ class ArticlesListFragment : Fragment() {
             }
         }
 
-        articlesListViewModel.isLoadingArticles.observe(viewLifecycleOwner) {
+        mainViewModel.isLoadingArticles.observe(viewLifecycleOwner) {
             binding.pbLoadingArticles.isVisible = it
         }
 
-        articlesListViewModel.isLoadingTopics.observe(viewLifecycleOwner) {
+        mainViewModel.isLoadingTopics.observe(viewLifecycleOwner) {
             binding.pbLoadingTopics.isVisible = it
         }
 

@@ -42,7 +42,7 @@ class RetrofitInstance(context: Context) {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val communityApi: CommunityApi = retrofit.create(CommunityApi::class.java)
+    val communityApiService: CommunityApiService = retrofit.create(CommunityApiService::class.java)
 
     //interceptor to save cookies from every request
     inner class ReceivedCookiesInterceptor : Interceptor {

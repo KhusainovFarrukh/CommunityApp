@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.utils.clicklisteners
 
 import android.widget.Toast
-import khusainov.farrukh.communityapp.data.model.Notification
+import khusainov.farrukh.communityapp.data.models.Notification
 import khusainov.farrukh.communityapp.ui.activities.HomeActivity
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_USER

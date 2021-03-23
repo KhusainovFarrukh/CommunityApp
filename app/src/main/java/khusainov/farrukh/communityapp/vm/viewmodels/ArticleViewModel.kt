@@ -5,9 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import khusainov.farrukh.communityapp.data.model.ArticleDetails
-import khusainov.farrukh.communityapp.data.model.ArticleDetailsWithResponses
-import khusainov.farrukh.communityapp.data.model.UserModel
+import khusainov.farrukh.communityapp.data.models.ArticleDetails
+import khusainov.farrukh.communityapp.data.models.ArticleDetailsWithResponses
+import khusainov.farrukh.communityapp.data.models.UserModel
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -15,7 +15,7 @@ import retrofit2.Response
 /**
  *Created by FarrukhKhusainov on 3/4/21 10:53 PM
  **/
-class ArticleDetailsViewModel(private val articleId: String, private val repository: Repository) :
+class ArticleViewModel(private val articleId: String, private val repository: Repository) :
     ViewModel() {
 
     private val _isLoadingArticle = MutableLiveData<Boolean>()

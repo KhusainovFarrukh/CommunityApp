@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import khusainov.farrukh.communityapp.data.model.Article
-import khusainov.farrukh.communityapp.data.model.Topic
+import khusainov.farrukh.communityapp.data.models.Article
+import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class ArticlesListViewModel(repo: Repository) : ViewModel() {
+class MainViewModel(repo: Repository) : ViewModel() {
 
     private val _isLoadingArticles = MutableLiveData<Boolean>()
     private val _isLoadingTopics = MutableLiveData<Boolean>()

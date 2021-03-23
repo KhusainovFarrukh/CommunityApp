@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import khusainov.farrukh.communityapp.data.model.User
+import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response

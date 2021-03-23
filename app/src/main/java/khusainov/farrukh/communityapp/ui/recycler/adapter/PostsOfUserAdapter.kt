@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import khusainov.farrukh.communityapp.data.model.Article
+import khusainov.farrukh.communityapp.data.models.Article
 import khusainov.farrukh.communityapp.databinding.ViewholderArticleOfUserBinding
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 
-class ArticleInUserAdapter(
+class PostsOfUserAdapter(
     private val clickListener: ItemClickListener,
 ) :
-    ListAdapter<Article, ArticleInUserAdapter.ArticleInUserViewHolder>(object :
+    ListAdapter<Article, PostsOfUserAdapter.ArticleInUserViewHolder>(object :
         DiffUtil.ItemCallback<Article>() {
         override fun areItemsTheSame(oldItem: Article, newItem: Article) =
             oldItem.articleId == newItem.articleId
@@ -53,7 +53,7 @@ class ArticleInUserAdapter(
                 txvLikes.text = article.stats.likesCount.toString()
                 txvComments.text = article.stats.commentsCount.toString()
                 txvSummary.text = Html.fromHtml(article.summary)
-                val hashtagAdapter = HashtagAdapter(clickListener)
+                val hashtagAdapter = HashTagAdapter(clickListener)
                 rvHashtags.adapter = hashtagAdapter
                 hashtagAdapter.submitList(article.topics)
                 txvTime.text = article.getDifference()

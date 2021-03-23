@@ -13,12 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.model.Topic
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleInUserAdapter
+import khusainov.farrukh.communityapp.ui.recycler.adapter.PostsOfUserAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.TopicVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.TopicViewModel
@@ -32,7 +30,7 @@ class TopicFragment : Fragment() {
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var topicViewModel: TopicViewModel
-    private lateinit var articleInUserAdapter: ArticleInUserAdapter
+    private lateinit var postsOfUserAdapter: PostsOfUserAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +50,7 @@ class TopicFragment : Fragment() {
         topicViewModel =
             ViewModelProvider(
                 this,
-                TopicVMFactory(topicId, Repository(RetrofitInstance(requireContext()).communityApi))
+                TopicVMFactory(topicId, requireContext())
             ).get(TopicViewModel::class.java)
 
         binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -73,7 +71,7 @@ class TopicFragment : Fragment() {
             }
         }
 
-        binding.rvPosts.adapter = articleInUserAdapter
+        binding.rvPosts.adapter = postsOfUserAdapter
 
         setObservers()
         setClickListeners()
@@ -88,7 +86,7 @@ class TopicFragment : Fragment() {
         super.onAttach(context)
         if (context is HomeActivityListener) {
             activityListener = context
-            articleInUserAdapter = ArticleInUserAdapter(ItemClickListener(activityListener))
+            postsOfUserAdapter = PostsOfUserAdapter(ItemClickListener(activityListener))
         } else {
             throw IllegalArgumentException("$context is not HomeActivityListener")
         }
@@ -119,7 +117,7 @@ class TopicFragment : Fragment() {
         }
         topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
-                articleInUserAdapter.submitList(it.body()!!)
+                postsOfUserAdapter.submitList(it.body()!!)
             } else {
                 Toast.makeText(
                     requireActivity(),

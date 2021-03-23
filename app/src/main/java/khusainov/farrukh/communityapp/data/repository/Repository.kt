@@ -1,63 +1,63 @@
 package khusainov.farrukh.communityapp.data.repository
 
-import khusainov.farrukh.communityapp.data.api.CommunityApi
-import khusainov.farrukh.communityapp.data.model.*
+import khusainov.farrukh.communityapp.data.api.CommunityApiService
+import khusainov.farrukh.communityapp.data.models.*
 
-class Repository(private val api: CommunityApi) {
+class Repository(private val apiService: CommunityApiService) {
 
     suspend fun signIn(signInData: SignInData) =
-        api.signIn(signInData)
+        apiService.signIn(signInData)
 
     suspend fun getTopics() =
-        api.getTopics()
+        apiService.getTopics()
 
     suspend fun getArticlesList(limit: Int) =
-        api.getArticlesList(limit)
+        apiService.getArticlesList(limit)
 
     suspend fun getNotifications() =
-        api.getNotifications()
+        apiService.getNotifications()
 
     suspend fun getArticle(articleId: String) =
-        api.getArticle(articleId)
+        apiService.getArticle(articleId)
 
     suspend fun getComments(articleId: String) =
-        api.getCommentsOfArticle(articleId)
+        apiService.getCommentsOfArticle(articleId)
 
     suspend fun getUser(userId: String) =
-        api.getUser(userId)
+        apiService.getUser(userId)
 
     //TODO edit this to return User data class
     suspend fun followUser(userId: String) =
-        api.followUser(userId)
+        apiService.followUser(userId)
 
     //TODO edit this to return User data class
     suspend fun unFollowUser(userId: String) =
-        api.unFollowUser(userId)
+        apiService.unFollowUser(userId)
 
     suspend fun getPostsOfUser(userId: String, type: String, sortBy: String) =
-        api.getPostsOfUser(userId = userId, type = type, sort = sortBy)
+        apiService.getPostsOfUser(userId = userId, type = type, sort = sortBy)
 
     suspend fun getTopic(topicId: String) =
-        api.getTopic(topicId)
+        apiService.getTopic(topicId)
 
     suspend fun getPostsOfTopic(topicId: String, sortBy: String) =
-        api.getPostsOfTopic(topicId, sortBy)
+        apiService.getPostsOfTopic(topicId, sortBy)
 
     suspend fun likeArticle(articleId: String) =
-        api.likeArticle(articleId).body()!!
+        apiService.likeArticle(articleId).body()!!
 
     suspend fun removeLikeArticle(articleId: String) =
-        api.removeLikeArticle(articleId).body()!!
+        apiService.removeLikeArticle(articleId).body()!!
 
     suspend fun addComment(body: String, parent: ArticleDetails) =
-        api.addComment(SampleAddComment(content = body, parent = parent))
+        apiService.addComment(SampleAddComment(content = body, parent = parent))
 
     suspend fun addCommentToComment(body: String, parent: ArticleDetailsWithResponses) =
-        api.addCommentToComment(SampleAddCommentToComment(content = body, parent = parent))
+        apiService.addCommentToComment(SampleAddCommentToComment(content = body, parent = parent))
 
     suspend fun reportArticle(articleId: String, reportValue: ReportValue) =
-        api.reportArticle(articleId, reportValue)
+        apiService.reportArticle(articleId, reportValue)
 
     suspend fun deleteArticle(articleId: String) =
-        api.deleteArticle(articleId)
+        apiService.deleteArticle(articleId)
 }

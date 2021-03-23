@@ -10,9 +10,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.model.ReportValue
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.models.ReportValue
 import khusainov.farrukh.communityapp.databinding.FragmentDialogReportBinding
 import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.vm.factories.ReportVMFactory
@@ -43,7 +41,7 @@ class ReportDialogFragment : DialogFragment() {
         reportViewModel =
             ViewModelProvider(
                 this,
-                ReportVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
+                ReportVMFactory(requireContext())
             ).get(
                 ReportViewModel::class.java
             )

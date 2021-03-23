@@ -14,29 +14,27 @@ import androidx.lifecycle.ViewModelProvider
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.model.ArticleDetails
-import khusainov.farrukh.communityapp.data.model.ArticleDetailsWithResponses
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.models.ArticleDetails
+import khusainov.farrukh.communityapp.data.models.ArticleDetailsWithResponses
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
-import khusainov.farrukh.communityapp.ui.recycler.adapter.HashtagAdapter
+import khusainov.farrukh.communityapp.ui.recycler.adapter.HashTagAdapter
 import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
-import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickInterface
+import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
-import khusainov.farrukh.communityapp.vm.factories.ArticleDetailsVMFactory
-import khusainov.farrukh.communityapp.vm.viewmodels.ArticleDetailsViewModel
+import khusainov.farrukh.communityapp.vm.factories.ArticleVMFactory
+import khusainov.farrukh.communityapp.vm.viewmodels.ArticleViewModel
 import org.jsoup.Jsoup
 
-class ArticleDetailsFragment : Fragment(), CommentClickInterface {
+class ArticleFragment : Fragment(), CommentClickListener {
 
     private var _binding: FragmentArticleDetailsBinding? = null
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
-    private lateinit var articleViewModel: ArticleDetailsViewModel
+    private lateinit var articleViewModel: ArticleViewModel
     private val commentAdapter = CommentAdapter(this)
-    private lateinit var hashtagAdapter: HashtagAdapter
+    private lateinit var hashTagAdapter: HashTagAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,13 +53,10 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
 
         articleViewModel = ViewModelProvider(
             this,
-            ArticleDetailsVMFactory(
-                id,
-                Repository(RetrofitInstance(requireContext()).communityApi)
-            )
-        ).get(ArticleDetailsViewModel::class.java)
+            ArticleVMFactory(id, requireContext())
+        ).get(ArticleViewModel::class.java)
 
-        binding.rvHashtags.adapter = hashtagAdapter
+        binding.rvHashtags.adapter = hashTagAdapter
         binding.rvComments.adapter = commentAdapter
         setObservers()
         setClickListeners()
@@ -76,7 +71,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
         super.onAttach(context)
         if (context is HomeActivityListener) {
             activityListener = context
-            hashtagAdapter = HashtagAdapter(ItemClickListener(activityListener))
+            hashTagAdapter = HashTagAdapter(ItemClickListener(activityListener))
         } else {
             throw IllegalArgumentException("$context is not HomeActivityListener")
         }
@@ -205,7 +200,7 @@ class ArticleDetailsFragment : Fragment(), CommentClickInterface {
 
             txvUserDescription.text = article.user?.profile?.title
 
-            hashtagAdapter.submitList(article.topics)
+            hashTagAdapter.submitList(article.topics)
 
             txvUserName.text = article.user?.profile?.name ?: "Unknown"
 

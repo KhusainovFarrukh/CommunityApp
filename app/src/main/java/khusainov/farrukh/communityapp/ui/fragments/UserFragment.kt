@@ -15,12 +15,10 @@ import androidx.lifecycle.ViewModelProvider
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.model.User
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.viewpager.adapter.FragmentPagerAdapter
+import khusainov.farrukh.communityapp.ui.viewpager.adapter.ViewPagerAdapter
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
 import khusainov.farrukh.communityapp.vm.factories.UserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.UserViewModel
@@ -53,10 +51,10 @@ class UserFragment : Fragment() {
         userViewModel =
             ViewModelProvider(
                 this,
-                UserVMFactory(userId, Repository(RetrofitInstance(requireContext()).communityApi))
+                UserVMFactory(userId, requireContext())
             ).get(UserViewModel::class.java)
 
-        val pagerAdapter = FragmentPagerAdapter(userId, childFragmentManager)
+        val pagerAdapter = ViewPagerAdapter(userId, childFragmentManager)
 
         binding.vpPosts.adapter = pagerAdapter
         binding.tlPosts.setupWithViewPager(binding.vpPosts)

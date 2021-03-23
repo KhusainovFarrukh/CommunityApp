@@ -1,11 +1,11 @@
 package khusainov.farrukh.communityapp.utils.clicklisteners
 
-import khusainov.farrukh.communityapp.data.model.ArticleDetailsWithResponses
+import khusainov.farrukh.communityapp.data.models.ArticleDetailsWithResponses
 
 /**
  *Created by FarrukhKhusainov on 3/12/21 12:26 AM
  **/
-interface CommentClickInterface {
+interface CommentClickListener {
     fun onLikeCommentClick(commentId: String, isLiked: Boolean)
     fun onLikeSubCommentClick(commentId: String, isLiked: Boolean)
     fun onWriteSubCommentClick(body: String, parentComment: ArticleDetailsWithResponses)

@@ -9,8 +9,6 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.NotificationAdapter
@@ -40,7 +38,7 @@ class NotificationsFragment : Fragment() {
 
         notificationsViewModel = ViewModelProvider(
             this,
-            NotificationsVMFactory(Repository(RetrofitInstance(requireContext()).communityApi))
+            NotificationsVMFactory(requireContext())
         ).get(NotificationsViewModel::class.java)
 
         initRecyclerView()

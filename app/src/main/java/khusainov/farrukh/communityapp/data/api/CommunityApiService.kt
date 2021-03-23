@@ -1,10 +1,10 @@
 package khusainov.farrukh.communityapp.data.api
 
-import khusainov.farrukh.communityapp.data.model.*
+import khusainov.farrukh.communityapp.data.models.*
 import retrofit2.Response
 import retrofit2.http.*
 
-interface CommunityApi {
+interface CommunityApiService {
 
     //function to sign in user
     @POST("api/v1/sessions")

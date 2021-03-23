@@ -8,8 +8,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.model.ArticleDetails
-import khusainov.farrukh.communityapp.data.model.SignInData
+import khusainov.farrukh.communityapp.data.models.ArticleDetails
+import khusainov.farrukh.communityapp.data.models.SignInData
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
 import khusainov.farrukh.communityapp.ui.fragments.*
 import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
@@ -42,7 +42,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
     override fun showArticlesListFragment() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.view_container, ArticlesListFragment())
+            .replace(R.id.view_container, MainFragment())
             .commit()
     }
 
@@ -60,7 +60,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
     }
 
     override fun showArticleDetailsFragment(articleId: String) {
-        val fragment = ArticleDetailsFragment()
+        val fragment = ArticleFragment()
         val bundle = Bundle()
         bundle.putString("articleId", articleId)
         fragment.arguments = bundle

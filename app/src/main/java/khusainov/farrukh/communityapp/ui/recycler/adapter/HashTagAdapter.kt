@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import khusainov.farrukh.communityapp.data.model.Topic
+import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.databinding.ViewholderHashtagBinding
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import java.util.*
@@ -13,9 +13,9 @@ import java.util.*
 /**
  *Created by FarrukhKhusainov on 3/23/21 4:11 PM
  **/
-class HashtagAdapter(
+class HashTagAdapter(
     private val topicClickListener: ItemClickListener,
-) : ListAdapter<Topic, HashtagAdapter.HashtagViewHolder>(object : DiffUtil.ItemCallback<Topic>() {
+) : ListAdapter<Topic, HashTagAdapter.HashtagViewHolder>(object : DiffUtil.ItemCallback<Topic>() {
     override fun areItemsTheSame(oldItem: Topic, newItem: Topic) =
         oldItem.topicId == newItem.topicId
 

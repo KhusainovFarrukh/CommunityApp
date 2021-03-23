@@ -13,7 +13,7 @@ import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleInUserAdapter
+import khusainov.farrukh.communityapp.ui.recycler.adapter.PostsOfUserAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.PostsOfUserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.PostsOfUserViewModel
@@ -21,16 +21,16 @@ import khusainov.farrukh.communityapp.vm.viewmodels.PostsOfUserViewModel
 /**
  *Created by FarrukhKhusainov on 3/17/21 11:14 PM
  **/
-class PostsOfUserListFragment : Fragment() {
+class PostsOfUserFragment : Fragment() {
 
     private var activityListener: HomeActivityListener? = null
     private var _binding: FragmentListPostsOfUserBinding? = null
     private lateinit var postsViewModel: PostsOfUserViewModel
-    private lateinit var articleInUserAdapter: ArticleInUserAdapter
+    private lateinit var postsOfUserAdapter: PostsOfUserAdapter
     private val binding get() = _binding!!
 
-    fun newInstance(userId: String, postsType: String, sortBy: String): PostsOfUserListFragment {
-        val fragment = PostsOfUserListFragment()
+    fun newInstance(userId: String, postsType: String, sortBy: String): PostsOfUserFragment {
+        val fragment = PostsOfUserFragment()
         val bundle = Bundle()
         bundle.putString("userId", userId)
         bundle.putString("type", postsType)
@@ -61,10 +61,10 @@ class PostsOfUserListFragment : Fragment() {
                 PostsOfUserVMFactory(userId,
                     type,
                     sortBy,
-                    Repository(RetrofitInstance(requireContext()).communityApi))
+                    Repository(RetrofitInstance(requireContext()).communityApiService))
             ).get(PostsOfUserViewModel::class.java)
 
-        binding.rvPosts.adapter = articleInUserAdapter
+        binding.rvPosts.adapter = postsOfUserAdapter
 
         setObservers()
     }
@@ -76,7 +76,7 @@ class PostsOfUserListFragment : Fragment() {
 
         postsViewModel.usersPosts.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
-                articleInUserAdapter.submitList(it.body()!!)
+                postsOfUserAdapter.submitList(it.body()!!)
             } else {
                 Toast.makeText(
                     requireActivity(),
@@ -96,7 +96,7 @@ class PostsOfUserListFragment : Fragment() {
         super.onAttach(context)
         if (context is HomeActivityListener) {
             activityListener = context
-            articleInUserAdapter = ArticleInUserAdapter(ItemClickListener(activityListener))
+            postsOfUserAdapter = PostsOfUserAdapter(ItemClickListener(activityListener))
         } else {
             throw IllegalArgumentException("$context is not HomeActivityListener")
         }

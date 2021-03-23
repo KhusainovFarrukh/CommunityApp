@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.model.Notification
+import khusainov.farrukh.communityapp.data.models.Notification
 import khusainov.farrukh.communityapp.databinding.ViewholderNotificationBinding
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_USER
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST
