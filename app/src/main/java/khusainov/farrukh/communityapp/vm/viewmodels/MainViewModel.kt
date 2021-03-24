@@ -3,10 +3,11 @@ package khusainov.farrukh.communityapp.vm.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.data.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -22,8 +23,10 @@ class MainViewModel(repo: Repository) : ViewModel() {
     val responseAllPosts: LiveData<Response<List<Post>>> = _responseAllPosts
     val responseTopics: LiveData<Response<List<Topic>>> = _responseTopics
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
     init {
-        viewModelScope.launch {
+        coroutineScope.launch {
             _isLoadingArticles.postValue(true)
 
             _responseAllPosts.postValue(repo.getArticlesList(20))
@@ -31,7 +34,7 @@ class MainViewModel(repo: Repository) : ViewModel() {
             _isLoadingArticles.postValue(false)
         }
 
-        viewModelScope.launch {
+        coroutineScope.launch {
             _isLoadingTopics.postValue(true)
 
             _responseTopics.postValue(repo.getTopics())

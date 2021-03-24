@@ -32,6 +32,7 @@ class UserFragment : Fragment() {
     private val binding get() = _binding!!
     private var activityListener: HomeActivityListener? = null
     private lateinit var userViewModel: UserViewModel
+    private lateinit var pagerAdapter: ViewPagerAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,29 +55,11 @@ class UserFragment : Fragment() {
                 UserVMFactory(userId, requireContext())
             ).get(UserViewModel::class.java)
 
-        val pagerAdapter = ViewPagerAdapter(userId, childFragmentManager)
-
+        pagerAdapter = ViewPagerAdapter(userId, childFragmentManager)
         binding.vpPosts.adapter = pagerAdapter
         binding.tlPosts.setupWithViewPager(binding.vpPosts)
 
-        binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long,
-            ) {
-                when (position) {
-                    0 -> pagerAdapter.sortBy = "createdAt.desc"
-                    1 -> pagerAdapter.sortBy = "createdAt.asc"
-                    2 -> pagerAdapter.sortBy = "upvotes"
-                }
-                pagerAdapter.notifyDataSetChanged()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
+        setSpinnerListener()
         setObservers()
         setClickListeners()
     }
@@ -155,5 +138,26 @@ class UserFragment : Fragment() {
 
     private fun setClickListeners() {
         //TODO set all click listeners in the fragment
+    }
+
+    private fun setSpinnerListener() {
+        binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long,
+            ) {
+                when (position) {
+                    0 -> pagerAdapter.sortBy = "createdAt.desc"
+                    1 -> pagerAdapter.sortBy = "createdAt.asc"
+                    2 -> pagerAdapter.sortBy = "upvotes"
+                }
+                pagerAdapter.notifyDataSetChanged()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
     }
 }

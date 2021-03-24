@@ -3,9 +3,10 @@ package khusainov.farrukh.communityapp.vm.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.data.models.Notification
 import khusainov.farrukh.communityapp.data.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -20,8 +21,10 @@ class NotificationsViewModel(repository: Repository) : ViewModel() {
     val isLoading: LiveData<Boolean> = _isLoading
     val responseNotification: LiveData<Response<List<Notification>>> = _responseNotifications
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
     init {
-        viewModelScope.launch {
+        coroutineScope.launch {
             _isLoading.postValue(true)
 
             _responseNotifications.postValue(repository.getNotifications())

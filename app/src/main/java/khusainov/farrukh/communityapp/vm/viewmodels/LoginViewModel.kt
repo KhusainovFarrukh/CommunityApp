@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.data.models.SignInData
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.data.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -23,8 +25,10 @@ class LoginViewModel(private val repository: Repository) : ViewModel() {
     val isLoading: LiveData<Boolean> = _isLoading
     val responseUser: LiveData<Response<User>> = _responseUser
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
     fun signInWithEmail(signInData: SignInData) {
-        loginJob = viewModelScope.launch {
+        loginJob = coroutineScope.launch {
             _isLoading.postValue(true)
 
             _responseUser.postValue(repository.signIn(signInData))

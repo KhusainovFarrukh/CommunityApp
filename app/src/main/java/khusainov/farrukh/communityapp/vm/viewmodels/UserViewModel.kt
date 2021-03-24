@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.data.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -22,8 +24,10 @@ class UserViewModel(private val userId: String, private val repository: Reposito
     val isLoading: LiveData<Boolean> = _isLoading
     val isFollowed: LiveData<Boolean> = _isFollowed
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
     init {
-        viewModelScope.launch {
+        coroutineScope.launch {
             _isLoading.postValue(true)
 
             _responseUser.postValue(repository.getUser(userId))
@@ -38,7 +42,7 @@ class UserViewModel(private val userId: String, private val repository: Reposito
 
     //TODO edit this to return User data class
     fun followUser() {
-        viewModelScope.launch {
+        coroutineScope.launch {
             if (_isFollowed.value == true) {
                 repository.unFollowUser(userId)
                 _isFollowed.postValue(false)

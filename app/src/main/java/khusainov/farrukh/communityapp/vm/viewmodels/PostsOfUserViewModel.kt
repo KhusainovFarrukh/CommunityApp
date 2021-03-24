@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.data.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -25,8 +27,10 @@ class PostsOfUserViewModel(
     val usersPosts: LiveData<Response<List<Post>>> = _usersPosts
     val isLoading: LiveData<Boolean> = _isLoading
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
     init {
-        viewModelScope.launch {
+        coroutineScope.launch {
             _isLoading.postValue(true)
 
             _usersPosts.postValue(repository.getPostsOfUser(userId, type, sortBy))

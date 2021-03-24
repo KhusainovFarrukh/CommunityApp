@@ -55,8 +55,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
             ArticleVMFactory(id, requireContext())
         ).get(ArticleViewModel::class.java)
 
-        binding.rvHashtags.adapter = hashTagAdapter
-        binding.rvComments.adapter = commentAdapter
+        setRecyclerAdapters()
         setObservers()
         setClickListeners()
     }
@@ -148,6 +147,11 @@ class ArticleFragment : Fragment(), CommentClickListener {
                 )
             }
         }
+    }
+
+    private fun setRecyclerAdapters() {
+        binding.rvHashtags.adapter = hashTagAdapter
+        binding.rvComments.adapter = commentAdapter
     }
 
     //TODO remove this annotation in the future

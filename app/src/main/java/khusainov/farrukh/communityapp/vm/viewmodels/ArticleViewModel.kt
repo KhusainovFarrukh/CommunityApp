@@ -4,10 +4,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.data.repository.Repository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -29,15 +30,17 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     val responseComments: MutableLiveData<Response<List<Post>>> = _responseComments
     val isLiked: LiveData<Boolean> = _isLiked
 
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
     init {
-        viewModelScope.launch {
+        coroutineScope.launch {
             _isLoadingArticle.postValue(true)
 
             _responseArticle.postValue(repository.getArticle(articleId))
 
             _isLoadingArticle.postValue(false)
         }
-        viewModelScope.launch {
+        coroutineScope.launch {
             _isLoadingComments.postValue(true)
 
             _responseComments.postValue(repository.getComments(articleId))
@@ -56,7 +59,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     }
 
     fun likeArticle(articleId: String) {
-        viewModelScope.launch {
+        coroutineScope.launch {
             try {
                 if (_isLiked.value == true) {
                     repository.removeLikeArticle(articleId)
@@ -72,7 +75,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     }
 
     fun likeComment(commentId: String, isLiked: Boolean) {
-        viewModelScope.launch {
+        coroutineScope.launch {
             (_responseComments.value?.body() as MutableList<Post>).let {
                 it.forEach { currentItem ->
                     if (currentItem.id == commentId) {
@@ -100,7 +103,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     }
 
     fun likeSubComment(commentId: String, isLiked: Boolean) {
-        viewModelScope.launch {
+        coroutineScope.launch {
             if (isLiked) {
                 repository.removeLikeArticle(commentId)
             } else {
@@ -112,7 +115,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     }
 
     fun addCommentToArticle(body: String) {
-        viewModelScope.launch {
+        coroutineScope.launch {
             (_responseComments.value?.body() as MutableList<Post>).let { list ->
                 repository.addComment(body, _responseArticle.value!!.body()!!).body()
                     ?.let {
@@ -124,14 +127,14 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     }
 
     fun addCommentToComment(body: String, parentComment: Post) {
-        viewModelScope.launch {
+        coroutineScope.launch {
             repository.addCommentToComment(body, parentComment)
             _responseComments.postValue(repository.getComments(articleId))
         }
     }
 
     fun deleteComment(commentId: String) {
-        viewModelScope.launch {
+        coroutineScope.launch {
             repository.deleteArticle(commentId)
             (_responseComments.value?.body() as MutableList<Post>).let {
                 it.forEach { currentItem ->
@@ -146,7 +149,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     }
 
     fun deleteSubComment(commentId: String) {
-        viewModelScope.launch {
+        coroutineScope.launch {
             repository.deleteArticle(commentId)
             _responseComments.postValue(repository.getComments(articleId))
         }

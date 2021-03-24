@@ -161,22 +161,25 @@ class MainFragment : Fragment() {
     }
 
     private fun setUserToViews(user: User) {
+        binding.apply {
+            btnLogin.visibility = Button.INVISIBLE
+            imvProfile.visibility = ImageView.VISIBLE
+            imvCreatePost.visibility = ImageView.VISIBLE
 
-        binding.btnLogin.visibility = Button.INVISIBLE
-        binding.imvProfile.visibility = ImageView.VISIBLE
-        binding.imvCreatePost.visibility = ImageView.VISIBLE
-
-        binding.imvProfile.load(user.profile.photo) {
-            crossfade(true)
-            placeholder(R.drawable.ic_account_circle)
-            transformations(CircleCropTransformation())
+            imvProfile.load(user.profile.photo) {
+                crossfade(true)
+                placeholder(R.drawable.ic_account_circle)
+                transformations(CircleCropTransformation())
+            }
         }
     }
 
     private fun initRecyclerView() {
-        binding.rvTopics.adapter = topicAdapter
-        binding.rvPosts.setHasFixedSize(true)
-        binding.rvPosts.adapter = articleAdapter
+        binding.apply {
+            rvTopics.adapter = topicAdapter
+            rvPosts.setHasFixedSize(true)
+            rvPosts.adapter = articleAdapter
+        }
     }
 
     private fun signInAutomatically() {

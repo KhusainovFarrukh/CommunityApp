@@ -53,26 +53,8 @@ class TopicFragment : Fragment() {
                 TopicVMFactory(topicId, requireContext())
             ).get(TopicViewModel::class.java)
 
-        binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long,
-            ) {
-                when (position) {
-                    0 -> topicViewModel.getPostsOfTopic("createdAt.desc")
-                    1 -> topicViewModel.getPostsOfTopic("createdAt.asc")
-                    2 -> topicViewModel.getPostsOfTopic("upvotes")
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
-
+        setSpinnerListener()
         binding.rvPosts.adapter = postsOfUserAdapter
-
         setObservers()
         setClickListeners()
     }
@@ -143,5 +125,25 @@ class TopicFragment : Fragment() {
 
     private fun setClickListeners() {
         //TODO set all click listeners in the fragment
+    }
+
+    private fun setSpinnerListener() {
+        binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long,
+            ) {
+                when (position) {
+                    0 -> topicViewModel.getPostsOfTopic("createdAt.desc")
+                    1 -> topicViewModel.getPostsOfTopic("createdAt.asc")
+                    2 -> topicViewModel.getPostsOfTopic("upvotes")
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
     }
 }
