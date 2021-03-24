@@ -14,8 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.ArticleDetails
-import khusainov.farrukh.communityapp.data.models.ArticleDetailsWithResponses
+import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
@@ -153,19 +152,19 @@ class ArticleFragment : Fragment(), CommentClickListener {
 
     //TODO remove this annotation in the future
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
-    private fun setDataToViews(article: ArticleDetails) {
+    private fun setDataToViews(article: Post) {
         binding.apply {
             txvLikeArticle.setOnClickListener {
-                articleViewModel.likeArticle(article.articleId)
+                articleViewModel.likeArticle(article.id)
             }
             txvShare.setOnClickListener {
                 activityListener?.shareIntent(article)
             }
             txvReportArticle.setOnClickListener {
-                activityListener?.showReportDialog(article.articleId)
+                activityListener?.showReportDialog(article.id)
             }
             txvSeeProfile.setOnClickListener {
-                activityListener?.showUserFragment(article.user!!.userId)
+                activityListener?.showUserFragment(article.user!!.id)
             }
 
             //Replacing '#' from encoded version. Because there is a bug with WebView
@@ -192,9 +191,9 @@ class ArticleFragment : Fragment(), CommentClickListener {
                 "UTF-8"
             )
 
-            txvComments.text = "${article.stats.commentsCount} comments"
-            txvFollowers.text = "${article.stats.followersCount} followers"
-            txvLikes.text = "${article.stats.likesCount} likes"
+            txvComments.text = "${article.stats.comments} comments"
+            txvFollowers.text = "${article.stats.followers} followers"
+            txvLikes.text = "${article.stats.likes} likes"
             txvViews.text = "${article.stats.viewsCount} views"
             txvTime.text = article.getDifference()
 
@@ -206,7 +205,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 
             txvTitle.text = article.title?.trim()
 
-            imvProfilePhoto.load(article.user?.profile?.profilePhoto) {
+            imvProfilePhoto.load(article.user?.profile?.photo) {
                 crossfade(true)
                 placeholder(R.drawable.ic_account_circle)
                 transformations(CircleCropTransformation())
@@ -226,7 +225,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
         activityListener?.showUserFragment(userId)
     }
 
-    override fun onWriteSubCommentClick(body: String, parentComment: ArticleDetailsWithResponses) {
+    override fun onWriteSubCommentClick(body: String, parentComment: Post) {
         articleViewModel.addCommentToComment(body, parentComment)
     }
 

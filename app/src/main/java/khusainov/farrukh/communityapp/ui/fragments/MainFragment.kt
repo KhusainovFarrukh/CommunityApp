@@ -166,7 +166,7 @@ class MainFragment : Fragment() {
         binding.imvProfile.visibility = ImageView.VISIBLE
         binding.imvCreatePost.visibility = ImageView.VISIBLE
 
-        binding.imvProfile.load(user.profileInUser.picture) {
+        binding.imvProfile.load(user.profile.photo) {
             crossfade(true)
             placeholder(R.drawable.ic_account_circle)
             transformations(CircleCropTransformation())

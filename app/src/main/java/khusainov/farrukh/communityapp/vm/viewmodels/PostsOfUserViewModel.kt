@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import khusainov.farrukh.communityapp.data.models.Article
+import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -19,10 +19,10 @@ class PostsOfUserViewModel(
     private val repository: Repository,
 ) : ViewModel() {
 
-    private val _usersPosts = MutableLiveData<Response<List<Article>>>()
+    private val _usersPosts = MutableLiveData<Response<List<Post>>>()
     private val _isLoading = MutableLiveData<Boolean>()
 
-    val usersPosts: LiveData<Response<List<Article>>> = _usersPosts
+    val usersPosts: LiveData<Response<List<Post>>> = _usersPosts
     val isLoading: LiveData<Boolean> = _isLoading
 
     init {

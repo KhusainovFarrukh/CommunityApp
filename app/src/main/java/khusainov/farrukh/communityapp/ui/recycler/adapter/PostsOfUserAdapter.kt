@@ -6,19 +6,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import khusainov.farrukh.communityapp.data.models.Article
+import com.google.gson.Gson
+import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderArticleOfUserBinding
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 
 class PostsOfUserAdapter(
     private val clickListener: ItemClickListener,
 ) :
-    ListAdapter<Article, PostsOfUserAdapter.ArticleInUserViewHolder>(object :
-        DiffUtil.ItemCallback<Article>() {
-        override fun areItemsTheSame(oldItem: Article, newItem: Article) =
-            oldItem.articleId == newItem.articleId
+    ListAdapter<Post, PostsOfUserAdapter.ArticleInUserViewHolder>(object :
+        DiffUtil.ItemCallback<Post>() {
+        override fun areItemsTheSame(oldItem: Post, newItem: Post) =
+            oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: Article, newItem: Article) =
+        override fun areContentsTheSame(oldItem: Post, newItem: Post) =
             oldItem == newItem
     }) {
 
@@ -34,7 +35,7 @@ class PostsOfUserAdapter(
 
     override fun onBindViewHolder(holder: ArticleInUserViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            clickListener.onArticleClick(getItem(position).articleId)
+            clickListener.onArticleClick(getItem(position).id)
         }
         holder.onBindArticle(getItem(position))
     }
@@ -42,16 +43,22 @@ class PostsOfUserAdapter(
     inner class ArticleInUserViewHolder(private val binding: ViewholderArticleOfUserBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun onBindArticle(article: Article) {
+        fun onBindArticle(article: Post) {
             binding.apply {
                 if (article.title.isNullOrEmpty()) {
-                    txvTitle.text = "\"${article.parent.title ?: "Komment"}\" ga javoban:"
+                    if (article.onlyParentId()) {
+                        txvTitle.text = "Komment ga javoban:"
+                    } else {
+                        Gson().fromJson(article.parent, Post::class.java).let {
+                            txvTitle.text = "\"${it.title ?: "Komment"}\" ga javoban:"
+                        }
+                    }
                 } else {
                     txvTitle.text = article.title.trim()
                 }
                 txvViews.text = article.stats.viewsCount.toString()
-                txvLikes.text = article.stats.likesCount.toString()
-                txvComments.text = article.stats.commentsCount.toString()
+                txvLikes.text = article.stats.likes.toString()
+                txvComments.text = article.stats.comments.toString()
                 txvSummary.text = Html.fromHtml(article.summary)
                 val hashtagAdapter = HashTagAdapter(clickListener)
                 rvHashtags.adapter = hashtagAdapter

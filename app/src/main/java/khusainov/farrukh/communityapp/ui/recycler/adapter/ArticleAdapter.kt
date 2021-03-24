@@ -8,16 +8,16 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Article
+import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderArticleBinding
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 
 class ArticleAdapter(private val articleClickListener: ItemClickListener) :
-    ListAdapter<Article, ArticleViewHolder>(object : DiffUtil.ItemCallback<Article>() {
-        override fun areItemsTheSame(oldItem: Article, newItem: Article) =
-            oldItem.articleId == newItem.articleId
+    ListAdapter<Post, ArticleViewHolder>(object : DiffUtil.ItemCallback<Post>() {
+        override fun areItemsTheSame(oldItem: Post, newItem: Post) =
+            oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: Article, newItem: Article) =
+        override fun areContentsTheSame(oldItem: Post, newItem: Post) =
             oldItem == newItem
     }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
@@ -32,7 +32,7 @@ class ArticleAdapter(private val articleClickListener: ItemClickListener) :
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            articleClickListener.onArticleClick(getItem(position).articleId)
+            articleClickListener.onArticleClick(getItem(position).id)
         }
         holder.onBindArticle(getItem(position))
     }
@@ -41,13 +41,13 @@ class ArticleAdapter(private val articleClickListener: ItemClickListener) :
 class ArticleViewHolder(private val binding: ViewholderArticleBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun onBindArticle(article: Article) {
+    fun onBindArticle(article: Post) {
         binding.apply {
             txvTitle.text = article.title?.trim()
             txvAuthor.text = article.user?.profile?.name ?: "Unknown"
             txvViews.text = article.stats.viewsCount.toString()
-            txvLikes.text = article.stats.likesCount.toString()
-            txvComments.text = article.stats.commentsCount.toString()
+            txvLikes.text = article.stats.likes.toString()
+            txvComments.text = article.stats.comments.toString()
             if (article.imagesList.isNotEmpty()) {
                 imvImage.load(article.imagesList[0].imageLink) {
                     crossfade(true)

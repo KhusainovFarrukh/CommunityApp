@@ -7,8 +7,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Notification
+import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderNotificationBinding
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_USER
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST
@@ -91,7 +93,11 @@ class NotificationViewHolder(private val binding: ViewholderNotificationBinding)
                     txvNotificationText.text = itemView.context.getString(
                         R.string.verb_reply,
                         notification.from[0].profile.name,
-                        notification.objects[0].parent.title,
+                        if (notification.objects[0].onlyParentId()) {
+                            "Maqola"
+                        } else {
+                            Gson().fromJson(notification.objects[0].parent, Post::class.java).title
+                        },
                         notification.objects[0].summary
                     )
                     imvIcon.setImageDrawable(

@@ -49,11 +49,11 @@ class Repository(private val apiService: CommunityApiService) {
     suspend fun removeLikeArticle(articleId: String) =
         apiService.removeLikeArticle(articleId).body()!!
 
-    suspend fun addComment(body: String, parent: ArticleDetails) =
-        apiService.addComment(SampleAddComment(content = body, parent = parent))
+    suspend fun addComment(body: String, parent: Post) =
+        apiService.addComment(CommentValue(content = body, parent = parent))
 
-    suspend fun addCommentToComment(body: String, parent: ArticleDetailsWithResponses) =
-        apiService.addCommentToComment(SampleAddCommentToComment(content = body, parent = parent))
+    suspend fun addCommentToComment(body: String, parent: Post) =
+        apiService.addCommentToComment(CommentValue(content = body, parent = parent))
 
     suspend fun reportArticle(articleId: String, reportValue: ReportValue) =
         apiService.reportArticle(articleId, reportValue)

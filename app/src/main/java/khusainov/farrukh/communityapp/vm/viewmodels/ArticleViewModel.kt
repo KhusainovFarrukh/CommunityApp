@@ -5,9 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import khusainov.farrukh.communityapp.data.models.ArticleDetails
-import khusainov.farrukh.communityapp.data.models.ArticleDetailsWithResponses
-import khusainov.farrukh.communityapp.data.models.UserModel
+import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -20,15 +19,14 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 
     private val _isLoadingArticle = MutableLiveData<Boolean>()
     private val _isLoadingComments = MutableLiveData<Boolean>()
-    private val _responseArticle = MutableLiveData<Response<ArticleDetails>>()
-    private val _responseComments = MutableLiveData<Response<List<ArticleDetailsWithResponses>>>()
+    private val _responseArticle = MutableLiveData<Response<Post>>()
+    private val _responseComments = MutableLiveData<Response<List<Post>>>()
     private val _isLiked = MutableLiveData(false)
 
     val isLoadingArticle: LiveData<Boolean> = _isLoadingArticle
     val isLoadingComments: LiveData<Boolean> = _isLoadingComments
-    val responseArticle: LiveData<Response<ArticleDetails>> = _responseArticle
-    val responseComments: MutableLiveData<Response<List<ArticleDetailsWithResponses>>> =
-        _responseComments
+    val responseArticle: LiveData<Response<Post>> = _responseArticle
+    val responseComments: MutableLiveData<Response<List<Post>>> = _responseComments
     val isLiked: LiveData<Boolean> = _isLiked
 
     init {
@@ -48,9 +46,9 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
         }
     }
 
-    fun isLiked(id: String, idList: List<UserModel>) {
+    fun isLiked(id: String, idList: List<User>) {
         idList.forEach {
-            if (it.userId == id) {
+            if (it.id == id) {
                 _isLiked.postValue(true)
                 return@forEach
             }
@@ -75,9 +73,9 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 
     fun likeComment(commentId: String, isLiked: Boolean) {
         viewModelScope.launch {
-            (_responseComments.value?.body() as MutableList<ArticleDetailsWithResponses>).let {
+            (_responseComments.value?.body() as MutableList<Post>).let {
                 it.forEach { currentItem ->
-                    if (currentItem.articleId == commentId) {
+                    if (currentItem.id == commentId) {
                         if (isLiked) {
                             repository.removeLikeArticle(commentId).let { likedComment ->
                                 it[it.indexOf(currentItem)] = currentItem.copy(
@@ -115,7 +113,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 
     fun addCommentToArticle(body: String) {
         viewModelScope.launch {
-            (_responseComments.value?.body() as MutableList<ArticleDetailsWithResponses>).let { list ->
+            (_responseComments.value?.body() as MutableList<Post>).let { list ->
                 repository.addComment(body, _responseArticle.value!!.body()!!).body()
                     ?.let {
                         list.add(it)
@@ -125,7 +123,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
         }
     }
 
-    fun addCommentToComment(body: String, parentComment: ArticleDetailsWithResponses) {
+    fun addCommentToComment(body: String, parentComment: Post) {
         viewModelScope.launch {
             repository.addCommentToComment(body, parentComment)
             _responseComments.postValue(repository.getComments(articleId))
@@ -135,9 +133,9 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     fun deleteComment(commentId: String) {
         viewModelScope.launch {
             repository.deleteArticle(commentId)
-            (_responseComments.value?.body() as MutableList<ArticleDetailsWithResponses>).let {
+            (_responseComments.value?.body() as MutableList<Post>).let {
                 it.forEach { currentItem ->
-                    if (currentItem.articleId == commentId) {
+                    if (currentItem.id == commentId) {
                         it.remove(currentItem)
                         return@forEach
                     }

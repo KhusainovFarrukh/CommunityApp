@@ -13,7 +13,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.ArticleDetailsWithResponses
+import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderCommentBinding
 import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
 
@@ -24,22 +24,22 @@ import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
 //TODO remove it
 @Suppress("DEPRECATION")
 open class CommentAdapter(private val commentClickListener: CommentClickListener) :
-    ListAdapter<ArticleDetailsWithResponses, CommentAdapter.CommentViewHolder>(object :
-        DiffUtil.ItemCallback<ArticleDetailsWithResponses>() {
+    ListAdapter<Post, CommentAdapter.CommentViewHolder>(object :
+        DiffUtil.ItemCallback<Post>() {
         override fun getChangePayload(
-            oldItem: ArticleDetailsWithResponses,
-            newItem: ArticleDetailsWithResponses
+            oldItem: Post,
+            newItem: Post,
         ) = false
 
         override fun areItemsTheSame(
-            oldItem: ArticleDetailsWithResponses,
-            newItem: ArticleDetailsWithResponses
+            oldItem: Post,
+            newItem: Post,
         ) =
-            oldItem.articleId == newItem.articleId
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(
-            oldItem: ArticleDetailsWithResponses,
-            newItem: ArticleDetailsWithResponses
+            oldItem: Post,
+            newItem: Post,
         ) =
             oldItem == newItem
     }) {
@@ -54,23 +54,23 @@ open class CommentAdapter(private val commentClickListener: CommentClickListener
 
     inner class CommentViewHolder(private val binding: ViewholderCommentBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun onBind(comment: ArticleDetailsWithResponses) {
+        fun onBind(comment: Post) {
             binding.apply {
                 txvName.text = comment.user?.profile?.name ?: "Unknown"
                 txvTime.text = comment.getDifference()
                 txvComment.text = Html.fromHtml(comment.content).trim()
-                txvLike.text = comment.stats.likesCount.toString()
-                txvReply.text = comment.stats.commentsCount.toString()
-                imvProfile.load(comment.user?.profile?.profilePhoto) {
+                txvLike.text = comment.stats.likes.toString()
+                txvReply.text = comment.stats.comments.toString()
+                imvProfile.load(comment.user?.profile?.photo) {
                     crossfade(true)
                     placeholder(R.drawable.ic_account_circle)
                     transformations(CircleCropTransformation())
                 }
                 imvProfile.setOnClickListener {
-                    commentClickListener.onCommentAuthorClick(comment.user?.userId ?: "")
+                    commentClickListener.onCommentAuthorClick(comment.user?.id ?: "")
                 }
                 txvName.setOnClickListener {
-                    commentClickListener.onCommentAuthorClick(comment.user?.userId ?: "")
+                    commentClickListener.onCommentAuthorClick(comment.user?.id ?: "")
                 }
                 txvLike.setOnClickListener {
                     onLikeClick(comment)
@@ -98,7 +98,7 @@ open class CommentAdapter(private val commentClickListener: CommentClickListener
                 }
                 txvMore.setOnClickListener {
                     val popUp = PopupMenu(itemView.context, txvMore)
-                    if (comment.user?.userId == commentClickListener.getUserId()) {
+                    if (comment.user?.id == commentClickListener.getUserId()) {
                         popUp.inflate(R.menu.popup_menu_author)
                     } else {
                         popUp.inflate((R.menu.popup_menu_not_author))
@@ -107,10 +107,10 @@ open class CommentAdapter(private val commentClickListener: CommentClickListener
                     popUp.setOnMenuItemClickListener {
                         when (it.itemId) {
                             R.id.item_report -> {
-                                commentClickListener.showReportDialog(comment.articleId)
+                                commentClickListener.showReportDialog(comment.id)
                             }
                             R.id.item_delete -> {
-                                onDeleteClick(comment.articleId)
+                                onDeleteClick(comment.id)
                             }
                         }
                         true
@@ -147,9 +147,9 @@ open class CommentAdapter(private val commentClickListener: CommentClickListener
                     }
                 } else {
                     txvAnotherComments.isVisible = false
-                    val list: MutableList<ArticleDetailsWithResponses> = mutableListOf()
+                    val list: MutableList<Post> = mutableListOf()
                     comment.responses.forEach {
-                        list.add(Gson().fromJson(it, ArticleDetailsWithResponses::class.java))
+                        list.add(Gson().fromJson(it, Post::class.java))
                     }
                     adapter.submitList(list)
                 }
@@ -157,8 +157,8 @@ open class CommentAdapter(private val commentClickListener: CommentClickListener
         }
     }
 
-    open fun onLikeClick(comment: ArticleDetailsWithResponses) {
-        commentClickListener.onLikeCommentClick(comment.articleId, comment.isLiked)
+    open fun onLikeClick(comment: Post) {
+        commentClickListener.onLikeCommentClick(comment.id, comment.isLiked)
     }
 
     open fun onDeleteClick(commentId: String) {
@@ -168,8 +168,8 @@ open class CommentAdapter(private val commentClickListener: CommentClickListener
 
 class SubCommentAdapter(private val commentClickListener: CommentClickListener) :
     CommentAdapter(commentClickListener) {
-    override fun onLikeClick(comment: ArticleDetailsWithResponses) {
-        commentClickListener.onLikeSubCommentClick(comment.articleId, comment.isLiked)
+    override fun onLikeClick(comment: Post) {
+        commentClickListener.onLikeSubCommentClick(comment.id, comment.isLiked)
     }
 
     override fun onDeleteClick(commentId: String) {

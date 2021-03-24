@@ -129,25 +129,25 @@ class UserFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun setUserDataToViews(user: User) {
         binding.apply {
-            txvName.text = user.profileInUser.name
-            txvTitle.text = user.profileInUser.title
-            txvDescription.text = Html.fromHtml(user.profileInUser.description)
-            txvLikes.text = "${user.profileInUser.statsInUser.likes} received likes"
-            txvFollowers.text = "${user.profileInUser.statsInUser.followers} followers"
-            txvPostsCount.text = "${user.profileInUser.statsInUser.posts} posts"
-            txvReputation.text = "${user.profileInUser.score} reputation"
+            txvName.text = user.profile.name
+            txvTitle.text = user.profile.title
+            txvDescription.text = Html.fromHtml(user.profile.description)
+            txvLikes.text = "${user.profile.stats.likes} received likes"
+            txvFollowers.text = "${user.profile.stats.followers} followers"
+            txvPostsCount.text = "${user.profile.stats.posts} posts"
+            txvReputation.text = "${user.profile.score} reputation"
 
             txvFollow.setOnClickListener {
                 //TODO edit this to return User data class
                 userViewModel.followUser()
             }
-            imvProfile.load(user.profileInUser.picture) {
+            imvProfile.load(user.profile.photo) {
                 crossfade(true)
                 placeholder(R.drawable.ic_account_circle)
                 transformations(CircleCropTransformation())
             }
 
-            imvBanner.load(user.profileInUser.banner) {
+            imvBanner.load(user.profile.banner) {
                 crossfade(true)
             }
         }

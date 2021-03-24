@@ -2,39 +2,25 @@ package khusainov.farrukh.communityapp.data.models
 
 import com.google.gson.annotations.SerializedName
 
+//data class for using as User (with profile)
 data class User(
     @SerializedName("_id")
     val id: String,
     @SerializedName("email")
     val email: String,
     @SerializedName("profile")
-    val profileInUser: ProfileInUser,
-    val followed: Boolean
+    val profile: ProfileInUser,
+    val followed: Boolean,
 )
 
 data class ProfileInUser(
     @SerializedName("counts")
-    val statsInUser: StatsInUser,
+    val stats: Stats,
     val score: Int,
-    val picture: String,
+    @SerializedName("picture")
+    val photo: String,
     val banner: String,
     val name: String,
     val title: String,
-    val description: String
-)
-
-data class StatsInUser(
-    @SerializedName("receivedLikes")
-    val likes: Int,
-    @SerializedName("replies")
-    val comments: Int,
-    val groups: Int,
-    val posts: Int,
-    val followings: Int,
-    val followers: Int
-)
-
-data class SignInData(
-    val email: String,
-    val password: String
+    val description: String,
 )

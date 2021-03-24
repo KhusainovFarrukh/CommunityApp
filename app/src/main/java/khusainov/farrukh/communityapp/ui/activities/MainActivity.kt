@@ -8,7 +8,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.ArticleDetails
+import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.data.models.SignInData
 import khusainov.farrukh.communityapp.databinding.ActivityHomeBinding
 import khusainov.farrukh.communityapp.ui.fragments.*
@@ -98,13 +98,13 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
             .commit()
     }
 
-    override fun shareIntent(article: ArticleDetails) {
+    override fun shareIntent(article: Post) {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"
         shareIntent.putExtra(
             Intent.EXTRA_TEXT,
             "${article.user?.profile?.name ?: "Noma`lum muallif"} yozgan \"${
-                article.title
+                article.title ?: "Comment"
             }\" nomli maqolani o`qib ko`ring: \n${
                 BASE_URL + article.url
             }"
@@ -145,6 +145,6 @@ interface HomeActivityListener {
     fun saveUserId(userId: String)
     fun getUserId(): String
     fun showUserFragment(userId: String)
-    fun shareIntent(article: ArticleDetails)
+    fun shareIntent(article: Post)
     fun showTopicFragment(topicId: String)
 }
