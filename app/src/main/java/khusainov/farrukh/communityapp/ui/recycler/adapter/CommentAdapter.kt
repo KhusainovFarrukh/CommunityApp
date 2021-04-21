@@ -25,7 +25,7 @@ import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
 
 //TODO remove it
 @Suppress("DEPRECATION")
-open class CommentAdapter(private val commentClickListener: CommentClickListener) :
+class CommentAdapter(private val commentClickListener: CommentClickListener) :
     PagingDataAdapter<Post, CommentAdapter.CommentViewHolder>(object :
         DiffUtil.ItemCallback<Post>() {
         override fun getChangePayload(
@@ -151,7 +151,7 @@ open class CommentAdapter(private val commentClickListener: CommentClickListener
                     }
                 } else {
                     txvAnotherComments.isVisible = false
-                    val list: MutableList<Post> = mutableListOf()
+                    val list = mutableListOf<Post>()
                     comment.responses.forEach {
                         list.add(Gson().fromJson(it, Post::class.java))
                     }
@@ -170,19 +170,7 @@ open class CommentAdapter(private val commentClickListener: CommentClickListener
     }
 }
 
-//TODO
-//class SubCommentAdapter(private val commentClickListener: CommentClickListener) :
-//    CommentAdapter(commentClickListener) {
-//    override fun onLikeClick(comment: Post) {
-//        commentClickListener.onLikeSubCommentClick(comment.id, comment.isLiked)
-//    }
-//
-//    override fun onDeleteClick(commentId: String) {
-//        commentClickListener.onDeleteSubCommentClick(commentId)
-//    }
-//}
-
-open class SubCommentAdapter(
+class SubCommentAdapter(
     private val commentClickListener: CommentClickListener,
     private val parentComments: List<Post>,
 ) :
@@ -243,27 +231,15 @@ open class SubCommentAdapter(
                 }
                 txvSendComment.setOnClickListener {
                     if (etComment.text.isNotEmpty()) {
-                        if (comment.onlyParentId()) {
-                            parentComments.forEach {
-                                if (comment.parent as String == it.id) {
-                                    commentClickListener.onWriteSubCommentClick(etComment.text.toString(),
-                                        it)
-                                } else {
-                                    Toast.makeText(
-                                        itemView.context,
-                                        "There is no parent comment with this ID!",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                        parentComments.forEach {
+                            if (comment.replyTo == it.id) {
+                                commentClickListener.onWriteSubCommentClick(
+                                    etComment.text.toString(),
+                                    it
+                                )
+                                return@forEach
                             }
-                        } else {
-                            commentClickListener.onWriteSubCommentClick(etComment.text.toString(),
-                                comment)
                         }
-//                        commentClickListener.onWriteSubCommentClick(
-//                            etComment.text.toString(),
-//                            comment
-//                        )
                         etComment.text.clear()
                         etComment.isVisible = false
                         txvSendComment.isVisible = false
@@ -337,7 +313,7 @@ open class SubCommentAdapter(
     }
 
     fun onLikeClick(comment: Post) {
-        commentClickListener.onLikeSubCommentClick(comment.id, comment.isLiked)
+        commentClickListener.onLikeSubCommentClick(comment)
     }
 
     fun onDeleteClick(commentId: String) {

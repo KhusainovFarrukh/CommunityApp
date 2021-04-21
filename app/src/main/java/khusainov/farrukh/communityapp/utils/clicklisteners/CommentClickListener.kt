@@ -7,7 +7,7 @@ import khusainov.farrukh.communityapp.data.models.Post
  **/
 interface CommentClickListener {
     fun onLikeCommentClick(comment: Post)
-    fun onLikeSubCommentClick(commentId: String, isLiked: Boolean)
+    fun onLikeSubCommentClick(comment: Post)
     fun onWriteSubCommentClick(body: String, parentComment: Post)
     fun onCommentAuthorClick(userId: String)
     fun getUserId(): String

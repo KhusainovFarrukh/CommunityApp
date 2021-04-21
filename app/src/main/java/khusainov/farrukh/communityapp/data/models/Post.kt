@@ -21,6 +21,7 @@ data class Post(
     val user: User?,
     val url: String,
     val parent: JsonElement,
+    val replyTo: String?,
     val summary: String,
     val topics: List<Topic>,
     @SerializedName("upvoted")

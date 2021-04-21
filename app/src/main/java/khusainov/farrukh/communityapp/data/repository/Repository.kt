@@ -98,27 +98,6 @@ class Repository(private val apiService: CommunityApiService) {
         DataWrapper.Error(e.message.toString())
     }
 
-    fun testAddCommentToComment(body: String, parent: Post) = try {
-        DataWrapper.Success(Post(
-            "0",
-            "title",
-            "2021-03-29T07:08:34.014Z",
-            emptyList(),
-            Stats(0, 1, 0, 1, 0, 0, 0, 0),
-            body,
-            null,
-            "url",
-            Gson().toJsonTree(parent),
-            "summary",
-            emptyList(),
-            false,
-            JsonArray(),
-            emptyList()
-        ))
-    } catch (e: Exception) {
-        DataWrapper.Error(e.message.toString())
-    }
-
     suspend fun reportArticle(articleId: String, reportValue: ReportValue) =
         apiService.reportArticle(articleId, reportValue)
 
