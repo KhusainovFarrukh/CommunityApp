@@ -68,4 +68,7 @@ dependencies {
 
     //jodatime
     implementation 'joda-time:joda-time:2.10.10'
+
+    //paging3
+    implementation 'androidx.paging:paging-runtime-ktx:3.0.0-alpha11'
 }

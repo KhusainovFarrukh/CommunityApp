@@ -3,8 +3,8 @@ package khusainov.farrukh.communityapp.ui.recycler.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import khusainov.farrukh.communityapp.R
@@ -13,7 +13,7 @@ import khusainov.farrukh.communityapp.databinding.ViewholderArticleBinding
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 
 class ArticleAdapter(private val articleClickListener: ItemClickListener) :
-    ListAdapter<Post, ArticleViewHolder>(object : DiffUtil.ItemCallback<Post>() {
+    PagingDataAdapter<Post, ArticleViewHolder>(object : DiffUtil.ItemCallback<Post>() {
         override fun areItemsTheSame(oldItem: Post, newItem: Post) =
             oldItem.id == newItem.id
 
@@ -32,9 +32,9 @@ class ArticleAdapter(private val articleClickListener: ItemClickListener) :
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         holder.itemView.setOnClickListener {
-            articleClickListener.onArticleClick(getItem(position).id)
+            articleClickListener.onArticleClick(getItem(position)!!.id)
         }
-        holder.onBindArticle(getItem(position))
+        holder.onBindArticle(getItem(position)!!)
     }
 }
 

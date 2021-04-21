@@ -1,6 +1,8 @@
 package khusainov.farrukh.communityapp.utils
 
 object Constants {
+    const val PAGE_STARTING_INDEX = 1
+
     const val BASE_URL = "https://community.uzbekcoders.uz"
     const val KEY_COOKIES_RESPONSE = "Set-Cookie"
     const val KEY_COOKIES_REQUEST = "Cookie"

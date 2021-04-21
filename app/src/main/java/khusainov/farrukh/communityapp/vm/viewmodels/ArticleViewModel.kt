@@ -4,6 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.filter
+import androidx.paging.map
+import com.google.gson.Gson
+import khusainov.farrukh.communityapp.data.models.CommentEvents
+import khusainov.farrukh.communityapp.data.models.DataWrapper
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.data.repository.Repository
@@ -21,16 +29,26 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     private val _isLoadingArticle = MutableLiveData<Boolean>()
     private val _isLoadingComments = MutableLiveData<Boolean>()
     private val _responseArticle = MutableLiveData<Response<Post>>()
-    private val _responseComments = MutableLiveData<Response<List<Post>>>()
+
     private val _isLiked = MutableLiveData(false)
 
     val isLoadingArticle: LiveData<Boolean> = _isLoadingArticle
+
     val isLoadingComments: LiveData<Boolean> = _isLoadingComments
     val responseArticle: LiveData<Response<Post>> = _responseArticle
-    val responseComments: MutableLiveData<Response<List<Post>>> = _responseComments
+
     val isLiked: LiveData<Boolean> = _isLiked
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
+
+
+    private val _comments = repository.getComments(articleId)
+        .cachedIn(viewModelScope)
+        .let {
+            it as MutableLiveData<PagingData<Post>>
+        }
+
+    val comments: LiveData<PagingData<Post>> get() = _comments
 
     init {
         coroutineScope.launch {
@@ -40,12 +58,36 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 
             _isLoadingArticle.postValue(false)
         }
-        coroutineScope.launch {
-            _isLoadingComments.postValue(true)
+    }
 
-            _responseComments.postValue(repository.getComments(articleId))
+    fun onCommentEvent(commentEvents: CommentEvents) {
+        val comments = _comments.value ?: return
 
-            _isLoadingComments.postValue(false)
+        viewModelScope.launch {
+
+            when (commentEvents) {
+
+                //like
+                is CommentEvents.Like -> {
+                    likeCommentWithPaging(comments, commentEvents)
+                }
+
+                //delete
+                is CommentEvents.Delete -> {
+                    deleteCommentWithPaging(comments, commentEvents)
+                }
+
+                //TODO bug
+                //reply
+                is CommentEvents.Reply -> {
+                    replyCommentWithPaging(comments, commentEvents)
+                }
+
+                //add
+                is CommentEvents.Add -> {
+                    addCommentWithPaging(comments, commentEvents)
+                }
+            }
         }
     }
 
@@ -74,84 +116,102 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
         }
     }
 
-    fun likeComment(commentId: String, isLiked: Boolean) {
-        coroutineScope.launch {
-            (_responseComments.value?.body() as MutableList<Post>).let {
-                it.forEach { currentItem ->
-                    if (currentItem.id == commentId) {
-                        if (isLiked) {
-                            repository.removeLikeArticle(commentId).let { likedComment ->
-                                it[it.indexOf(currentItem)] = currentItem.copy(
-                                    stats = likedComment.stats,
-                                    isLiked = likedComment.isLiked
-                                )
-                            }
-                        } else {
-                            repository.likeArticle(commentId).let { likedComment ->
-                                it[it.indexOf(currentItem)] = currentItem.copy(
-                                    stats = likedComment.stats,
-                                    isLiked = likedComment.isLiked
-                                )
+    //TODO what if user likes 1st degree comment and 2nd degree comment
+    private suspend fun likeCommentWithPaging(
+        comments: PagingData<Post>,
+        commentEvents: CommentEvents.Like,
+    ) {
+        comments.map {
+            if (commentEvents.commentToLike.id == it.id) {
+                if (commentEvents.commentToLike.isLiked) {
+                    repository.removeLikeArticle(commentEvents.commentToLike.id)
+                        .let { responseComment ->
+                            when (responseComment) {
+                                is DataWrapper.Success -> return@map responseComment.data.copy(
+                                    responses = it.responses)
+                                is DataWrapper.Error -> return@map it
                             }
                         }
-                        return@forEach
-                    }
+                } else {
+                    repository.likeArticle(commentEvents.commentToLike.id)
+                        .let { responseComment ->
+                            when (responseComment) {
+                                is DataWrapper.Success -> return@map responseComment.data.copy(
+                                    responses = it.responses
+                                )
+                                is DataWrapper.Error -> return@map it
+                            }
+                        }
                 }
-            }
-            _responseComments.postValue(_responseComments.value)
-        }
-    }
-
-    fun likeSubComment(commentId: String, isLiked: Boolean) {
-        coroutineScope.launch {
-            if (isLiked) {
-                repository.removeLikeArticle(commentId)
             } else {
-                repository.likeArticle(commentId)
+                return@map it
             }
-
-            _responseComments.postValue(repository.getComments(articleId))
-        }
+        }.let { _comments.value = it }
     }
 
-    fun addCommentToArticle(body: String) {
-        coroutineScope.launch {
-            (_responseComments.value?.body() as MutableList<Post>).let { list ->
-                repository.addComment(body, _responseArticle.value!!.body()!!).body()
-                    ?.let {
-                        list.add(it)
+    //TODO-6 delete not working, tested with sub comment
+    private suspend fun deleteCommentWithPaging(
+        comments: PagingData<Post>,
+        commentEvents: CommentEvents.Delete,
+    ) {
+        repository.deleteArticle(commentEvents.commentId)
+        comments.filter { commentEvents.commentId != it.id }
+            .let { _comments.value = it }
+    }
+
+    private suspend fun replyCommentWithPaging(
+        comments: PagingData<Post>,
+        commentEvents: CommentEvents.Reply,
+    ) {
+        comments.map {
+            if (commentEvents.parentComment.id == it.id) {
+
+                repository.testAddCommentToComment(commentEvents.replyBody,
+                    commentEvents.parentComment)
+//                repository.addCommentToComment(commentEvents.replyBody, commentEvents.parentComment)
+                    .let { responseComment ->
+                        //TODO-3 bug: View is not being updated, but reply is being added
+                        when (responseComment) {
+                            is DataWrapper.Success -> {
+                                val newResponses = it.responses.also { jsonArray ->
+                                    try {
+                                        jsonArray.add(Gson().toJsonTree(responseComment.data))
+                                    } catch (e: Exception) {
+                                        Log.e("ArticleViewModel", e.message.toString())
+                                    }
+                                }
+
+                                Log.wtf("Success", newResponses.size().toString())
+
+                                return@map it.copy(responses = newResponses)
+                            }
+                            is DataWrapper.Error -> {
+                                Log.wtf("Error", responseComment.message)
+                                return@map it
+                            }
+                        }
                     }
+            } else {
+                Log.wtf("Else", "There is no ${commentEvents.parentComment.id} post")
+                return@map it
             }
-            _responseComments.postValue(_responseComments.value)
+        }.let { pagingData ->
+            Log.wtf("Setting LiveData", pagingData.toString())
+            _comments.value = pagingData
         }
     }
 
-    fun addCommentToComment(body: String, parentComment: Post) {
-        coroutineScope.launch {
-            repository.addCommentToComment(body, parentComment)
-            _responseComments.postValue(repository.getComments(articleId))
-        }
-    }
-
-    fun deleteComment(commentId: String) {
-        coroutineScope.launch {
-            repository.deleteArticle(commentId)
-            (_responseComments.value?.body() as MutableList<Post>).let {
-                it.forEach { currentItem ->
-                    if (currentItem.id == commentId) {
-                        it.remove(currentItem)
-                        return@forEach
-                    }
-                }
+    private suspend fun addCommentWithPaging(
+        comments: PagingData<Post>,
+        commentEvents: CommentEvents.Add,
+    ) {
+        repository.addComment(commentEvents.commentBody,
+            _responseArticle.value!!.body()!!).let { wrapper ->
+            when (wrapper) {
+                is DataWrapper.Success -> _comments.value =
+                    comments.insertFooterItem(wrapper.data)
+                is DataWrapper.Error -> Log.e("TAG", wrapper.message)
             }
-            _responseComments.postValue(_responseComments.value)
-        }
-    }
-
-    fun deleteSubComment(commentId: String) {
-        coroutineScope.launch {
-            repository.deleteArticle(commentId)
-            _responseComments.postValue(repository.getComments(articleId))
         }
     }
 }

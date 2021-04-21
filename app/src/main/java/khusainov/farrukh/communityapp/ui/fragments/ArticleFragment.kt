@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,19 +12,23 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
+import khusainov.farrukh.communityapp.data.models.CommentEvents
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.HashTagAdapter
+import khusainov.farrukh.communityapp.ui.recycler.adapter.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.ArticleVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleViewModel
+import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 
 class ArticleFragment : Fragment(), CommentClickListener {
@@ -58,6 +63,50 @@ class ArticleFragment : Fragment(), CommentClickListener {
         setRecyclerAdapters()
         setObservers()
         setClickListeners()
+//
+//        val response1 = "response1"
+//        val response2 = "response2"
+//
+//        val post1 = Post(
+//            "1",
+//            "1",
+//            "1",
+//            emptyList(),
+//            Stats(0, 0, 0, 0, 0, 0, 0, 0),
+//            "1",
+//            null,
+//            "1",
+//            Gson().toJsonTree(response1),
+//            "1",
+//            emptyList(),
+//            true,
+//            JsonArray().also { it.add(Gson().toJsonTree(response1)) },
+//            emptyList()
+//        )
+//
+//        val post2 = Post(
+//            "1",
+//            "1",
+//            "1",
+//            emptyList(),
+//            Stats(0, 0, 0, 0, 0, 0, 0, 0),
+//            "1",
+//            null,
+//            "1",
+//            Gson().toJsonTree(response1),
+//            "1",
+//            emptyList(),
+//            true,
+//            JsonArray().also {
+//                it.add(Gson().toJsonTree(response1))
+//                it.add(Gson().toJsonTree(response2))
+//            },
+//            emptyList()
+//        )
+//
+//        Log.e("==", (post1 == post2).toString())
+//        Log.e("== with copy",
+//            (post1 == post1.copy(responses = JsonArray().also { it.add(Gson().toJsonTree(response2)) })).toString())
     }
 
     override fun onDestroyView() {
@@ -84,7 +133,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
         binding.apply {
             txvSendComment.setOnClickListener {
                 if (etComment.text.isNotEmpty()) {
-                    articleViewModel.addCommentToArticle(etComment.text.toString())
+//                    articleViewModel.addCommentToArticle(etComment.text.toString()) { commentAdapter.refresh() }
+                    articleViewModel.onCommentEvent(CommentEvents.Add(etComment.text.toString()))
                     etComment.text.clear()
                 } else {
                     Toast.makeText(
@@ -113,12 +163,22 @@ class ArticleFragment : Fragment(), CommentClickListener {
                 ).show()
             }
         }
-        articleViewModel.responseComments.observe(viewLifecycleOwner) {
-            if (it.isSuccessful && it.body()!!.isNotEmpty()) {
-                commentAdapter.submitList(it.body()!!.toMutableList())
-                binding.txvNoComments.isVisible = false
-            } else {
-                binding.txvNoComments.isVisible = true
+        articleViewModel.comments.observe(viewLifecycleOwner) {
+
+            //region response without paging3
+            //TODO
+//            if (it.isSuccessful && it.body()!!.isNotEmpty()) {
+//                commentAdapter.submitList(it.body()!!.toMutableList())
+//                binding.txvNoComments.isVisible = false
+//            } else {
+//                binding.txvNoComments.isVisible = true
+//            }
+            //endregion
+
+            Log.wtf("Observer", it.toString())
+
+            lifecycleScope.launch {
+                commentAdapter.submitData(it)
             }
         }
         articleViewModel.isLoadingArticle.observe(viewLifecycleOwner) {
@@ -128,6 +188,16 @@ class ArticleFragment : Fragment(), CommentClickListener {
         articleViewModel.isLoadingComments.observe(viewLifecycleOwner, {
             binding.rlLoadingComments.isVisible = it
         })
+
+        //region paging3 refresh state
+        //TODO
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            commentAdapter.loadStateFlow.collectLatest {
+//                binding.rlLoadingComments.isVisible = it.refresh is LoadState.Loading
+//            }
+//        }
+        //endregion
+
         articleViewModel.isLiked.observe(viewLifecycleOwner) {
             if (it) {
                 binding.txvLikeArticle.text = "Liked already"
@@ -151,7 +221,10 @@ class ArticleFragment : Fragment(), CommentClickListener {
 
     private fun setRecyclerAdapters() {
         binding.rvHashtags.adapter = hashTagAdapter
-        binding.rvComments.adapter = commentAdapter
+        binding.rvComments.adapter = commentAdapter.withLoadStateHeaderAndFooter(
+            ListLoadStateAdapter { commentAdapter.retry() },
+            ListLoadStateAdapter { commentAdapter.retry() }
+        )
     }
 
     //TODO remove this annotation in the future
@@ -217,12 +290,15 @@ class ArticleFragment : Fragment(), CommentClickListener {
         }
     }
 
-    override fun onLikeCommentClick(commentId: String, isLiked: Boolean) {
-        articleViewModel.likeComment(commentId, isLiked)
+    override fun onLikeCommentClick(comment: Post) {
+//        articleViewModel.likeComment(commentId, isLiked) { commentAdapter.refresh() }
+        articleViewModel.onCommentEvent(CommentEvents.Like(comment))
     }
 
+    //TODO handle sub comments
     override fun onLikeSubCommentClick(commentId: String, isLiked: Boolean) {
-        articleViewModel.likeSubComment(commentId, isLiked)
+//        articleViewModel.likeSubComment(commentId, isLiked) { commentAdapter.refresh() }
+//        articleViewModel.onCommentEvent(CommentEvents.Like(commentId))
     }
 
     override fun onCommentAuthorClick(userId: String) {
@@ -230,7 +306,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
     }
 
     override fun onWriteSubCommentClick(body: String, parentComment: Post) {
-        articleViewModel.addCommentToComment(body, parentComment)
+//        articleViewModel.addCommentToComment(body, parentComment) { commentAdapter.refresh() }
+        articleViewModel.onCommentEvent(CommentEvents.Reply(parentComment, body))
     }
 
     override fun getUserId() = activityListener?.getUserId() ?: ""
@@ -240,10 +317,13 @@ class ArticleFragment : Fragment(), CommentClickListener {
     }
 
     override fun onDeleteCommentClick(commentId: String) {
-        articleViewModel.deleteComment(commentId)
+//        articleViewModel.deleteComment(commentId) { commentAdapter.refresh() }
+        articleViewModel.onCommentEvent(CommentEvents.Delete(commentId))
     }
 
+    //TODO handle sub comments
     override fun onDeleteSubCommentClick(commentId: String) {
-        articleViewModel.deleteSubComment(commentId)
+//        articleViewModel.deleteSubComment(commentId) { commentAdapter.refresh() }
+//        articleViewModel.onCommentEvent(CommentEvents.Like(commentId))
     }
 }

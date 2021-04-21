@@ -12,6 +12,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
@@ -19,12 +21,15 @@ import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.recycler.adapter.ArticleAdapter
+import khusainov.farrukh.communityapp.ui.recycler.adapter.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.TopicAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
-import khusainov.farrukh.communityapp.vm.factories.MainVMFactory
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
-import khusainov.farrukh.communityapp.vm.viewmodels.MainViewModel
+import khusainov.farrukh.communityapp.vm.factories.MainVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
+import khusainov.farrukh.communityapp.vm.viewmodels.MainViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment() {
 
@@ -97,22 +102,18 @@ class MainFragment : Fragment() {
         }
 
         mainViewModel.responseAllPosts.observe(viewLifecycleOwner) { responseList ->
-            if (responseList.isSuccessful) {
-                if (responseList.body()?.isNotEmpty() == true) {
-                    articleAdapter.submitList(responseList.body())
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Not valid list",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else {
-                Toast.makeText(
-                    context,
-                    "Error code: " + responseList.code(),
-                    Toast.LENGTH_SHORT
-                ).show()
+            viewLifecycleOwner.lifecycleScope.launch {
+                articleAdapter.submitData(responseList)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            articleAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.pbLoadingArticles.isVisible = loadStates.refresh is LoadState.Loading
+//                binding.pbLoadingArticles.isVisible = loadStates.prepend is LoadState.Loading
+//                binding.pbLoadingArticles.isVisible = loadStates.append is LoadState.Loading
+//                retry.isVisible = loadState.refresh !is LoadState.Loading
+//                errorMsg.isVisible = loadState.refresh is LoadState.Error
             }
         }
 
@@ -136,9 +137,9 @@ class MainFragment : Fragment() {
             }
         }
 
-        mainViewModel.isLoadingArticles.observe(viewLifecycleOwner) {
-            binding.pbLoadingArticles.isVisible = it
-        }
+//        mainViewModel.isLoadingArticles.observe(viewLifecycleOwner) {
+//            binding.pbLoadingArticles.isVisible = it
+//        }
 
         mainViewModel.isLoadingTopics.observe(viewLifecycleOwner) {
             binding.pbLoadingTopics.isVisible = it
@@ -178,7 +179,10 @@ class MainFragment : Fragment() {
         binding.apply {
             rvTopics.adapter = topicAdapter
             rvPosts.setHasFixedSize(true)
-            rvPosts.adapter = articleAdapter
+            rvPosts.adapter = articleAdapter.withLoadStateHeaderAndFooter(
+                ListLoadStateAdapter { articleAdapter.retry() },
+                ListLoadStateAdapter { articleAdapter.retry() }
+            )
         }
     }
 

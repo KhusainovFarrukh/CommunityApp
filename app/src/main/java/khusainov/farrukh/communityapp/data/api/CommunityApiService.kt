@@ -22,13 +22,15 @@ interface CommunityApiService {
     @GET("api/v1/posts?type=article")
     suspend fun getArticlesList(
         @Query("limit") limit: Int = 20,
-    ): Response<List<Post>>
+        @Query("page") page: Int = 0,
+    ): List<Post>
 
     //function to get notifications of signed user
     @GET("api/v1/notifications")
     suspend fun getNotifications(
         @Query("limit") limit: Int = 50,
-    ): Response<List<Notification>>
+        @Query("page") page: Int = 0,
+    ): List<Notification>
 
     //function to get a article
     @GET("api/v1/posts/{articleId}")
@@ -53,7 +55,9 @@ interface CommunityApiService {
     @GET("api/v1/posts/{articleId}/responses")
     suspend fun getCommentsOfArticle(
         @Path("articleId") articleId: String,
-    ): Response<List<Post>>
+        @Query("page") page: Int = 0,
+        @Query("limit") limit: Int = 25,
+    ): List<Post>
 
     //function to get a user
     @GET("api/v1/users/{userId}")
@@ -102,23 +106,23 @@ interface CommunityApiService {
     suspend fun likeArticle(
         @Path("articleId") articleId: String,
         @Body like: LikeValue = LikeValue(1),
-    ): Response<Post>
+    ): Post
 
     //function to remove a like
     @DELETE("api/v1/posts/{articleId}/votes")
     suspend fun removeLikeArticle(
         @Path("articleId") articleId: String,
-    ): Response<Post>
+    ): Post
 
     //function to add a comment (as a post)
     @POST("api/v1/posts")
     suspend fun addComment(
         @Body commentValue: CommentValue,
-    ): Response<Post>
+    ): Post
 
     //function to add a comment to comment (as a post)
     @POST("api/v1/posts")
     suspend fun addCommentToComment(
         @Body commentValue: CommentValue,
-    ): Response<Post>
+    ): Post
 }

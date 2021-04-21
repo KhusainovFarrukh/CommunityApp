@@ -5,16 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
+import khusainov.farrukh.communityapp.ui.recycler.adapter.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.NotificationAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.NotificationsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel
+import kotlinx.coroutines.launch
 
 class NotificationsFragment : Fragment() {
 
@@ -67,32 +68,38 @@ class NotificationsFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.rvNotifications.setHasFixedSize(true)
-        binding.rvNotifications.adapter = notificationAdapter
+        binding.rvNotifications.adapter = notificationAdapter.withLoadStateHeaderAndFooter(
+            ListLoadStateAdapter { notificationAdapter.retry() },
+            ListLoadStateAdapter { notificationAdapter.retry() }
+        )
     }
 
     private fun setObservers() {
-        notificationsViewModel.responseNotification.observe(viewLifecycleOwner) { responseList ->
-            if (responseList.isSuccessful) {
-                if (responseList.body()?.isNotEmpty() == true) {
-                    notificationAdapter.submitList(responseList.body())
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Not valid list",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else {
-                Toast.makeText(
-                    context,
-                    "Error code: " + responseList.code(),
-                    Toast.LENGTH_SHORT
-                ).show()
+        notificationsViewModel.responseNotification.observe(viewLifecycleOwner) {
+//            if (responseList.isSuccessful) {
+//                if (responseList.body()?.isNotEmpty() == true) {
+//                    notificationAdapter.submitList(responseList.body())
+//                } else {
+//                    Toast.makeText(
+//                        context,
+//                        "Not valid list",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//            } else {
+//                Toast.makeText(
+//                    context,
+//                    "Error code: " + responseList.code(),
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
+            lifecycleScope.launch {
+                notificationAdapter.submitData(it)
             }
         }
 
-        notificationsViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.pbLoadingNotification.isVisible = it
-        }
+//        notificationsViewModel.isLoading.observe(viewLifecycleOwner) {
+//            binding.pbLoadingNotification.isVisible = it
+//        }
     }
 }
