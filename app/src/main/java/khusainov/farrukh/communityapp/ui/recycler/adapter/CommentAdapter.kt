@@ -41,7 +41,7 @@ class CommentAdapter(private val commentClickListener: CommentClickListener) :
                 txvSendComment.setOnClickListener {
                     if (etComment.text.isNotEmpty()) {
                         commentClickListener.onWriteSubCommentClick(etComment.text.toString(),
-                            comment)
+                            comment.id)
                         etComment.text.clear()
                         etComment.isVisible = false
                         txvSendComment.isVisible = false
@@ -106,7 +106,7 @@ class SubCommentAdapter(
                             if (comment.replyTo == it.id) {
                                 commentClickListener.onWriteSubCommentClick(
                                     etComment.text.toString(),
-                                    it
+                                    it.id
                                 )
                                 return@forEach
                             }

@@ -104,8 +104,8 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
         refresh.invoke()
     }
 
-    suspend fun replyCommentTemp(replyBody: String, parentComment: Post, refresh: () -> Unit) {
-        repository.addCommentToComment(replyBody, parentComment).let { dataWrapper ->
+    suspend fun replyCommentTemp(replyBody: String, replyTo: String, refresh: () -> Unit) {
+        repository.addCommentToComment(replyBody, _responseArticle.value!!.body()!!, replyTo).let { dataWrapper ->
                 when (dataWrapper) {
                     is DataWrapper.Success -> refresh.invoke()
                     is DataWrapper.Error -> Log.wtf("VM", dataWrapper.message)

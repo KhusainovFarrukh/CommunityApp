@@ -29,6 +29,7 @@ data class Post(
     val responses: JsonArray,
     @SerializedName("upvotes")
     val likes: List<User>,
+    val type: String
 ) {
     fun onlyParentId() = parent.isJsonPrimitive
     fun onlyResponsesId(): Boolean {

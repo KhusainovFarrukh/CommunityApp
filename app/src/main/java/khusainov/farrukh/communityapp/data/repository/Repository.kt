@@ -84,8 +84,8 @@ class Repository(private val apiService: CommunityApiService) {
         DataWrapper.Error(e.message.toString())
     }
 
-    suspend fun addCommentToComment(body: String, parent: Post) = try {
-        DataWrapper.Success(apiService.addCommentToComment(CommentValue(content = body, parent = parent)))
+    suspend fun addCommentToComment(body: String, parent: Post, replyTo: String) = try {
+        DataWrapper.Success(apiService.addCommentToComment(SubCommentValue(content = body, parent = parent, replyTo = replyTo)))
     } catch (e: Exception) {
         DataWrapper.Error(e.message.toString())
     }

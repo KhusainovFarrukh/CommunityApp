@@ -239,9 +239,9 @@ class ArticleFragment : Fragment(), CommentClickListener {
         activityListener?.showUserFragment(userId)
     }
 
-    override fun onWriteSubCommentClick(body: String, parentComment: Post) {
+    override fun onWriteSubCommentClick(body: String, replyTo: String) {
         lifecycleScope.launch {
-            articleViewModel.replyCommentTemp(body, parentComment) { commentAdapter.refresh() }
+            articleViewModel.replyCommentTemp(body, replyTo) { commentAdapter.refresh() }
         }
     }
 

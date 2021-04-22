@@ -126,6 +126,6 @@ interface CommunityApiService {
     //function to add a comment to comment (as a post)
     @POST("api/v1/posts")
     suspend fun addCommentToComment(
-        @Body commentValue: CommentValue,
+        @Body commentValue: SubCommentValue,
     ): Post
 }
