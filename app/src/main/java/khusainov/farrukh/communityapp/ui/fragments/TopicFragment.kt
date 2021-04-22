@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import coil.load
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Topic
@@ -22,6 +23,7 @@ import khusainov.farrukh.communityapp.ui.recycler.adapter.PostsOfUserAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.TopicVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.TopicViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -86,7 +88,11 @@ class TopicFragment : Fragment() {
     }
 
     private fun setObservers() {
-
+        viewLifecycleOwner.lifecycleScope.launch {
+            postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
+            }
+        }
         topicViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
         }
