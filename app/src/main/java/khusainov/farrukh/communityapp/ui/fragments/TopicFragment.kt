@@ -17,6 +17,7 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
+import khusainov.farrukh.communityapp.ui.recycler.adapter.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.ui.recycler.adapter.PostsOfUserAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.TopicVMFactory
@@ -56,7 +57,10 @@ class TopicFragment : Fragment() {
             ).get(TopicViewModel::class.java)
 
         setSpinnerListener()
-        binding.rvPosts.adapter = postsOfUserAdapter
+        binding.rvPosts.adapter = postsOfUserAdapter.withLoadStateHeaderAndFooter(
+            ListLoadStateAdapter { postsOfUserAdapter.retry() },
+            ListLoadStateAdapter { postsOfUserAdapter.retry() }
+        )
         setObservers()
         setClickListeners()
     }
@@ -82,6 +86,7 @@ class TopicFragment : Fragment() {
     }
 
     private fun setObservers() {
+
         topicViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
         }
@@ -96,7 +101,6 @@ class TopicFragment : Fragment() {
                 ).show()
             }
         }
-
         topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 postsOfUserAdapter.submitData(it)

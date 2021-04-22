@@ -16,9 +16,11 @@ class CommentPagingSource(
         val position = params.key ?: Constants.PAGE_STARTING_INDEX
 
         return try {
-            communityApiService.getCommentsOfArticle(articleId = articleId,
+            communityApiService.getCommentsOfArticle(
+                articleId = articleId,
                 page = position,
-                limit = 25).let {
+                limit = 5
+            ).let {
                 LoadResult.Page(
                     data = it,
                     prevKey = if (position == Constants.PAGE_STARTING_INDEX) null else position - 1,

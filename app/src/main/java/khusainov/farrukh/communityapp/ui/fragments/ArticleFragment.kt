@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
@@ -26,6 +27,7 @@ import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.ArticleVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 
@@ -103,6 +105,11 @@ class ArticleFragment : Fragment(), CommentClickListener {
     }
 
     private fun setObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            commentAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.rlLoadingComments.isVisible = loadStates.refresh is LoadState.Loading
+            }
+        }
         articleViewModel.responseArticle.observe(viewLifecycleOwner) { response ->
             if (response.isSuccessful) {
                 articleViewModel.isLiked(
