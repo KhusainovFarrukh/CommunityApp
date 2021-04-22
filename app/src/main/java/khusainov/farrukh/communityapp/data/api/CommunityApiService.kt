@@ -83,10 +83,11 @@ interface CommunityApiService {
     @GET("api/v1/users/{userId}/posts")
     suspend fun getPostsOfUser(
         @Path("userId") userId: String,
-        @Query("limit") limit: Int = 50,
+        @Query("limit") limit: Int = 25,
         @Query("type") type: String,
-        @Query("sort") sort: String = "upvotes",
-    ): Response<List<Post>>
+        @Query("sort") sort: String = "createdAt.desc",
+        @Query("page") page: Int = 1
+    ): List<Post>
 
     //function to get topic data
     @GET("api/v1/topics/{topicId}")

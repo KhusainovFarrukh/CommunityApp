@@ -1,15 +1,7 @@
 package khusainov.farrukh.communityapp.vm.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.data.repository.Repository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Response
 
 /**
  *Created by FarrukhKhusainov on 3/18/21 9:55 PM
@@ -21,21 +13,5 @@ class PostsOfUserViewModel(
     private val repository: Repository,
 ) : ViewModel() {
 
-    private val _usersPosts = MutableLiveData<Response<List<Post>>>()
-    private val _isLoading = MutableLiveData<Boolean>()
-
-    val usersPosts: LiveData<Response<List<Post>>> = _usersPosts
-    val isLoading: LiveData<Boolean> = _isLoading
-
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
-
-    init {
-        coroutineScope.launch {
-            _isLoading.postValue(true)
-
-            _usersPosts.postValue(repository.getPostsOfUser(userId, type, sortBy))
-
-            _isLoading.postValue(false)
-        }
-    }
+    val usersPosts = repository.getPostsOfUser(userId, type, sortBy)
 }

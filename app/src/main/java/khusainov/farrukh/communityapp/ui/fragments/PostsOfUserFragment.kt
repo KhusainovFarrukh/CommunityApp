@@ -5,10 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
@@ -17,6 +16,7 @@ import khusainov.farrukh.communityapp.ui.recycler.adapter.PostsOfUserAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.PostsOfUserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.PostsOfUserViewModel
+import kotlinx.coroutines.launch
 
 /**
  *Created by FarrukhKhusainov on 3/17/21 11:14 PM
@@ -70,19 +70,9 @@ class PostsOfUserFragment : Fragment() {
     }
 
     private fun setObservers() {
-        postsViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.pbLoading.isVisible = it
-        }
-
         postsViewModel.usersPosts.observe(viewLifecycleOwner) {
-            if (it.isSuccessful) {
-//                postsOfUserAdapter.submitList(it.body()!!)
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "${it.code()}: ${it.errorBody()}",
-                    Toast.LENGTH_LONG
-                ).show()
+            lifecycleScope.launch {
+                postsOfUserAdapter.submitData(it)
             }
         }
     }

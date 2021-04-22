@@ -85,9 +85,6 @@ class TopicFragment : Fragment() {
         topicViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
         }
-//        topicViewModel.isLoadingPosts.observe(viewLifecycleOwner) {
-//            binding.pbLoadingPosts.isVisible = it
-//        }
         topicViewModel.responseTopic.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
                 setTopicDataToViews(it.body()!!)
@@ -99,17 +96,6 @@ class TopicFragment : Fragment() {
                 ).show()
             }
         }
-//        topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
-//            if (it.isSuccessful) {
-//                postsOfUserAdapter.submitList(it.body()!!)
-//            } else {
-//                Toast.makeText(
-//                    requireActivity(),
-//                    "${it.code()}: ${it.errorBody()}",
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }
-//        }
 
         topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
@@ -145,9 +131,9 @@ class TopicFragment : Fragment() {
             ) {
                 lifecycleScope.launch {
                     when (position) {
-                        0 -> topicViewModel.getPostsOfTopic("createdAt.desc")
-                        1 -> topicViewModel.getPostsOfTopic("createdAt.asc")
-                        2 -> topicViewModel.getPostsOfTopic("upvotes")
+                        0 -> topicViewModel.sortPosts("createdAt.desc")
+                        1 -> topicViewModel.sortPosts("createdAt.asc")
+                        2 -> topicViewModel.sortPosts("upvotes")
                     }
                 }
             }

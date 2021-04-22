@@ -1,13 +1,10 @@
 package khusainov.farrukh.communityapp.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
-import com.google.gson.Gson
-import com.google.gson.JsonArray
 import khusainov.farrukh.communityapp.data.api.CommunityApiService
 import khusainov.farrukh.communityapp.data.models.*
 
@@ -66,14 +63,8 @@ class Repository(private val apiService: CommunityApiService) {
     suspend fun unFollowUser(userId: String) =
         apiService.unFollowUser(userId)
 
-    suspend fun getPostsOfUser(userId: String, type: String, sortBy: String) =
-        apiService.getPostsOfUser(userId = userId, type = type, sort = sortBy)
-
     suspend fun getTopic(topicId: String) =
         apiService.getTopic(topicId)
-
-    suspend fun getPostsOfTopic(topicId: String, sortBy: String) =
-        apiService.getPostsOfTopic(topicId, sortBy)
 
     suspend fun likeArticle(articleId: String) = try {
         DataWrapper.Success(apiService.likeArticle(articleId))
@@ -106,7 +97,7 @@ class Repository(private val apiService: CommunityApiService) {
         apiService.deleteArticle(articleId)
 
 
-    fun getPostsOfTopicWithPaging(topicId: String, sortBy: String): LiveData<PagingData<Post>> {
+    fun getPostsOfTopic(topicId: String, sortBy: String): LiveData<PagingData<Post>> {
         return Pager(
             PagingConfig(
                 pageSize = 25,
@@ -114,6 +105,17 @@ class Repository(private val apiService: CommunityApiService) {
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { PostsOfTopicPagingSource(apiService, topicId, sortBy) }
+        ).liveData
+    }
+
+    fun getPostsOfUser(userId: String, type: String, sortBy: String): LiveData<PagingData<Post>> {
+        return Pager(
+            PagingConfig(
+                pageSize = 25,
+                maxSize = 100,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { PostsOfUserPagingSource(apiService, userId, type, sortBy) }
         ).liveData
     }
 }
