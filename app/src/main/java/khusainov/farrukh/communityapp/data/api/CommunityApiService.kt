@@ -21,8 +21,8 @@ interface CommunityApiService {
     //function to get last 20 articles
     @GET("api/v1/posts?type=article")
     suspend fun getArticlesList(
-        @Query("limit") limit: Int = 20,
-        @Query("page") page: Int = 0,
+        @Query("limit") limit: Int = 25,
+        @Query("page") page: Int = 1,
     ): List<Post>
 
     //function to get notifications of signed user
@@ -55,7 +55,7 @@ interface CommunityApiService {
     @GET("api/v1/posts/{articleId}/responses")
     suspend fun getCommentsOfArticle(
         @Path("articleId") articleId: String,
-        @Query("page") page: Int = 0,
+        @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 25,
     ): List<Post>
 
@@ -99,7 +99,9 @@ interface CommunityApiService {
     suspend fun getPostsOfTopic(
         @Path("topicId") topicId: String,
         @Query("sort") sortBy: String,
-    ): Response<List<Post>>
+        @Query("limit") limit: Int = 25,
+        @Query("page") page: Int = 1
+    ): List<Post>
 
     //function to like a article
     @POST("api/v1/posts/{articleId}/votes")

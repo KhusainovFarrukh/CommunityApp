@@ -1,5 +1,6 @@
 package khusainov.farrukh.communityapp.data.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -21,7 +22,7 @@ class Repository(private val apiService: CommunityApiService) {
     fun getArticlesList(): LiveData<PagingData<Post>> {
         return Pager(
             PagingConfig(
-                pageSize = 20,
+                pageSize = 25,
                 maxSize = 100,
                 enablePlaceholders = false
             ),
@@ -103,4 +104,16 @@ class Repository(private val apiService: CommunityApiService) {
 
     suspend fun deleteArticle(articleId: String) =
         apiService.deleteArticle(articleId)
+
+
+    fun getPostsOfTopicWithPaging(topicId: String, sortBy: String): LiveData<PagingData<Post>> {
+        return Pager(
+            PagingConfig(
+                pageSize = 25,
+                maxSize = 100,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { PostsOfTopicPagingSource(apiService, topicId, sortBy) }
+        ).liveData
+    }
 }

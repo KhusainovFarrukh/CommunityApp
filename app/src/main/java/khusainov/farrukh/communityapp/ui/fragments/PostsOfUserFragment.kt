@@ -76,7 +76,7 @@ class PostsOfUserFragment : Fragment() {
 
         postsViewModel.usersPosts.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
-                postsOfUserAdapter.submitList(it.body()!!)
+//                postsOfUserAdapter.submitList(it.body()!!)
             } else {
                 Toast.makeText(
                     requireActivity(),

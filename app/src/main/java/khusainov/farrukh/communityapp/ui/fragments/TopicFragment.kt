@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import coil.load
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Topic
@@ -20,6 +21,7 @@ import khusainov.farrukh.communityapp.ui.recycler.adapter.PostsOfUserAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.TopicVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.TopicViewModel
+import kotlinx.coroutines.launch
 
 /**
  *Created by FarrukhKhusainov on 3/22/21 11:31 PM
@@ -83,9 +85,9 @@ class TopicFragment : Fragment() {
         topicViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
         }
-        topicViewModel.isLoadingPosts.observe(viewLifecycleOwner) {
-            binding.pbLoadingPosts.isVisible = it
-        }
+//        topicViewModel.isLoadingPosts.observe(viewLifecycleOwner) {
+//            binding.pbLoadingPosts.isVisible = it
+//        }
         topicViewModel.responseTopic.observe(viewLifecycleOwner) {
             if (it.isSuccessful) {
                 setTopicDataToViews(it.body()!!)
@@ -97,15 +99,21 @@ class TopicFragment : Fragment() {
                 ).show()
             }
         }
+//        topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
+//            if (it.isSuccessful) {
+//                postsOfUserAdapter.submitList(it.body()!!)
+//            } else {
+//                Toast.makeText(
+//                    requireActivity(),
+//                    "${it.code()}: ${it.errorBody()}",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//            }
+//        }
+
         topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
-            if (it.isSuccessful) {
-                postsOfUserAdapter.submitList(it.body()!!)
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "${it.code()}: ${it.errorBody()}",
-                    Toast.LENGTH_LONG
-                ).show()
+            lifecycleScope.launch {
+                postsOfUserAdapter.submitData(it)
             }
         }
     }
@@ -135,10 +143,12 @@ class TopicFragment : Fragment() {
                 position: Int,
                 id: Long,
             ) {
-                when (position) {
-                    0 -> topicViewModel.getPostsOfTopic("createdAt.desc")
-                    1 -> topicViewModel.getPostsOfTopic("createdAt.asc")
-                    2 -> topicViewModel.getPostsOfTopic("upvotes")
+                lifecycleScope.launch {
+                    when (position) {
+                        0 -> topicViewModel.getPostsOfTopic("createdAt.desc")
+                        1 -> topicViewModel.getPostsOfTopic("createdAt.asc")
+                        2 -> topicViewModel.getPostsOfTopic("upvotes")
+                    }
                 }
             }
 

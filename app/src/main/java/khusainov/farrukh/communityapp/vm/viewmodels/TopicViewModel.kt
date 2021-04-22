@@ -3,6 +3,9 @@ package khusainov.farrukh.communityapp.vm.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.data.repository.Repository
@@ -18,14 +21,16 @@ class TopicViewModel(private val topicId: String, private val repository: Reposi
     ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
-    private val _isLoadingPosts = MutableLiveData<Boolean>()
+
+    //    private val _isLoadingPosts = MutableLiveData<Boolean>()
     private val _responseTopic = MutableLiveData<Response<Topic>>()
-    private val _responseTopicPosts = MutableLiveData<Response<List<Post>>>()
+    private var _responseTopicPosts = repository.getPostsOfTopicWithPaging(topicId, "createdAt.desc").cachedIn(viewModelScope)
 
     val isLoading: LiveData<Boolean> = _isLoading
-    val isLoadingPosts: LiveData<Boolean> = _isLoadingPosts
+
+    //    val isLoadingPosts: LiveData<Boolean> = _isLoadingPosts
     val responseTopic: LiveData<Response<Topic>> = _responseTopic
-    val responseTopicPosts: LiveData<Response<List<Post>>> = _responseTopicPosts
+    val responseTopicPosts: LiveData<PagingData<Post>> = _responseTopicPosts
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -37,16 +42,13 @@ class TopicViewModel(private val topicId: String, private val repository: Reposi
 
             _isLoading.postValue(false)
         }
-        getPostsOfTopic()
+//        getPostsOfTopic()
     }
 
     fun getPostsOfTopic(sortBy: String = "createdAt.desc") {
-        coroutineScope.launch {
-            _isLoadingPosts.postValue(true)
-
-            _responseTopicPosts.postValue(repository.getPostsOfTopic(topicId, sortBy))
-
-            _isLoadingPosts.postValue(false)
-        }
+        _responseTopicPosts =
+            repository.getPostsOfTopicWithPaging(topicId, sortBy).cachedIn(viewModelScope).let {
+                it as MutableLiveData<PagingData<Post>>
+            }
     }
 }
