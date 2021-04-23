@@ -105,30 +105,20 @@ class LoginDialogFragment : DialogFragment() {
     }
 
     private fun setObservers() {
-        loginViewModel.responseUser.observe(viewLifecycleOwner) { response ->
-            if (response.isSuccessful) {
-
-                activityListener?.saveSignInData(
-                    SignInData(
-                        binding.etEmail.text.toString(),
-                        binding.etPassword.text.toString()
-                    )
+        loginViewModel.responseUser.observe(viewLifecycleOwner) {
+            activityListener?.saveSignInData(
+                SignInData(
+                    binding.etEmail.text.toString(),
+                    binding.etPassword.text.toString()
                 )
-                Toast.makeText(
-                    context,
-                    "Muvaffaqiyatli kirildi",
-                    Toast.LENGTH_SHORT
-                ).show()
-                this.dismiss()
-            } else {
-                Toast.makeText(
-                    context,
-                    "Error code:" + response.code(),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            )
+            Toast.makeText(
+                context,
+                "Muvaffaqiyatli kirildi",
+                Toast.LENGTH_SHORT
+            ).show()
+            this.dismiss()
         }
-
         loginViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.btnLogin.isEnabled = !it
             binding.pbLoading.isVisible = it

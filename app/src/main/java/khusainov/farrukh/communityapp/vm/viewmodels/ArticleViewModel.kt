@@ -9,12 +9,10 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.models.DataWrapper
 import khusainov.farrukh.communityapp.data.models.Post
-import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 /**
  *Created by FarrukhKhusainov on 3/4/21 10:53 PM
@@ -24,16 +22,11 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 
     private val _isLoadingArticle = MutableLiveData<Boolean>()
     private val _isLoadingComments = MutableLiveData<Boolean>()
-    private val _responseArticle = MutableLiveData<Response<Post>>()
-
-    private val _isLiked = MutableLiveData(false)
+    private val _responseArticle = MutableLiveData<Post>()
 
     val isLoadingArticle: LiveData<Boolean> = _isLoadingArticle
-
     val isLoadingComments: LiveData<Boolean> = _isLoadingComments
-    val responseArticle: LiveData<Response<Post>> = _responseArticle
-
-    val isLiked: LiveData<Boolean> = _isLiked
+    val responseArticle: LiveData<Post> = _responseArticle
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -49,33 +42,33 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
         coroutineScope.launch {
             _isLoadingArticle.postValue(true)
 
-            _responseArticle.postValue(repository.getArticle(articleId))
+            repository.getArticle(articleId).let { dataWrapper ->
+                when (dataWrapper) {
+                    is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
+                    is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                }
+            }
 
             _isLoadingArticle.postValue(false)
         }
     }
 
-    fun isLiked(id: String, idList: List<User>) {
-        idList.forEach {
-            if (it.id == id) {
-                _isLiked.postValue(true)
-                return@forEach
-            }
-        }
-    }
-
     fun likeArticle(articleId: String) {
-        coroutineScope.launch {
-            try {
-                if (_isLiked.value == true) {
-                    repository.removeLikeArticle(articleId)
-                    _isLiked.postValue(false)
-                } else {
-                    repository.likeArticle(articleId)
-                    _isLiked.postValue(true)
+        viewModelScope.launch {
+            if (_responseArticle.value!!.isLiked) {
+                repository.removeLikeArticle(articleId).let { dataWrapper ->
+                    when (dataWrapper) {
+                        is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
+                        is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                    }
                 }
-            } catch (e: Exception) {
-                Log.wtf("error", e.message)
+            } else {
+                repository.likeArticle(articleId).let { dataWrapper ->
+                    when (dataWrapper) {
+                        is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
+                        is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                    }
+                }
             }
         }
     }
@@ -105,7 +98,8 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     }
 
     suspend fun replyCommentTemp(replyBody: String, replyTo: String, refresh: () -> Unit) {
-        repository.addCommentToComment(replyBody, _responseArticle.value!!.body()!!, replyTo).let { dataWrapper ->
+        repository.addCommentToComment(replyBody, _responseArticle.value!!, replyTo)
+            .let { dataWrapper ->
                 when (dataWrapper) {
                     is DataWrapper.Success -> refresh.invoke()
                     is DataWrapper.Error -> Log.wtf("VM", dataWrapper.message)
@@ -114,7 +108,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     }
 
     suspend fun addCommentWithPaging(commentBody: String, refresh: () -> Unit) {
-        repository.addComment(commentBody, _responseArticle.value!!.body()!!).let { wrapper ->
+        repository.addComment(commentBody, _responseArticle.value!!).let { wrapper ->
             when (wrapper) {
                 is DataWrapper.Success -> refresh.invoke()
                 is DataWrapper.Error -> Log.e("TAG", wrapper.message)

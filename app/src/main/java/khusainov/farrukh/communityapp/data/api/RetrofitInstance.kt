@@ -72,10 +72,13 @@ class RetrofitInstance(context: Context) {
                         sharedPref.getString(KEY_SESSION_ID, "") + DELIMITER_COOKIES +
                         sharedPref.getString(KEY_CSRF_TOKEN, "")
             )
-            requestBuilder.addHeader(
-                KEY_CSRF_TOKEN,
-                (sharedPref.getString(KEY_CSRF_TOKEN, "") ?: "").split(DELIMITER_CSRF)[1]
-            )
+
+            //TODO code optimization
+            (sharedPref.getString(KEY_CSRF_TOKEN, "") ?: "").split(DELIMITER_CSRF).let {
+                if (it.size > 1) {
+                    requestBuilder.addHeader(KEY_CSRF_TOKEN, it[1])
+                }
+            }
 
             return chain.proceed(requestBuilder.build())
         }

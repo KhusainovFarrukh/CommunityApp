@@ -10,11 +10,17 @@ import khusainov.farrukh.communityapp.data.models.*
 
 class Repository(private val apiService: CommunityApiService) {
 
-    suspend fun signIn(signInData: SignInData) =
-        apiService.signIn(signInData)
+    suspend fun signIn(signInData: SignInData) = try {
+        DataWrapper.Success(apiService.signIn(signInData))
+    } catch (e: Exception) {
+        DataWrapper.Error(e.message.toString())
+    }
 
-    suspend fun getTopics() =
-        apiService.getTopics()
+    suspend fun getTopics() = try {
+        DataWrapper.Success(apiService.getTopics())
+    } catch (e: Exception) {
+        DataWrapper.Error(e.message.toString())
+    }
 
     fun getArticlesList(): LiveData<PagingData<Post>> {
         return Pager(
@@ -38,8 +44,11 @@ class Repository(private val apiService: CommunityApiService) {
         ).liveData
     }
 
-    suspend fun getArticle(articleId: String) =
-        apiService.getArticle(articleId)
+    suspend fun getArticle(articleId: String) = try {
+        DataWrapper.Success(apiService.getArticle(articleId))
+    } catch (e: Exception) {
+        DataWrapper.Error(e.message.toString())
+    }
 
     fun getComments(articleId: String): LiveData<PagingData<Post>> {
         return Pager(
@@ -52,8 +61,11 @@ class Repository(private val apiService: CommunityApiService) {
         ).liveData
     }
 
-    suspend fun getUser(userId: String) =
-        apiService.getUser(userId)
+    suspend fun getUser(userId: String) = try {
+        DataWrapper.Success(apiService.getUser(userId))
+    } catch (e: Exception) {
+        DataWrapper.Error(e.message.toString())
+    }
 
     //TODO edit this to return User data class
     suspend fun followUser(userId: String) =
@@ -63,8 +75,11 @@ class Repository(private val apiService: CommunityApiService) {
     suspend fun unFollowUser(userId: String) =
         apiService.unFollowUser(userId)
 
-    suspend fun getTopic(topicId: String) =
-        apiService.getTopic(topicId)
+    suspend fun getTopic(topicId: String) = try {
+        DataWrapper.Success(apiService.getTopic(topicId))
+    } catch (e: Exception) {
+        DataWrapper.Error(e.message.toString())
+    }
 
     suspend fun likeArticle(articleId: String) = try {
         DataWrapper.Success(apiService.likeArticle(articleId))
@@ -78,14 +93,16 @@ class Repository(private val apiService: CommunityApiService) {
         DataWrapper.Error(e.message.toString())
     }
 
-    suspend fun addComment(body: String, parent: Post)  = try {
+    suspend fun addComment(body: String, parent: Post) = try {
         DataWrapper.Success(apiService.addComment(CommentValue(content = body, parent = parent)))
     } catch (e: Exception) {
         DataWrapper.Error(e.message.toString())
     }
 
     suspend fun addCommentToComment(body: String, parent: Post, replyTo: String) = try {
-        DataWrapper.Success(apiService.addCommentToComment(SubCommentValue(content = body, parent = parent, replyTo = replyTo)))
+        DataWrapper.Success(apiService.addCommentToComment(SubCommentValue(content = body,
+            parent = parent,
+            replyTo = replyTo)))
     } catch (e: Exception) {
         DataWrapper.Error(e.message.toString())
     }

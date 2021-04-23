@@ -6,17 +6,19 @@ import retrofit2.http.*
 
 interface CommunityApiService {
 
+    //TODO exception
     //function to sign in user
     @POST("api/v1/sessions")
     suspend fun signIn(
         @Body signInData: SignInData,
-    ): Response<User>
+    ): User
 
+    //TODO exception
     //function to get topics
     @GET("api/v1/topics")
     suspend fun getTopics(
         @Query("type") type: String = "collection",
-    ): Response<List<Topic>>
+    ): List<Topic>
 
     //function to get last 20 articles
     @GET("api/v1/posts?type=article")
@@ -32,18 +34,21 @@ interface CommunityApiService {
         @Query("page") page: Int = 0,
     ): List<Notification>
 
+    //TODO exception
     //function to get a article
     @GET("api/v1/posts/{articleId}")
     suspend fun getArticle(
         @Path("articleId") articleId: String,
-    ): Response<Post>
+    ): Post
 
+    //TODO exception
     //function to delete own comment
     @DELETE("api/v1/posts/{articleId}")
     suspend fun deleteArticle(
         @Path("articleId") articleId: String,
     )
 
+    //TODO exception
     //function to report a article
     @POST("api/v1/posts/{articleId}/reports")
     suspend fun reportArticle(
@@ -59,12 +64,14 @@ interface CommunityApiService {
         @Query("limit") limit: Int = 25,
     ): List<Post>
 
+    //TODO exception
     //function to get a user
     @GET("api/v1/users/{userId}")
     suspend fun getUser(
         @Path("userId") userId: String,
-    ): Response<User>
+    ): User
 
+    //TODO exception
     //TODO edit this to return User data class
     //function to follow user
     @POST("api/v1/users/{userId}/followers")
@@ -72,6 +79,7 @@ interface CommunityApiService {
         @Path("userId") userId: String,
     )
 
+    //TODO exception
     //TODO edit this to return User data class
     //function to unfollow user
     @DELETE("api/v1/users/{userId}/followers")
@@ -89,11 +97,12 @@ interface CommunityApiService {
         @Query("page") page: Int = 1
     ): List<Post>
 
+    //TODO exception
     //function to get topic data
     @GET("api/v1/topics/{topicId}")
     suspend fun getTopic(
         @Path("topicId") topicId: String,
-    ): Response<Topic>
+    ): Topic
 
     //function to get posts of topic
     @GET("api/v1/topics/{topicId}/posts?limit=20")
@@ -104,6 +113,7 @@ interface CommunityApiService {
         @Query("page") page: Int = 1
     ): List<Post>
 
+    //TODO exception
     //function to like a article
     @POST("api/v1/posts/{articleId}/votes")
     suspend fun likeArticle(
@@ -111,18 +121,21 @@ interface CommunityApiService {
         @Body like: LikeValue = LikeValue(1),
     ): Post
 
+    //TODO exception
     //function to remove a like
     @DELETE("api/v1/posts/{articleId}/votes")
     suspend fun removeLikeArticle(
         @Path("articleId") articleId: String,
     ): Post
 
+    //TODO exception
     //function to add a comment (as a post)
     @POST("api/v1/posts")
     suspend fun addComment(
         @Body commentValue: CommentValue,
     ): Post
 
+    //TODO exception
     //function to add a comment to comment (as a post)
     @POST("api/v1/posts")
     suspend fun addCommentToComment(

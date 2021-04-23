@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -88,17 +87,8 @@ class UserFragment : Fragment() {
             binding.rlLoading.isVisible = it
         }
         userViewModel.responseUser.observe(viewLifecycleOwner) {
-            if (it.isSuccessful) {
-                setUserDataToViews(it.body()!!)
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "${it.code()}: ${it.errorBody()}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            setUserDataToViews(it)
         }
-
         //TODO edit this to return User data class
         userViewModel.isFollowed.observe(viewLifecycleOwner) {
             if (it) {

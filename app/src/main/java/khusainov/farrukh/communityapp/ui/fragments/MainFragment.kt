@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -88,25 +87,15 @@ class MainFragment : Fragment() {
     }
 
     private fun setObservers() {
-        loginViewModel.responseUser.observe(viewLifecycleOwner) { response ->
-            if (response.isSuccessful) {
-                activityListener?.saveUserId(response.body()!!.id)
-                setUserToViews(response.body()!!)
-            } else {
-                Toast.makeText(
-                    context,
-                    "Error code:" + response.code(),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        loginViewModel.responseUser.observe(viewLifecycleOwner) {
+            activityListener?.saveUserId(it.id)
+            setUserToViews(it)
         }
-
         mainViewModel.responseAllPosts.observe(viewLifecycleOwner) { responseList ->
             viewLifecycleOwner.lifecycleScope.launch {
                 articleAdapter.submitData(responseList)
             }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             articleAdapter.loadStateFlow.collectLatest { loadStates ->
                 binding.pbLoadingArticles.isVisible = loadStates.refresh is LoadState.Loading
@@ -116,35 +105,12 @@ class MainFragment : Fragment() {
 //                errorMsg.isVisible = loadState.refresh is LoadState.Error
             }
         }
-
-        mainViewModel.responseTopics.observe(viewLifecycleOwner) { responseTopics ->
-            if (responseTopics.isSuccessful) {
-                if (responseTopics.body()?.isNotEmpty() == true) {
-                    topicAdapter.submitList(responseTopics.body())
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Not valid list",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } else {
-                Toast.makeText(
-                    context,
-                    "Error code: " + responseTopics.code(),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        mainViewModel.responseTopics.observe(viewLifecycleOwner) {
+                topicAdapter.submitList(it)
         }
-
-//        mainViewModel.isLoadingArticles.observe(viewLifecycleOwner) {
-//            binding.pbLoadingArticles.isVisible = it
-//        }
-
         mainViewModel.isLoadingTopics.observe(viewLifecycleOwner) {
             binding.pbLoadingTopics.isVisible = it
         }
-
         loginViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.pbLoadingLogin.isVisible = it
             binding.btnLogin.isEnabled = !it

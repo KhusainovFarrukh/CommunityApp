@@ -1,26 +1,26 @@
 package khusainov.farrukh.communityapp.vm.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import khusainov.farrukh.communityapp.data.models.DataWrapper
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:58 PM
  **/
 class UserViewModel(private val userId: String, private val repository: Repository) : ViewModel() {
 
-    private val _responseUser = MutableLiveData<Response<User>>()
+    private val _responseUser = MutableLiveData<User>()
     private val _isLoading = MutableLiveData<Boolean>()
     private val _isFollowed = MutableLiveData<Boolean>()
 
-    val responseUser: LiveData<Response<User>> = _responseUser
+    val responseUser: LiveData<User> = _responseUser
     val isLoading: LiveData<Boolean> = _isLoading
     val isFollowed: LiveData<Boolean> = _isFollowed
 
@@ -30,11 +30,16 @@ class UserViewModel(private val userId: String, private val repository: Reposito
         coroutineScope.launch {
             _isLoading.postValue(true)
 
-            _responseUser.postValue(repository.getUser(userId))
+            repository.getUser(userId).let { dataWrapper ->
+                when (dataWrapper) {
+                    is DataWrapper.Success -> _responseUser.postValue(dataWrapper.data)
+                    is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                }
+            }
 
             _isLoading.postValue(false)
 
-            _responseUser.value?.body()?.let {
+            _responseUser.value?.let {
                 _isFollowed.postValue(it.followed)
             }
         }

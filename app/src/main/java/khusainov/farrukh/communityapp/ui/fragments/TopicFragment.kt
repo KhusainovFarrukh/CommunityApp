@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -96,16 +95,19 @@ class TopicFragment : Fragment() {
         topicViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
         }
+//        topicViewModel.responseTopic.observe(viewLifecycleOwner) {
+//            if (it.isSuccessful) {
+//                setTopicDataToViews(it.body()!!)
+//            } else {
+//                Toast.makeText(
+//                    requireActivity(),
+//                    "${it.code()}: ${it.errorBody()}",
+//                    Toast.LENGTH_LONG
+//                ).show()
+//            }
+//        }
         topicViewModel.responseTopic.observe(viewLifecycleOwner) {
-            if (it.isSuccessful) {
-                setTopicDataToViews(it.body()!!)
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "${it.code()}: ${it.errorBody()}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            setTopicDataToViews(it)
         }
         topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
             lifecycleScope.launch {

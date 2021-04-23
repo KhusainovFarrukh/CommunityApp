@@ -110,20 +110,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
                 binding.rlLoadingComments.isVisible = loadStates.refresh is LoadState.Loading
             }
         }
-        articleViewModel.responseArticle.observe(viewLifecycleOwner) { response ->
-            if (response.isSuccessful) {
-                articleViewModel.isLiked(
-                    activityListener?.getUserId() ?: "",
-                    response.body()?.likes!!
-                )
-                setDataToViews(response.body()!!)
-            } else {
-                Toast.makeText(
-                    requireActivity(),
-                    "${response.code()}: ${response.errorBody()}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+        articleViewModel.responseArticle.observe(viewLifecycleOwner) {
+            setDataToViews(it)
         }
         articleViewModel.comments.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
@@ -137,26 +125,6 @@ class ArticleFragment : Fragment(), CommentClickListener {
         articleViewModel.isLoadingComments.observe(viewLifecycleOwner, {
             binding.rlLoadingComments.isVisible = it
         })
-
-        articleViewModel.isLiked.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.txvLikeArticle.text = "Liked already"
-                binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_favorite,
-                    0,
-                    0,
-                    0
-                )
-            } else {
-                binding.txvLikeArticle.text = "Like"
-                binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_favorite_border,
-                    0,
-                    0,
-                    0
-                )
-            }
-        }
     }
 
     private fun setRecyclerAdapters() {
@@ -182,6 +150,23 @@ class ArticleFragment : Fragment(), CommentClickListener {
             }
             txvSeeProfile.setOnClickListener {
                 activityListener?.showUserFragment(article.user!!.id)
+            }
+            if (article.isLiked) {
+                binding.txvLikeArticle.text = "Liked already"
+                binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_favorite,
+                    0,
+                    0,
+                    0
+                )
+            } else {
+                binding.txvLikeArticle.text = "Like"
+                binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_favorite_border,
+                    0,
+                    0,
+                    0
+                )
             }
 
             //Replacing '#' from encoded version. Because there is a bug with WebView
