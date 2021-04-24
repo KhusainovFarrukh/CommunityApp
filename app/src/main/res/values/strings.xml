@@ -19,4 +19,15 @@
         <item>Eskiligi bo`yicha</item>
         <item>Layklar bo`yicha</item>
     </string-array>
+
+    <string-array name="vm_factory_types">
+        <item>user</item>
+        <item>article</item>
+        <item>topic</item>
+        <item>main</item>
+        <item>login</item>
+        <item>notification</item>
+        <item>report</item>
+        <item>postsOfUser</item>
+    </string-array>
 </resources>

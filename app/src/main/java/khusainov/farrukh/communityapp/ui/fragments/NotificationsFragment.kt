@@ -92,7 +92,7 @@ class NotificationsFragment : Fragment() {
                 }
             }
         }
-        notificationsViewModel.responseNotification.observe(viewLifecycleOwner) {
+        notificationsViewModel.notificationsLiveData.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 notificationAdapter.submitData(it)
             }

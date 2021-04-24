@@ -88,17 +88,17 @@ class MainFragment : Fragment() {
     }
 
     private fun setObservers() {
-        loginViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
+        loginViewModel.signInError.observe(viewLifecycleOwner) { otherError ->
             (Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
                 .setAction("Retry") {
                     otherError.retry.invoke()
                 }).show()
         }
-        loginViewModel.responseUser.observe(viewLifecycleOwner) {
+        loginViewModel.userLiveData.observe(viewLifecycleOwner) {
             activityListener?.saveUserId(it.id)
             setUserToViews(it)
         }
-        mainViewModel.responseAllPosts.observe(viewLifecycleOwner) { responseList ->
+        mainViewModel.articlesLiveData.observe(viewLifecycleOwner) { responseList ->
             viewLifecycleOwner.lifecycleScope.launch {
                 articleAdapter.submitData(responseList)
             }
@@ -119,7 +119,7 @@ class MainFragment : Fragment() {
                 }
             }
         }
-        mainViewModel.responseTopics.observe(viewLifecycleOwner) {
+        mainViewModel.topicsLiveData.observe(viewLifecycleOwner) {
                 topicAdapter.submitList(it)
         }
         mainViewModel.isLoadingTopics.observe(viewLifecycleOwner) {
@@ -149,7 +149,7 @@ class MainFragment : Fragment() {
             articleAdapter.retry()
         }
         binding.btnRetryTopics.setOnClickListener {
-            mainViewModel.initializeTopics()
+            mainViewModel.initTopics()
         }
     }
 
@@ -179,7 +179,7 @@ class MainFragment : Fragment() {
     }
 
     private fun signInAutomatically() {
-        if (loginViewModel.responseUser.value == null) {
+        if (loginViewModel.userLiveData.value == null) {
             activityListener?.getSignInData()?.let {
                 loginViewModel.signInWithEmail(it)
             }

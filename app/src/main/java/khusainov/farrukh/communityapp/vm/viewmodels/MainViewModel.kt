@@ -8,34 +8,40 @@ import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.models.DataWrapper
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.data.repository.Repository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repo: Repository) : ViewModel() {
 
+    /**
+    [_isLoadingTopics] - topics loading state
+    [_topicsLiveData] - topics value
+    [_errorTopics] - error while initializing topics
+    [articlesLiveData] - articles value
+     */
+
+    //private mutable live data:
     private val _isLoadingTopics = MutableLiveData<Boolean>()
-    private val _responseTopics = MutableLiveData<List<Topic>>()
+    private val _topicsLiveData = MutableLiveData<List<Topic>>()
     private val _errorTopics = MutableLiveData<String>()
 
-    val isLoadingTopics: LiveData<Boolean> = _isLoadingTopics
-    val responseAllPosts = repo.getArticlesList().cachedIn(viewModelScope)
-    val responseTopics: LiveData<List<Topic>> = _responseTopics
+    //public immutable live data:
+    val isLoadingTopics: LiveData<Boolean> get() = _isLoadingTopics
+    val topicsLiveData: LiveData<List<Topic>> get() = _topicsLiveData
     val errorTopics: LiveData<String> get() = _errorTopics
-
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
+    val articlesLiveData = repo.getArticlesList().cachedIn(viewModelScope)
 
     init {
-        initializeTopics()
+        initTopics()
     }
 
-    fun initializeTopics() {
-        coroutineScope.launch {
+    fun initTopics() {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoadingTopics.postValue(true)
 
             repo.getTopics().let { dataWrapper ->
                 when (dataWrapper) {
-                    is DataWrapper.Success -> _responseTopics.postValue(dataWrapper.data)
+                    is DataWrapper.Success -> _topicsLiveData.postValue(dataWrapper.data)
                     is DataWrapper.Error -> _errorTopics.postValue(dataWrapper.message)
                 }
             }

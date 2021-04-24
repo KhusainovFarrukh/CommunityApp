@@ -99,7 +99,7 @@ class ReportDialogFragment : DialogFragment() {
     }
 
     private fun setObservers() {
-        reportViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
+        reportViewModel.reportError.observe(viewLifecycleOwner) { otherError ->
             (Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
                 .setAction("Retry") {
                     otherError.retry.invoke()

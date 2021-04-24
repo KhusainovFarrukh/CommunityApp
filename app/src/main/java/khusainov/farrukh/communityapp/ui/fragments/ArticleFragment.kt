@@ -91,7 +91,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
             txvSendComment.setOnClickListener {
                 if (etComment.text.isNotEmpty()) {
                     lifecycleScope.launch {
-                        articleViewModel.addCommentWithPaging(etComment.text.toString()) { commentAdapter.refresh() }
+                        articleViewModel.addCommentTemp(etComment.text.toString()) { commentAdapter.refresh() }
                     }
                     etComment.text.clear()
                 } else {
@@ -106,7 +106,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
                 commentAdapter.retry()
             }
             btnRetryArticle.setOnClickListener {
-                articleViewModel.initializeArticle()
+                articleViewModel.initArticle()
             }
         }
     }
@@ -118,7 +118,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
                     otherError.retry.invoke()
                 }).show()
         }
-        articleViewModel.responseArticle.observe(viewLifecycleOwner) {
+        articleViewModel.articleLiveData.observe(viewLifecycleOwner) {
             setDataToViews(it)
         }
         articleViewModel.comments.observe(viewLifecycleOwner) {
@@ -126,7 +126,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
                 commentAdapter.submitData(it)
             }
         }
-        articleViewModel.isLoadingArticle.observe(viewLifecycleOwner) {
+        articleViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.pbLoadingArticle.isVisible = it
             if (hashTagAdapter.currentList.isNullOrEmpty()) {
                 binding.rlLoading.isVisible = true

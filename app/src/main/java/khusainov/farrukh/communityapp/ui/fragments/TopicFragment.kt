@@ -92,17 +92,17 @@ class TopicFragment : Fragment() {
                 binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
             }
         }
-        topicViewModel.responseTopic.observe(viewLifecycleOwner) {
+        topicViewModel.topicLiveData.observe(viewLifecycleOwner) {
             setTopicDataToViews(it)
         }
-        topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
+        topicViewModel.topicPostsLiveData.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 postsOfUserAdapter.submitData(it)
             }
         }
         topicViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.pbLoadingTopic.isVisible = it
-            if (topicViewModel.responseTopic.value == null) {
+            if (topicViewModel.topicLiveData.value == null) {
                 binding.rlLoading.isVisible = true
                 binding.txvErrorTopic.isVisible = !it
                 binding.btnRetryTopic.isVisible = !it
@@ -146,7 +146,7 @@ class TopicFragment : Fragment() {
     private fun setClickListeners() {
         binding.apply {
             btnRetryTopic.setOnClickListener {
-                topicViewModel.initializeTopic()
+                topicViewModel.initTopic()
             }
             btnRetryArticles.setOnClickListener {
                 postsOfUserAdapter.retry()

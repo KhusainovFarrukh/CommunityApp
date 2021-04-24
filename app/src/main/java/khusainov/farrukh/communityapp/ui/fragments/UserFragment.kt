@@ -95,7 +95,7 @@ class UserFragment : Fragment() {
         }
         userViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.pbLoadingUser.isVisible = it
-            if (userViewModel.responseUser.value == null) {
+            if (userViewModel.userLiveData.value == null) {
                 binding.rlLoading.isVisible = true
                 binding.txvErrorUser.isVisible = !it
                 binding.btnRetryUser.isVisible = !it
@@ -105,7 +105,7 @@ class UserFragment : Fragment() {
                 binding.btnRetryUser.isVisible = false
             }
         }
-        userViewModel.responseUser.observe(viewLifecycleOwner) {
+        userViewModel.userLiveData.observe(viewLifecycleOwner) {
             setUserDataToViews(it)
         }
     }
@@ -145,7 +145,7 @@ class UserFragment : Fragment() {
         //TODO set all click listeners in the fragment
         binding.apply {
             btnRetryUser.setOnClickListener {
-                userViewModel.initializeUser()
+                userViewModel.initUser()
             }
         }
     }

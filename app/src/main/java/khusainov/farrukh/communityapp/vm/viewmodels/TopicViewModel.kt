@@ -5,7 +5,6 @@ import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.models.DataWrapper
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.data.repository.Repository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -15,31 +14,40 @@ import kotlinx.coroutines.launch
 class TopicViewModel(private val topicId: String, private val repository: Repository) :
     ViewModel() {
 
+    /**
+    [_isLoading] - topic loading state
+    [_topicLiveData] - topic value
+    [_sortBy] - string for sorting posts of topic
+    [_errorTopic] - error while initializing topic
+    [topicPostsLiveData] - posts of topic value
+     */
+
+    //private mutable live data:
     private val _isLoading = MutableLiveData<Boolean>()
-    private val _responseTopic = MutableLiveData<Topic>()
+    private val _topicLiveData = MutableLiveData<Topic>()
     private val _sortBy = MutableLiveData<String>()
     private val _errorTopic = MutableLiveData<String>()
 
-    val isLoading: LiveData<Boolean> = _isLoading
-    val responseTopic: LiveData<Topic> = _responseTopic
+    //public immutable live data:
+    val isLoading: LiveData<Boolean> get()= _isLoading
+    val topicLiveData: LiveData<Topic> get()= _topicLiveData
     val errorTopic: LiveData<String> get() = _errorTopic
-    val responseTopicPosts = _sortBy.switchMap {
-        repository.getPostsOfTopic(topicId, it).cachedIn(viewModelScope)
+    val topicPostsLiveData = _sortBy.switchMap { sortBy ->
+        repository.getPostsOfTopic(topicId, sortBy).cachedIn(viewModelScope)
     }
-
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     init {
-        initializeTopic()
+        initTopic()
     }
 
-    fun initializeTopic() {
-        coroutineScope.launch {
+    //fun to initialize topic
+    fun initTopic() {
+        viewModelScope.launch(Dispatchers.IO) {
             _isLoading.postValue(true)
 
             repository.getTopic(topicId).let { dataWrapper ->
                 when (dataWrapper) {
-                    is DataWrapper.Success -> _responseTopic.postValue(dataWrapper.data)
+                    is DataWrapper.Success -> _topicLiveData.postValue(dataWrapper.data)
                     is DataWrapper.Error -> _errorTopic.postValue(dataWrapper.message)
                 }
             }
@@ -48,6 +56,7 @@ class TopicViewModel(private val topicId: String, private val repository: Reposi
         }
     }
 
+    //fun to sort posts of topic
     fun sortPosts(sortBy: String) {
         _sortBy.value = sortBy
     }

@@ -1,6 +1,8 @@
 package khusainov.farrukh.communityapp.vm.viewmodels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.repository.Repository
 
 /**
@@ -13,5 +15,6 @@ class PostsOfUserViewModel(
     repository: Repository,
 ) : ViewModel() {
 
-    val usersPosts = repository.getPostsOfUser(userId, type, sortBy)
+    //posts of user value
+    val userPostsLiveData = repository.getPostsOfUser(userId, type, sortBy).cachedIn(viewModelScope)
 }

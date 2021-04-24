@@ -102,7 +102,7 @@ class LoginDialogFragment : DialogFragment() {
     }
 
     private fun setObservers() {
-        loginViewModel.responseUser.observe(viewLifecycleOwner) {
+        loginViewModel.userLiveData.observe(viewLifecycleOwner) {
             activityListener?.saveSignInData(
                 SignInData(
                     binding.etEmail.text.toString(),
@@ -120,7 +120,7 @@ class LoginDialogFragment : DialogFragment() {
             binding.btnLogin.isEnabled = !it
             binding.pbLoading.isVisible = it
         }
-        loginViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
+        loginViewModel.signInError.observe(viewLifecycleOwner) { otherError ->
             (Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
                 .setAction("Retry") {
                     otherError.retry.invoke()

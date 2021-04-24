@@ -3,6 +3,7 @@ package khusainov.farrukh.communityapp.vm.factories
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.vm.viewmodels.*
@@ -10,23 +11,32 @@ import khusainov.farrukh.communityapp.vm.viewmodels.*
 /**
  *Created by FarrukhKhusainov on 3/4/21 11:02 PM
  **/
+//base factory for other ViewModelFactories (but not for PostsOfUserVMFactory)
 open class BaseViewModelFactory(
     private val viewModelType: String,
     private val id: String = "",
-    context: Context,
+    private val context: Context,
 ) : ViewModelProvider.Factory {
 
     private val repository = Repository(RetrofitInstance(context).communityApiService)
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when (viewModelType) {
-            "user" -> UserViewModel(id, repository) as T
-            "article" -> ArticleViewModel(id, repository) as T
-            "topic" -> TopicViewModel(id, repository) as T
-            "main" -> MainViewModel(repository) as T
-            "login" -> LoginViewModel(repository) as T
-            "notification" -> NotificationsViewModel(repository) as T
-            "report" -> ReportViewModel(repository) as T
+            //return ViewModel depending on type (excluding postsOfUser type)
+            context.resources.getStringArray(R.array.vm_factory_types)[0] -> UserViewModel(id,
+                repository) as T
+            context.resources.getStringArray(R.array.vm_factory_types)[1] -> ArticleViewModel(id,
+                repository) as T
+            context.resources.getStringArray(R.array.vm_factory_types)[2] -> TopicViewModel(id,
+                repository) as T
+            context.resources.getStringArray(R.array.vm_factory_types)[3] -> MainViewModel(
+                repository) as T
+            context.resources.getStringArray(R.array.vm_factory_types)[4] -> LoginViewModel(
+                repository) as T
+            context.resources.getStringArray(R.array.vm_factory_types)[5] -> NotificationsViewModel(
+                repository) as T
+            context.resources.getStringArray(R.array.vm_factory_types)[6] -> ReportViewModel(
+                repository) as T
             else -> throw IllegalArgumentException("$viewModelType is not supported")
         }
     }

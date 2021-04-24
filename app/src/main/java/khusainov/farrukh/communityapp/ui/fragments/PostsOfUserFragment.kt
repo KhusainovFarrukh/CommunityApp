@@ -91,7 +91,7 @@ class PostsOfUserFragment : Fragment() {
                 }
             }
         }
-        postsViewModel.usersPosts.observe(viewLifecycleOwner) {
+        postsViewModel.userPostsLiveData.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 postsOfUserAdapter.submitData(it)
             }
