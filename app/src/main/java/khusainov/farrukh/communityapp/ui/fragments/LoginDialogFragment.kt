@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.data.models.SignInData
 import khusainov.farrukh.communityapp.databinding.FragmentDialogLoginBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
@@ -44,10 +45,6 @@ class LoginDialogFragment : DialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-
-        if (loginViewModel.isLoading.value == true) {
-            loginViewModel.cancelJob()
-        }
 
         Toast.makeText(
             context,
@@ -122,6 +119,12 @@ class LoginDialogFragment : DialogFragment() {
         loginViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.btnLogin.isEnabled = !it
             binding.pbLoading.isVisible = it
+        }
+        loginViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
+            (Snackbar.make(binding.root, otherError.error, Snackbar.LENGTH_LONG)
+                .setAction("Retry") {
+                    otherError.retry.invoke()
+                }).show()
         }
     }
 }

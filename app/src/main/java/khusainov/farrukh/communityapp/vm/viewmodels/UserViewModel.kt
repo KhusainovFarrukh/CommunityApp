@@ -1,10 +1,10 @@
 package khusainov.farrukh.communityapp.vm.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import khusainov.farrukh.communityapp.data.models.DataWrapper
+import khusainov.farrukh.communityapp.data.models.OtherError
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.CoroutineScope
@@ -18,9 +18,13 @@ class UserViewModel(private val userId: String, private val repository: Reposito
 
     private val _responseUser = MutableLiveData<User>()
     private val _isLoading = MutableLiveData<Boolean>()
+    private val _errorUser = MutableLiveData<String>()
+    private val _otherError = MutableLiveData<OtherError>()
 
     val responseUser: LiveData<User> = _responseUser
     val isLoading: LiveData<Boolean> = _isLoading
+    val errorUser: LiveData<String> get() = _errorUser
+    val otherError: LiveData<OtherError> get() = _otherError
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -35,7 +39,7 @@ class UserViewModel(private val userId: String, private val repository: Reposito
             repository.getUser(userId).let { dataWrapper ->
                 when (dataWrapper) {
                     is DataWrapper.Success -> _responseUser.postValue(dataWrapper.data)
-                    is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                    is DataWrapper.Error -> _errorUser.postValue(dataWrapper.message)
                 }
             }
 
@@ -49,14 +53,16 @@ class UserViewModel(private val userId: String, private val repository: Reposito
                 repository.unFollowUser(userId).let { dataWrapper ->
                     when (dataWrapper) {
                         is DataWrapper.Success -> _responseUser.postValue(dataWrapper.data)
-                        is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                        ) { followUser() })
                     }
                 }
             } else {
                 repository.followUser(userId).let { dataWrapper ->
                     when (dataWrapper) {
                         is DataWrapper.Success -> _responseUser.postValue(dataWrapper.data)
-                        is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                        ) { followUser() })
                     }
                 }
             }

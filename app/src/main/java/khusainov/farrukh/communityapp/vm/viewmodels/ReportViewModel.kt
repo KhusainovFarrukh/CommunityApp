@@ -1,10 +1,10 @@
 package khusainov.farrukh.communityapp.vm.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import khusainov.farrukh.communityapp.data.models.DataWrapper
+import khusainov.farrukh.communityapp.data.models.OtherError
 import khusainov.farrukh.communityapp.data.models.ReportValue
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.CoroutineScope
@@ -18,9 +18,11 @@ class ReportViewModel(private val repository: Repository) : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     private val _isReported = MutableLiveData<Boolean>()
+    private val _otherError = MutableLiveData<OtherError>()
 
     val isLoading: LiveData<Boolean> get() = _isLoading
     val isReported: LiveData<Boolean> get() = _isReported
+    val otherError: LiveData<OtherError> get() = _otherError
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -31,7 +33,8 @@ class ReportViewModel(private val repository: Repository) : ViewModel() {
             repository.reportPost(postId, reportValue).let { dataWrapper ->
                 when (dataWrapper) {
                     is DataWrapper.Success -> _isReported.postValue(true)
-                    is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                    is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                    ) { reportPost(postId, reportValue) })
                 }
             }
 

@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
@@ -111,10 +112,11 @@ class ArticleFragment : Fragment(), CommentClickListener {
     }
 
     private fun setObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            commentAdapter.loadStateFlow.collectLatest { loadStates ->
-                binding.rlLoadingComments.isVisible = loadStates.refresh is LoadState.Loading
-            }
+        articleViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
+            (Snackbar.make(binding.root, otherError.error, Snackbar.LENGTH_LONG)
+                .setAction("Retry") {
+                    otherError.retry.invoke()
+                }).show()
         }
         articleViewModel.responseArticle.observe(viewLifecycleOwner) {
             setDataToViews(it)
@@ -143,7 +145,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             commentAdapter.loadStateFlow.collectLatest { loadStates ->
-                binding.rlLoadingComments.isVisible = loadStates.refresh is LoadState.Loading || loadStates.refresh is LoadState.Error
+                binding.rlLoadingComments.isVisible =
+                    loadStates.refresh is LoadState.Loading || loadStates.refresh is LoadState.Error
                 binding.pbLoadingComments.isVisible = loadStates.refresh is LoadState.Loading
                 binding.btnRetryComments.isVisible = loadStates.refresh is LoadState.Error
                 binding.txvErrorComments.isVisible = loadStates.refresh is LoadState.Error
@@ -246,15 +249,11 @@ class ArticleFragment : Fragment(), CommentClickListener {
     }
 
     override fun onLikeCommentClick(comment: Post) {
-        lifecycleScope.launch {
-            articleViewModel.likeCommentTemp(comment) { commentAdapter.refresh() }
-        }
+        articleViewModel.likeCommentTemp(comment) { commentAdapter.refresh() }
     }
 
     override fun onLikeSubCommentClick(comment: Post) {
-        lifecycleScope.launch {
-            articleViewModel.likeCommentTemp(comment) { commentAdapter.refresh() }
-        }
+        articleViewModel.likeCommentTemp(comment) { commentAdapter.refresh() }
     }
 
     override fun onCommentAuthorClick(userId: String) {
@@ -262,9 +261,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
     }
 
     override fun onWriteSubCommentClick(body: String, replyTo: String) {
-        lifecycleScope.launch {
-            articleViewModel.replyCommentTemp(body, replyTo) { commentAdapter.refresh() }
-        }
+        articleViewModel.replyCommentTemp(body, replyTo) { commentAdapter.refresh() }
     }
 
     override fun getUserId() = activityListener?.getUserId() ?: ""
@@ -274,14 +271,10 @@ class ArticleFragment : Fragment(), CommentClickListener {
     }
 
     override fun onDeleteCommentClick(commentId: String) {
-        lifecycleScope.launch {
-            articleViewModel.deleteCommentTemp(commentId) { commentAdapter.refresh() }
-        }
+        articleViewModel.deleteCommentTemp(commentId) { commentAdapter.refresh() }
     }
 
     override fun onDeleteSubCommentClick(commentId: String) {
-        lifecycleScope.launch {
-            articleViewModel.deleteCommentTemp(commentId) { commentAdapter.refresh() }
-        }
+        articleViewModel.deleteCommentTemp(commentId) { commentAdapter.refresh() }
     }
 }

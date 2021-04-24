@@ -1,6 +1,5 @@
 package khusainov.farrukh.communityapp.vm.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.models.DataWrapper
+import khusainov.farrukh.communityapp.data.models.OtherError
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.CoroutineScope
@@ -23,10 +23,12 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     private val _isLoadingArticle = MutableLiveData<Boolean>()
     private val _responseArticle = MutableLiveData<Post>()
     private val _errorArticle = MutableLiveData<String>()
+    private val _otherError = MutableLiveData<OtherError>()
 
     val isLoadingArticle: LiveData<Boolean> = _isLoadingArticle
     val responseArticle: LiveData<Post> = _responseArticle
     val errorArticle: LiveData<String> get() = _errorArticle
+    val otherError: LiveData<OtherError> get() = _otherError
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -63,62 +65,77 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
                 repository.removeLikePost(articleId).let { dataWrapper ->
                     when (dataWrapper) {
                         is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
-                        is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                        ) { likeArticle(articleId) })
                     }
                 }
             } else {
                 repository.likePost(articleId).let { dataWrapper ->
                     when (dataWrapper) {
                         is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
-                        is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                        ) { likeArticle(articleId) })
                     }
                 }
             }
         }
     }
 
-    suspend fun likeCommentTemp(comment: Post, refresh: () -> Unit) {
-        if (comment.isLiked) {
-            repository.removeLikePost(comment.id).let { dataWrapper ->
-                when (dataWrapper) {
-                    is DataWrapper.Success -> refresh.invoke()
-                    is DataWrapper.Error -> Log.wtf("VM", dataWrapper.message)
+    fun likeCommentTemp(comment: Post, refresh: () -> Unit) {
+        viewModelScope.launch {
+            if (comment.isLiked) {
+                repository.removeLikePost(comment.id).let { dataWrapper ->
+                    when (dataWrapper) {
+                        is DataWrapper.Success -> refresh.invoke()
+                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                        ) { likeCommentTemp(comment, refresh) })
+                    }
                 }
-            }
-        } else {
-            repository.likePost(comment.id).let { dataWrapper ->
-                when (dataWrapper) {
-                    is DataWrapper.Success -> refresh.invoke()
-                    is DataWrapper.Error -> Log.wtf("VM", dataWrapper.message)
+            } else {
+                repository.likePost(comment.id).let { dataWrapper ->
+                    when (dataWrapper) {
+                        is DataWrapper.Success -> refresh.invoke()
+                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                        ) { likeCommentTemp(comment, refresh) })
+                    }
                 }
             }
         }
     }
 
-    suspend fun deleteCommentTemp(commentId: String, refresh: () -> Unit) {
-        repository.deletePost(commentId).let { dataWrapper ->
-            when (dataWrapper) {
-                is DataWrapper.Success -> refresh.invoke()
-                is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+    fun deleteCommentTemp(commentId: String, refresh: () -> Unit) {
+        viewModelScope.launch {
+            repository.deletePost(commentId).let { dataWrapper ->
+                when (dataWrapper) {
+                    is DataWrapper.Success -> refresh.invoke()
+                    is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                    ) { deleteCommentTemp(commentId, refresh) })
+                }
             }
         }
     }
 
-    suspend fun replyCommentTemp(replyBody: String, replyTo: String, refresh: () -> Unit) {
-        repository.replyToComment(replyBody, _responseArticle.value!!, replyTo)
-            .let { dataWrapper ->
-                when (dataWrapper) {
-                    is DataWrapper.Success -> refresh.invoke()
-                    is DataWrapper.Error -> Log.wtf("VM", dataWrapper.message)
+    fun replyCommentTemp(replyBody: String, replyTo: String, refresh: () -> Unit) {
+        viewModelScope.launch {
+            repository.replyToComment(replyBody, _responseArticle.value!!, replyTo)
+                .let { dataWrapper ->
+                    when (dataWrapper) {
+                        is DataWrapper.Success -> refresh.invoke()
+                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                        ) { replyCommentTemp(replyBody, replyTo, refresh) })
+                    }
                 }
-            }
+        }
     }
 
-    suspend fun addCommentWithPaging(commentBody: String, refresh: () -> Unit) {
-        repository.addComment(commentBody, _responseArticle.value!!).let { wrapper ->
-            when (wrapper) {
-                is DataWrapper.Success -> refresh.invoke()
-                is DataWrapper.Error -> Log.e("TAG", wrapper.message)
+    fun addCommentWithPaging(commentBody: String, refresh: () -> Unit) {
+        viewModelScope.launch {
+            repository.addComment(commentBody, _responseArticle.value!!).let { dataWrapper ->
+                when (dataWrapper) {
+                    is DataWrapper.Success -> refresh.invoke()
+                    is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                    ) { addCommentWithPaging(commentBody, refresh) })
+                }
             }
         }
     }

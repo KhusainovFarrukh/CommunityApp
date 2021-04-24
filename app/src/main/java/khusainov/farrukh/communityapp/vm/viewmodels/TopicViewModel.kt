@@ -1,6 +1,5 @@
 package khusainov.farrukh.communityapp.vm.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.models.DataWrapper

@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
@@ -83,6 +84,15 @@ class UserFragment : Fragment() {
     }
 
     private fun setObservers() {
+        userViewModel.errorUser.observe(viewLifecycleOwner) {
+            binding.txvErrorUser.text = it
+        }
+        userViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
+            (Snackbar.make(binding.root, otherError.error, Snackbar.LENGTH_LONG)
+                .setAction("Retry") {
+                    otherError.retry.invoke()
+                }).show()
+        }
         userViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.pbLoadingUser.isVisible = it
             if (userViewModel.responseUser.value == null) {

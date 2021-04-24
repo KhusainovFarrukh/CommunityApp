@@ -10,20 +10,5 @@ import khusainov.farrukh.communityapp.data.repository.Repository
  **/
 class NotificationsViewModel(repository: Repository) : ViewModel() {
 
-//    private val _isLoading = MutableLiveData<Boolean>()
-//    private val _responseNotifications = MutableLiveData<Response<List<Notification>>>()
-
-//    val isLoading: LiveData<Boolean> = _isLoading
-
     val responseNotification = repository.getNotifications().cachedIn(viewModelScope)
-
-//    init {
-//        coroutineScope.launch {
-//            _isLoading.postValue(true)
-//
-//            _responseNotifications.postValue(repository.getNotifications())
-//
-//            _isLoading.postValue(false)
-//        }
-//    }
 }

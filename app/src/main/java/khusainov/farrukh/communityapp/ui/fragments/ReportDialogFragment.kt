@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.data.models.ReportValue
 import khusainov.farrukh.communityapp.databinding.FragmentDialogReportBinding
 import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
@@ -98,6 +99,12 @@ class ReportDialogFragment : DialogFragment() {
     }
 
     private fun setObservers() {
+        reportViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
+            (Snackbar.make(binding.root, otherError.error, Snackbar.LENGTH_LONG)
+                .setAction("Retry") {
+                    otherError.retry.invoke()
+                }).show()
+        }
         reportViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
         }

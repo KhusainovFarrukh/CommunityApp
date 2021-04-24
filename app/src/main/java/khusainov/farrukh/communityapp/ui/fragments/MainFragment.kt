@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import coil.load
 import coil.transform.CircleCropTransformation
+import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
@@ -87,6 +88,12 @@ class MainFragment : Fragment() {
     }
 
     private fun setObservers() {
+        loginViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
+            (Snackbar.make(binding.root, otherError.error, Snackbar.LENGTH_LONG)
+                .setAction("Retry") {
+                    otherError.retry.invoke()
+                }).show()
+        }
         loginViewModel.responseUser.observe(viewLifecycleOwner) {
             activityListener?.saveUserId(it.id)
             setUserToViews(it)

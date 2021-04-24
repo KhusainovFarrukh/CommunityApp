@@ -7,10 +7,10 @@ import khusainov.farrukh.communityapp.data.repository.Repository
  *Created by FarrukhKhusainov on 3/18/21 9:55 PM
  **/
 class PostsOfUserViewModel(
-    private val userId: String,
-    private val type: String,
-    private val sortBy: String,
-    private val repository: Repository,
+    userId: String,
+    type: String,
+    sortBy: String,
+    repository: Repository,
 ) : ViewModel() {
 
     val usersPosts = repository.getPostsOfUser(userId, type, sortBy)
