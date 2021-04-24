@@ -92,26 +92,40 @@ class TopicFragment : Fragment() {
                 binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
             }
         }
-        topicViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.rlLoading.isVisible = it
-        }
-//        topicViewModel.responseTopic.observe(viewLifecycleOwner) {
-//            if (it.isSuccessful) {
-//                setTopicDataToViews(it.body()!!)
-//            } else {
-//                Toast.makeText(
-//                    requireActivity(),
-//                    "${it.code()}: ${it.errorBody()}",
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }
-//        }
         topicViewModel.responseTopic.observe(viewLifecycleOwner) {
             setTopicDataToViews(it)
         }
         topicViewModel.responseTopicPosts.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 postsOfUserAdapter.submitData(it)
+            }
+        }
+        topicViewModel.isLoading.observe(viewLifecycleOwner) {
+            binding.pbLoadingTopic.isVisible = it
+            if (topicViewModel.responseTopic.value == null) {
+                binding.rlLoading.isVisible = true
+                binding.txvErrorTopic.isVisible = !it
+                binding.btnRetryTopic.isVisible = !it
+            } else {
+                binding.rlLoading.isVisible = it
+                binding.txvErrorTopic.isVisible = false
+                binding.btnRetryTopic.isVisible = false
+            }
+        }
+        topicViewModel.errorTopic.observe(viewLifecycleOwner) {
+            binding.txvErrorTopic.text = it
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
+                binding.btnRetryArticles.isVisible = loadStates.refresh is LoadState.Error
+                binding.txvErrorArticles.isVisible = loadStates.refresh is LoadState.Error
+
+                loadStates.refresh.let {
+                    if (it is LoadState.Error) {
+                        binding.txvErrorArticles.text = it.error.message
+                    }
+                }
             }
         }
     }
@@ -130,6 +144,14 @@ class TopicFragment : Fragment() {
     }
 
     private fun setClickListeners() {
+        binding.apply {
+            btnRetryTopic.setOnClickListener {
+                topicViewModel.initializeTopic()
+            }
+            btnRetryArticles.setOnClickListener {
+                postsOfUserAdapter.retry()
+            }
+        }
         //TODO set all click listeners in the fragment
     }
 

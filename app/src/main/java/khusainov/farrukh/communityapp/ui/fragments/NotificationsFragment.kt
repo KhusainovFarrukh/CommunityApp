@@ -46,6 +46,7 @@ class NotificationsFragment : Fragment() {
         ).get(NotificationsViewModel::class.java)
 
         initRecyclerView()
+        setClickListeners()
         setObservers()
     }
 
@@ -81,12 +82,26 @@ class NotificationsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             notificationAdapter.loadStateFlow.collectLatest { loadStates ->
                 binding.pbLoadingNotification.isVisible = loadStates.refresh is LoadState.Loading
+                binding.btnRetryNotification.isVisible = loadStates.refresh is LoadState.Error
+                binding.txvErrorNotification.isVisible = loadStates.refresh is LoadState.Error
+
+                loadStates.refresh.let {
+                    if (it is LoadState.Error) {
+                        binding.txvErrorNotification.text = it.error.message
+                    }
+                }
             }
         }
         notificationsViewModel.responseNotification.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 notificationAdapter.submitData(it)
             }
+        }
+    }
+
+    private fun setClickListeners() {
+        binding.btnRetryNotification.setOnClickListener {
+            notificationAdapter.retry()
         }
     }
 }

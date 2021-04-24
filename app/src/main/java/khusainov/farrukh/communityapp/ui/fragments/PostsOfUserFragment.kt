@@ -74,17 +74,34 @@ class PostsOfUserFragment : Fragment() {
         )
 
         setObservers()
+        setClickListeners()
     }
 
     private fun setObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
                 binding.pbLoading.isVisible = loadStates.refresh is LoadState.Loading
+                binding.btnRetry.isVisible = loadStates.refresh is LoadState.Error
+                binding.txvError.isVisible = loadStates.refresh is LoadState.Error
+
+                loadStates.refresh.let {
+                    if (it is LoadState.Error) {
+                        binding.txvError.text = it.error.message
+                    }
+                }
             }
         }
         postsViewModel.usersPosts.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
                 postsOfUserAdapter.submitData(it)
+            }
+        }
+    }
+
+    private fun setClickListeners() {
+        binding.apply {
+            btnRetry.setOnClickListener {
+                postsOfUserAdapter.retry()
             }
         }
     }

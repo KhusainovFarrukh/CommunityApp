@@ -107,7 +107,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
-        app:layout_constraintTop_toBottomOf="@+id/pb_loading_topics" />
+        app:layout_constraintTop_toBottomOf="@+id/barrier_topics" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_posts"
@@ -176,5 +176,52 @@
         app:layout_constraintEnd_toEndOf="@id/gl_end"
         app:layout_constraintStart_toStartOf="@id/gl_start"
         app:layout_constraintTop_toBottomOf="@id/rv_topics" />
+
+    <Button
+        android:id="@+id/btn_retry_articles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retry"
+        app:layout_constraintEnd_toEndOf="@id/gl_end"
+        app:layout_constraintStart_toStartOf="@id/gl_start"
+        app:layout_constraintTop_toBottomOf="@id/txv_error_articles" />
+
+    <TextView
+        android:id="@+id/txv_error_articles"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="Something went wrong"
+        app:layout_constraintEnd_toEndOf="@id/gl_end"
+        app:layout_constraintStart_toStartOf="@id/gl_start"
+        app:layout_constraintTop_toBottomOf="@id/txv_posts" />
+
+    <Button
+        android:id="@+id/btn_retry_topics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Retry"
+        app:layout_constraintEnd_toEndOf="@id/gl_end"
+        app:layout_constraintStart_toStartOf="@id/gl_start"
+        app:layout_constraintTop_toBottomOf="@id/txv_error_topics" />
+
+    <TextView
+        android:id="@+id/txv_error_topics"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="Something went wrong"
+        app:layout_constraintEnd_toEndOf="@id/gl_end"
+        app:layout_constraintStart_toStartOf="@id/gl_start"
+        app:layout_constraintTop_toBottomOf="@id/txv_sections" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_topics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="btn_retry_topics,pb_loading_topics,txv_error_topics,rv_topics" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -139,12 +139,31 @@
 
             <ProgressBar
                 android:id="@+id/pb_loading_posts"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="@id/gl_end"
                 app:layout_constraintStart_toStartOf="@id/gl_start"
                 app:layout_constraintTop_toTopOf="@id/rv_posts" />
+
+            <Button
+                android:id="@+id/btn_retry_articles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Retry"
+                app:layout_constraintEnd_toEndOf="@id/gl_end"
+                app:layout_constraintStart_toStartOf="@id/gl_start"
+                app:layout_constraintTop_toBottomOf="@id/txv_error_articles" />
+
+            <TextView
+                android:id="@+id/txv_error_articles"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Something went wrong"
+                app:layout_constraintEnd_toEndOf="@id/gl_end"
+                app:layout_constraintStart_toStartOf="@id/gl_start"
+                app:layout_constraintTop_toBottomOf="@id/txv_articles_title" />
 
             <RelativeLayout
                 android:id="@+id/rl_loading"
@@ -158,9 +177,27 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ProgressBar
+                    android:id="@+id/pb_loading_topic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true" />
+
+                <Button
+                    android:id="@+id/btn_retry_topic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txv_error_topic"
+                    android:layout_centerHorizontal="true"
+                    android:text="Retry" />
+
+                <TextView
+                    android:id="@+id/txv_error_topic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:text="Something went wrong" />
 
             </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

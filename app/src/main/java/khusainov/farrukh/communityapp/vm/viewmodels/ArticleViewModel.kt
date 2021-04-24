@@ -21,12 +21,12 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     ViewModel() {
 
     private val _isLoadingArticle = MutableLiveData<Boolean>()
-    private val _isLoadingComments = MutableLiveData<Boolean>()
     private val _responseArticle = MutableLiveData<Post>()
+    private val _errorArticle = MutableLiveData<String>()
 
     val isLoadingArticle: LiveData<Boolean> = _isLoadingArticle
-    val isLoadingComments: LiveData<Boolean> = _isLoadingComments
     val responseArticle: LiveData<Post> = _responseArticle
+    val errorArticle: LiveData<String> get() = _errorArticle
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -39,20 +39,23 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     val comments: LiveData<PagingData<Post>> get() = _comments
 
     init {
+        initializeArticle()
+    }
+
+    fun initializeArticle() {
         coroutineScope.launch {
             _isLoadingArticle.postValue(true)
 
             repository.getArticle(articleId).let { dataWrapper ->
                 when (dataWrapper) {
                     is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
-                    is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                    is DataWrapper.Error -> _errorArticle.postValue(dataWrapper.message)
                 }
             }
 
             _isLoadingArticle.postValue(false)
         }
     }
-
     fun likeArticle(articleId: String) {
         viewModelScope.launch {
             if (_responseArticle.value!!.isLiked) {

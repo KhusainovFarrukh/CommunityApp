@@ -19,9 +19,11 @@ class TopicViewModel(private val topicId: String, private val repository: Reposi
     private val _isLoading = MutableLiveData<Boolean>()
     private val _responseTopic = MutableLiveData<Topic>()
     private val _sortBy = MutableLiveData<String>()
+    private val _errorTopic = MutableLiveData<String>()
 
     val isLoading: LiveData<Boolean> = _isLoading
     val responseTopic: LiveData<Topic> = _responseTopic
+    val errorTopic: LiveData<String> get() = _errorTopic
     val responseTopicPosts = _sortBy.switchMap {
         repository.getPostsOfTopic(topicId, it).cachedIn(viewModelScope)
     }
@@ -29,13 +31,17 @@ class TopicViewModel(private val topicId: String, private val repository: Reposi
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     init {
+        initializeTopic()
+    }
+
+    fun initializeTopic() {
         coroutineScope.launch {
             _isLoading.postValue(true)
 
             repository.getTopic(topicId).let { dataWrapper ->
                 when (dataWrapper) {
                     is DataWrapper.Success -> _responseTopic.postValue(dataWrapper.data)
-                    is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                    is DataWrapper.Error -> _errorTopic.postValue(dataWrapper.message)
                 }
             }
 

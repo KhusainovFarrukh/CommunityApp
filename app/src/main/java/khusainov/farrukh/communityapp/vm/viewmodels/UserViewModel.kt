@@ -27,6 +27,10 @@ class UserViewModel(private val userId: String, private val repository: Reposito
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
     init {
+        initializeUser()
+    }
+
+    fun initializeUser() {
         coroutineScope.launch {
             _isLoading.postValue(true)
 

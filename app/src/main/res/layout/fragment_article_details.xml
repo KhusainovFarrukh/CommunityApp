@@ -297,14 +297,31 @@
                 android:id="@+id/rl_loading"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:visibility="gone">
+                android:background="@color/white">
 
                 <ProgressBar
+                    android:id="@+id/pb_loading_article"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true" />
 
+                <Button
+                    android:id="@+id/btn_retry_article"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Retry"
+                    android:layout_below="@id/txv_error_article"
+                    android:layout_centerHorizontal="true"
+                    app:layout_constraintTop_toBottomOf="@id/txv_error_article" />
+
+                <TextView
+                    android:id="@+id/txv_error_article"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:padding="8dp"
+                    android:text="Something went wrong"/>
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -339,13 +356,31 @@
                 android:id="@+id/rl_loading_comments"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:visibility="gone">
+                android:background="@color/white">
 
                 <ProgressBar
+                    android:id="@+id/pb_loading_comments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true" />
+
+                <Button
+                    android:id="@+id/btn_retry_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Retry"
+                    android:layout_below="@id/txv_error_comments"
+                    android:layout_centerHorizontal="true"
+                    app:layout_constraintTop_toBottomOf="@id/txv_error_comments" />
+
+                <TextView
+                    android:id="@+id/txv_error_comments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:padding="8dp"
+                    android:text="Something went wrong"/>
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
 

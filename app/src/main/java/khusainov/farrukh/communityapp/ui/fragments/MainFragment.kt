@@ -96,13 +96,20 @@ class MainFragment : Fragment() {
                 articleAdapter.submitData(responseList)
             }
         }
+        mainViewModel.errorTopics.observe(viewLifecycleOwner) {
+            binding.txvErrorTopics.text = it
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             articleAdapter.loadStateFlow.collectLatest { loadStates ->
                 binding.pbLoadingArticles.isVisible = loadStates.refresh is LoadState.Loading
-//                binding.pbLoadingArticles.isVisible = loadStates.prepend is LoadState.Loading
-//                binding.pbLoadingArticles.isVisible = loadStates.append is LoadState.Loading
-//                retry.isVisible = loadState.refresh !is LoadState.Loading
-//                errorMsg.isVisible = loadState.refresh is LoadState.Error
+                binding.btnRetryArticles.isVisible = loadStates.refresh is LoadState.Error
+                binding.txvErrorArticles.isVisible = loadStates.refresh is LoadState.Error
+
+                loadStates.refresh.let {
+                    if (it is LoadState.Error) {
+                        binding.txvErrorArticles.text = it.error.message
+                    }
+                }
             }
         }
         mainViewModel.responseTopics.observe(viewLifecycleOwner) {
@@ -110,6 +117,13 @@ class MainFragment : Fragment() {
         }
         mainViewModel.isLoadingTopics.observe(viewLifecycleOwner) {
             binding.pbLoadingTopics.isVisible = it
+            if (topicAdapter.currentList.isNullOrEmpty()) {
+                binding.txvErrorTopics.isVisible = !it
+                binding.btnRetryTopics.isVisible = !it
+            } else {
+                binding.txvErrorTopics.isVisible = false
+                binding.btnRetryTopics.isVisible = false
+            }
         }
         loginViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.pbLoadingLogin.isVisible = it
@@ -121,9 +135,14 @@ class MainFragment : Fragment() {
         binding.btnLogin.setOnClickListener {
             activityListener?.showLoginDialog()
         }
-
         binding.imvNotif.setOnClickListener {
             activityListener?.showNotificationsFragment()
+        }
+        binding.btnRetryArticles.setOnClickListener {
+            articleAdapter.retry()
+        }
+        binding.btnRetryTopics.setOnClickListener {
+            mainViewModel.initializeTopics()
         }
     }
 

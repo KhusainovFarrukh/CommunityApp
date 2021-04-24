@@ -101,6 +101,12 @@ class ArticleFragment : Fragment(), CommentClickListener {
                     ).show()
                 }
             }
+            btnRetryComments.setOnClickListener {
+                commentAdapter.retry()
+            }
+            btnRetryArticle.setOnClickListener {
+                articleViewModel.initializeArticle()
+            }
         }
     }
 
@@ -119,12 +125,36 @@ class ArticleFragment : Fragment(), CommentClickListener {
             }
         }
         articleViewModel.isLoadingArticle.observe(viewLifecycleOwner) {
-            binding.rlLoading.isVisible = it
-            binding.mcvSendComment.isVisible = !it
+            binding.pbLoadingArticle.isVisible = it
+            if (hashTagAdapter.currentList.isNullOrEmpty()) {
+                binding.rlLoading.isVisible = true
+                binding.mcvSendComment.isVisible = false
+                binding.txvErrorArticle.isVisible = !it
+                binding.btnRetryArticle.isVisible = !it
+            } else {
+                binding.rlLoading.isVisible = it
+                binding.mcvSendComment.isVisible = !it
+                binding.txvErrorArticle.isVisible = false
+                binding.btnRetryArticle.isVisible = false
+            }
         }
-        articleViewModel.isLoadingComments.observe(viewLifecycleOwner, {
-            binding.rlLoadingComments.isVisible = it
-        })
+        articleViewModel.errorArticle.observe(viewLifecycleOwner) {
+            binding.txvErrorArticle.text = it
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            commentAdapter.loadStateFlow.collectLatest { loadStates ->
+                binding.rlLoadingComments.isVisible = loadStates.refresh is LoadState.Loading || loadStates.refresh is LoadState.Error
+                binding.pbLoadingComments.isVisible = loadStates.refresh is LoadState.Loading
+                binding.btnRetryComments.isVisible = loadStates.refresh is LoadState.Error
+                binding.txvErrorComments.isVisible = loadStates.refresh is LoadState.Error
+
+                loadStates.refresh.let {
+                    if (it is LoadState.Error) {
+                        binding.txvErrorComments.text = it.error.message
+                    }
+                }
+            }
+        }
     }
 
     private fun setRecyclerAdapters() {

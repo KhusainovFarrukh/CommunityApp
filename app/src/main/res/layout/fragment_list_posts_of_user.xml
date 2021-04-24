@@ -16,7 +16,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginVertical="32dp"
-        android:visibility="gone" />
+        android:layout_marginVertical="32dp" />
+
+    <Button
+        android:id="@+id/btn_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txv_error"
+        android:layout_centerHorizontal="true"
+        android:text="Retry" />
+
+    <TextView
+        android:id="@+id/txv_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="8dp"
+        android:paddingVertical="16dp"
+        android:text="Something went wrong" />
 
 </RelativeLayout>

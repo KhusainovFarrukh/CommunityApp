@@ -84,7 +84,16 @@ class UserFragment : Fragment() {
 
     private fun setObservers() {
         userViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.rlLoading.isVisible = it
+            binding.pbLoadingUser.isVisible = it
+            if (userViewModel.responseUser.value == null) {
+                binding.rlLoading.isVisible = true
+                binding.txvErrorUser.isVisible = !it
+                binding.btnRetryUser.isVisible = !it
+            } else {
+                binding.rlLoading.isVisible = it
+                binding.rlLoading.isVisible = false
+                binding.btnRetryUser.isVisible = false
+            }
         }
         userViewModel.responseUser.observe(viewLifecycleOwner) {
             setUserDataToViews(it)
@@ -128,6 +137,11 @@ class UserFragment : Fragment() {
 
     private fun setClickListeners() {
         //TODO set all click listeners in the fragment
+        binding.apply {
+            btnRetryUser.setOnClickListener {
+                userViewModel.initializeUser()
+            }
+        }
     }
 
     private fun setSpinnerListener() {

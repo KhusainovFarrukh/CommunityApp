@@ -57,9 +57,10 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
 
                 when (notification.verb) {
                     KEY_NOTIFICATION_POST -> {
-                        var tempString: String? = ""
-                        if (notification.objects.isNotEmpty()) {
-                            tempString = notification.objects[0].title
+                        val tempString = if (notification.objects.isNotEmpty()) {
+                            notification.objects[0].title
+                        } else {
+                            "Noma`lum maqolani"
                         }
                         txvNotificationText.text = itemView.context.getString(
                             R.string.verb_post,
@@ -74,8 +75,11 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
                         )
                     }
                     KEY_NOTIFICATION_POST_UPVOTE -> {
-                        val tempString =
+                        val tempString = if (notification.objects.isNotEmpty()) {
                             notification.objects[0].title ?: notification.objects[0].summary
+                        } else {
+                            "Noma`lum maqolaga"
+                        }
                         txvNotificationText.text = itemView.context.getString(
                             R.string.verb_post_upvote,
                             notification.from[0].profile.name,
@@ -114,7 +118,7 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
                         imvIcon.setImageDrawable(
                             ContextCompat.getDrawable(
                                 itemView.context,
-                                R.drawable.ic_follower
+                                R.drawable.ic_follower_black
                             )
                         )
                     }
