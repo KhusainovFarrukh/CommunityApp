@@ -89,7 +89,7 @@ class MainFragment : Fragment() {
 
     private fun setObservers() {
         loginViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
-            (Snackbar.make(binding.root, otherError.error, Snackbar.LENGTH_LONG)
+            (Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
                 .setAction("Retry") {
                     otherError.retry.invoke()
                 }).show()

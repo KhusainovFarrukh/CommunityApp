@@ -14,7 +14,7 @@ class NotificationPagingSource(private val communityApiService: CommunityApiServ
         val position = params.key ?: PAGE_STARTING_INDEX
 
         return try {
-            communityApiService.getNotifications(page = position).let {
+            communityApiService.getNotifications(page = position, limit = 50).let {
                 LoadResult.Page(
                     data = it,
                     prevKey = if (position == PAGE_STARTING_INDEX) null else position - 1,

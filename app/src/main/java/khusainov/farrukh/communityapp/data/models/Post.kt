@@ -31,7 +31,10 @@ data class Post(
     val likes: List<User>,
     val type: String
 ) {
+    //Some requests return only id of parent post
     fun onlyParentId() = parent.isJsonPrimitive
+
+    //Some requests return only ids of responses
     fun onlyResponsesId(): Boolean {
         responses.asJsonArray.let {
             return if (it.size() > 0) {
@@ -42,6 +45,7 @@ data class Post(
         }
     }
 
+    //fun to calculate written time of post
     fun getDifference(): String {
         val formatter = ISODateTimeFormat.dateTime()
         val createdAtDate = formatter.parseDateTime(createdAt)
@@ -56,7 +60,7 @@ data class Post(
             difference.hours > 0 -> "${difference.hours} soat avval"
             difference.minutes > 0 -> "${difference.minutes} daqiqa avval"
             difference.seconds > 0 -> "${difference.seconds} soniya avval"
-            else -> "hozir?"
+            else -> "yaqinda"
         }
     }
 }

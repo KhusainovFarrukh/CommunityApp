@@ -3,7 +3,6 @@ package khusainov.farrukh.communityapp.data.repository
 import androidx.paging.PagingSource
 import khusainov.farrukh.communityapp.data.api.CommunityApiService
 import khusainov.farrukh.communityapp.data.models.Post
-import khusainov.farrukh.communityapp.utils.Constants
 import khusainov.farrukh.communityapp.utils.Constants.PAGE_STARTING_INDEX
 
 /**
@@ -19,7 +18,12 @@ class PostsOfTopicPagingSource(
         val position = params.key ?: PAGE_STARTING_INDEX
 
         return try {
-            communityApiService.getPostsOfTopic(topicId, sortBy, 25, position).let {
+            communityApiService.getPostsOfTopic(
+                page = position,
+                limit = 25,
+                topicId = topicId,
+                sortBy = sortBy,
+            ).let {
                 LoadResult.Page(
                     data = it,
                     prevKey = if (position == PAGE_STARTING_INDEX) null else position - 1,

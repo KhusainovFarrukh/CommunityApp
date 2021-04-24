@@ -88,7 +88,7 @@ class UserFragment : Fragment() {
             binding.txvErrorUser.text = it
         }
         userViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
-            (Snackbar.make(binding.root, otherError.error, Snackbar.LENGTH_LONG)
+            (Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
                 .setAction("Retry") {
                     otherError.retry.invoke()
                 }).show()
@@ -121,7 +121,7 @@ class UserFragment : Fragment() {
             txvPostsCount.text = "${user.profile.stats.posts} posts"
             txvReputation.text = "${user.profile.score} reputation"
 
-            if (user.followed) {
+            if (user.isFollowed) {
                 binding.txvFollow.text = "Unfollow"
             } else {
                 binding.txvFollow.text = "Follow"

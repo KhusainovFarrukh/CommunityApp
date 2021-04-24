@@ -14,7 +14,7 @@ class PostsPagingSource(private val communityApiService: CommunityApiService) :
         val position = params.key ?: PAGE_STARTING_INDEX
 
         return try {
-            communityApiService.getArticlesList(page = position).let {
+            communityApiService.getArticlesList(page = position, limit = 25).let {
                 LoadResult.Page(
                     data = it,
                     prevKey = if (position == PAGE_STARTING_INDEX) null else position - 1,

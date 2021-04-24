@@ -22,7 +22,7 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
     PagingDataAdapter<Notification, NotificationAdapter.NotificationViewHolder>(object :
         DiffUtil.ItemCallback<Notification>() {
         override fun areItemsTheSame(oldItem: Notification, newItem: Notification) =
-            oldItem.notificationId == newItem.notificationId
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Notification, newItem: Notification) =
             oldItem == newItem
@@ -49,7 +49,7 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
 
         fun onBindArticle(notification: Notification) {
             binding.apply {
-                if (notification.read) {
+                if (notification.isRead) {
                     txvNotificationText.typeface = Typeface.DEFAULT
                 } else {
                     txvNotificationText.typeface = Typeface.DEFAULT_BOLD

@@ -113,7 +113,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 
     private fun setObservers() {
         articleViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
-            (Snackbar.make(binding.root, otherError.error, Snackbar.LENGTH_LONG)
+            (Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
                 .setAction("Retry") {
                     otherError.retry.invoke()
                 }).show()
@@ -173,7 +173,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
     private fun setDataToViews(article: Post) {
         binding.apply {
             txvLikeArticle.setOnClickListener {
-                articleViewModel.likeArticle(article.id)
+                articleViewModel.likeArticle()
             }
             txvShare.setOnClickListener {
                 activityListener?.shareIntent(article)

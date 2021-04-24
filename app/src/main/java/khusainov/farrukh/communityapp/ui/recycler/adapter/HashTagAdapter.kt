@@ -17,7 +17,7 @@ class HashTagAdapter(
     private val topicClickListener: ItemClickListener,
 ) : ListAdapter<Topic, HashTagAdapter.HashtagViewHolder>(object : DiffUtil.ItemCallback<Topic>() {
     override fun areItemsTheSame(oldItem: Topic, newItem: Topic) =
-        oldItem.topicId == newItem.topicId
+        oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: Topic, newItem: Topic) = oldItem == newItem
 }) {
@@ -35,7 +35,7 @@ class HashTagAdapter(
             binding.apply {
                 txvHashtag.text = "#${topic.name.trim().toLowerCase(Locale.ROOT).replace(" ", "_")}"
                 txvHashtag.setOnClickListener {
-                    topicClickListener.onTopicClick(topic.topicId)
+                    topicClickListener.onTopicClick(topic.id)
                 }
             }
         }

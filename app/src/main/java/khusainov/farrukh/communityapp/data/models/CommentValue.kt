@@ -18,6 +18,7 @@ data class CommentValue(
     val topics: List<Any> = emptyList(),
 )
 
+//data class to send POST request for 'Reply to comment' functionality
 data class SubCommentValue(
     val content: String,
     val type: String = "response",

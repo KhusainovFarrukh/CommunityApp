@@ -16,6 +16,7 @@ import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.util.concurrent.TimeUnit
 
 class RetrofitInstance(context: Context) {
@@ -42,7 +43,7 @@ class RetrofitInstance(context: Context) {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val communityApiService: CommunityApiService = retrofit.create(CommunityApiService::class.java)
+    val communityApiService: CommunityApiService = retrofit.create()
 
     //interceptor to save cookies from every request
     inner class ReceivedCookiesInterceptor : Interceptor {
@@ -73,10 +74,11 @@ class RetrofitInstance(context: Context) {
                         sharedPref.getString(KEY_CSRF_TOKEN, "")
             )
 
-            //TODO code optimization
-            (sharedPref.getString(KEY_CSRF_TOKEN, "") ?: "").split(DELIMITER_CSRF).let {
-                if (it.size > 1) {
-                    requestBuilder.addHeader(KEY_CSRF_TOKEN, it[1])
+            if (sharedPref.contains(KEY_CSRF_TOKEN)) {
+                (sharedPref.getString(KEY_CSRF_TOKEN, "") ?: "").split(DELIMITER_CSRF).let {
+                    if (it.size > 1) {
+                        requestBuilder.addHeader(KEY_CSRF_TOKEN, it[1])
+                    }
                 }
             }
 

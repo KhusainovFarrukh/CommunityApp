@@ -10,7 +10,8 @@ data class User(
     val email: String,
     @SerializedName("profile")
     val profile: ProfileInUser,
-    val followed: Boolean,
+    @SerializedName("followed")
+    val isFollowed: Boolean,
 )
 
 data class ProfileInUser(

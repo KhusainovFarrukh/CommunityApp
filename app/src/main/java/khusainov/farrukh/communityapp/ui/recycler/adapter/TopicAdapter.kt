@@ -14,7 +14,7 @@ import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 class TopicAdapter(private val topicClickListener: ItemClickListener) :
     ListAdapter<Topic, TopicAdapter.TopicViewHolder>(object : DiffUtil.ItemCallback<Topic>() {
         override fun areItemsTheSame(oldItem: Topic, newItem: Topic) =
-            oldItem.topicId == newItem.topicId
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Topic, newItem: Topic) =
             oldItem == newItem
@@ -42,7 +42,7 @@ class TopicAdapter(private val topicClickListener: ItemClickListener) :
         fun onBindTopic(topic: Topic) {
             binding.apply {
                 root.setOnClickListener {
-                    topicClickListener.onTopicClick(topic.topicId)
+                    topicClickListener.onTopicClick(topic.id)
                 }
                 txvTitle.text = topic.name
                 txvPosts.text = topic.stats.posts.toString()

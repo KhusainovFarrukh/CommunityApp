@@ -32,7 +32,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
-    private var _comments = repository.getComments(articleId)
+    private var _comments = repository.getCommentsOfArticle(articleId)
         .cachedIn(viewModelScope)
         .let {
             it as MutableLiveData<PagingData<Post>>
@@ -59,23 +59,13 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
         }
     }
 
-    fun likeArticle(articleId: String) {
+    fun likeArticle() {
         viewModelScope.launch {
-            if (_responseArticle.value!!.isLiked) {
-                repository.removeLikePost(articleId).let { dataWrapper ->
-                    when (dataWrapper) {
-                        is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
-                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
-                        ) { likeArticle(articleId) })
-                    }
-                }
-            } else {
-                repository.likePost(articleId).let { dataWrapper ->
-                    when (dataWrapper) {
-                        is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
-                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
-                        ) { likeArticle(articleId) })
-                    }
+            repository.likePost(_responseArticle.value!!).let { dataWrapper ->
+                when (dataWrapper) {
+                    is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
+                    is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                    ) { likeArticle() })
                 }
             }
         }
@@ -83,21 +73,11 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 
     fun likeCommentTemp(comment: Post, refresh: () -> Unit) {
         viewModelScope.launch {
-            if (comment.isLiked) {
-                repository.removeLikePost(comment.id).let { dataWrapper ->
-                    when (dataWrapper) {
-                        is DataWrapper.Success -> refresh.invoke()
-                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
-                        ) { likeCommentTemp(comment, refresh) })
-                    }
-                }
-            } else {
-                repository.likePost(comment.id).let { dataWrapper ->
-                    when (dataWrapper) {
-                        is DataWrapper.Success -> refresh.invoke()
-                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
-                        ) { likeCommentTemp(comment, refresh) })
-                    }
+            repository.likePost(comment).let { dataWrapper ->
+                when (dataWrapper) {
+                    is DataWrapper.Success -> refresh.invoke()
+                    is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
+                    ) { likeCommentTemp(comment, refresh) })
                 }
             }
         }

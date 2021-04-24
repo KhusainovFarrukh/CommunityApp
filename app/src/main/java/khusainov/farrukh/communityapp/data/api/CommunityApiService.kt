@@ -20,15 +20,15 @@ interface CommunityApiService {
     //function to get last articles (with paging)
     @GET("api/v1/posts?type=article")
     suspend fun getArticlesList(
-        @Query("limit") limit: Int = 25,
         @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 25,
     ): List<Post>
 
     //function to get notifications of signed user  (with paging)
     @GET("api/v1/notifications")
     suspend fun getNotifications(
-        @Query("limit") limit: Int = 50,
         @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 50,
     ): List<Notification>
 
     //function to get a article
@@ -56,7 +56,7 @@ interface CommunityApiService {
         @Path("articleId") articleId: String,
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 25,
-    ): List<Post>
+        ): List<Post>
 
     //function to get a user
     @GET("api/v1/users/{userId}")
@@ -76,14 +76,14 @@ interface CommunityApiService {
         @Path("userId") userId: String,
     ): User
 
-    //function to posts of user (with paging)
+    //function to get posts of user (with paging)
     @GET("api/v1/users/{userId}/posts")
     suspend fun getPostsOfUser(
         @Path("userId") userId: String,
+        @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 25,
         @Query("type") type: String,
-        @Query("sort") sort: String = "createdAt.desc",
-        @Query("page") page: Int = 1,
+        @Query("sort") sortBy: String = "createdAt.desc",
     ): List<Post>
 
     //function to get topic data
@@ -96,9 +96,9 @@ interface CommunityApiService {
     @GET("api/v1/topics/{topicId}/posts?limit=20")
     suspend fun getPostsOfTopic(
         @Path("topicId") topicId: String,
-        @Query("sort") sortBy: String,
-        @Query("limit") limit: Int = 25,
         @Query("page") page: Int = 1,
+        @Query("limit") limit: Int = 25,
+        @Query("sort") sortBy: String,
     ): List<Post>
 
     //function to like a post
@@ -120,7 +120,7 @@ interface CommunityApiService {
         @Body commentValue: CommentValue,
     ): Post
 
-    //function to add a comment to comment (as a post)
+    //function for replying to comment(as a post)
     @POST("api/v1/posts")
     suspend fun replyToComment(
         @Body commentValue: SubCommentValue,

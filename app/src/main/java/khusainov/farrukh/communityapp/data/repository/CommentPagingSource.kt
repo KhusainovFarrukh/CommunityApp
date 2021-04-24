@@ -17,9 +17,9 @@ class CommentPagingSource(
 
         return try {
             communityApiService.getCommentsOfArticle(
-                articleId = articleId,
                 page = position,
-                limit = 5
+                limit = 25,
+                articleId = articleId,
             ).let {
                 LoadResult.Page(
                     data = it,

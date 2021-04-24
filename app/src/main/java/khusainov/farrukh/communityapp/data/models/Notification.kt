@@ -5,9 +5,10 @@ import com.google.gson.annotations.SerializedName
 //data class to get response of 'Get notifications' functionality
 data class Notification(
     @SerializedName("_id")
-    val notificationId: String,
+    val id: String,
     val verb: String,
     val from: List<User>,
-    val read: Boolean,
+    @SerializedName("read")
+    val isRead: Boolean,
     val objects: List<Post>,
 )

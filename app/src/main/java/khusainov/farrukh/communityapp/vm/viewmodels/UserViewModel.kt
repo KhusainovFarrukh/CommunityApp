@@ -49,21 +49,10 @@ class UserViewModel(private val userId: String, private val repository: Reposito
 
     fun followUser() {
         coroutineScope.launch {
-            if (_responseUser.value!!.followed) {
-                repository.unFollowUser(userId).let { dataWrapper ->
-                    when (dataWrapper) {
-                        is DataWrapper.Success -> _responseUser.postValue(dataWrapper.data)
-                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
-                        ) { followUser() })
-                    }
-                }
-            } else {
-                repository.followUser(userId).let { dataWrapper ->
-                    when (dataWrapper) {
-                        is DataWrapper.Success -> _responseUser.postValue(dataWrapper.data)
-                        is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message
-                        ) { followUser() })
-                    }
+            repository.followUser(_responseUser.value!!).let { dataWrapper ->
+                when (dataWrapper) {
+                    is DataWrapper.Success -> _responseUser.postValue(dataWrapper.data)
+                    is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message) { followUser() })
                 }
             }
         }

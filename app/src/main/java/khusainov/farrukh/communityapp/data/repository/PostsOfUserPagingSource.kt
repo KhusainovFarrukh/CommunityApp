@@ -18,7 +18,13 @@ class PostsOfUserPagingSource(
         val position = params.key ?: Constants.PAGE_STARTING_INDEX
 
         return try {
-            communityApiService.getPostsOfUser(userId, 25, type, sortBy, position).let {
+            communityApiService.getPostsOfUser(
+                page = position,
+                limit = 25,
+                userId = userId,
+                type = type,
+                sortBy = sortBy,
+            ).let {
                 LoadResult.Page(
                     data = it,
                     prevKey = if (position == Constants.PAGE_STARTING_INDEX) null else position - 1,
