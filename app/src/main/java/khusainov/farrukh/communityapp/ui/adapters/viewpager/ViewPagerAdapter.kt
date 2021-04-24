@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.ui.viewpager.adapter
+package khusainov.farrukh.communityapp.ui.adapters.viewpager
 
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter

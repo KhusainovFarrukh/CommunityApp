@@ -14,8 +14,8 @@ import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.recycler.adapter.ListLoadStateAdapter
-import khusainov.farrukh.communityapp.ui.recycler.adapter.PostsOfUserAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfUserAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.PostsOfUserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.PostsOfUserViewModel

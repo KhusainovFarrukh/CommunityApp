@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.ui.recycler.adapter
+package khusainov.farrukh.communityapp.ui.adapters.recycler
 
 import android.graphics.Typeface
 import android.view.LayoutInflater

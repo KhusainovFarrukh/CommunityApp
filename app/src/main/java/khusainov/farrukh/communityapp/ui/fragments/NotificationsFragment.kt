@@ -12,8 +12,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.recycler.adapter.ListLoadStateAdapter
-import khusainov.farrukh.communityapp.ui.recycler.adapter.NotificationAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.NotificationAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.NotificationsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel

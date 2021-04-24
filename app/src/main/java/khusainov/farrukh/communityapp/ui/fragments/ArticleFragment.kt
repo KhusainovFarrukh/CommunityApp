@@ -20,9 +20,9 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.recycler.adapter.CommentAdapter
-import khusainov.farrukh.communityapp.ui.recycler.adapter.HashTagAdapter
-import khusainov.farrukh.communityapp.ui.recycler.adapter.ListLoadStateAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.CommentAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.HashTagAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener

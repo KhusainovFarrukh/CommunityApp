@@ -17,8 +17,8 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
 import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.recycler.adapter.ListLoadStateAdapter
-import khusainov.farrukh.communityapp.ui.recycler.adapter.PostsOfUserAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfUserAdapter
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.TopicVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.TopicViewModel

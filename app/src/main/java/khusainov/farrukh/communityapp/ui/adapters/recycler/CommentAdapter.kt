@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.ui.recycler.adapter
+package khusainov.farrukh.communityapp.ui.adapters.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -88,7 +88,7 @@ class SubCommentAdapter(
         ViewholderCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    override fun onBindViewHolder(holder: SubCommentAdapter.CommentViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         holder.onBind(getItem(position))
     }
 
