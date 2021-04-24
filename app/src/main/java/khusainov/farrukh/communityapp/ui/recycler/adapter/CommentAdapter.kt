@@ -103,7 +103,7 @@ class SubCommentAdapter(
                 txvSendComment.setOnClickListener {
                     if (etComment.text.isNotEmpty()) {
                         parentComments.forEach {
-                            if (comment.replyTo == it.id) {
+                            if (comment.replyTo.asString == it.id) {
                                 commentClickListener.onWriteSubCommentClick(
                                     etComment.text.toString(),
                                     it.id

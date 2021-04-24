@@ -44,9 +44,10 @@ class PostsOfUserAdapter(
 
         fun onBindArticle(article: Post) {
             binding.apply {
+                //TODO handle replyTo
                 if (article.title.isNullOrEmpty()) {
                     if (article.onlyParentId()) {
-                        txvTitle.text = "Komment ga javoban:"
+                        txvTitle.text = "Maqola ga javoban:"
                     } else {
                         Gson().fromJson(article.parent, Post::class.java).let {
                             txvTitle.text = "\"${it.title ?: "Komment"}\" ga javoban:"
