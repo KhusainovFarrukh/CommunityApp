@@ -18,11 +18,9 @@ class UserViewModel(private val userId: String, private val repository: Reposito
 
     private val _responseUser = MutableLiveData<User>()
     private val _isLoading = MutableLiveData<Boolean>()
-    private val _isFollowed = MutableLiveData<Boolean>()
 
     val responseUser: LiveData<User> = _responseUser
     val isLoading: LiveData<Boolean> = _isLoading
-    val isFollowed: LiveData<Boolean> = _isFollowed
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
@@ -42,22 +40,25 @@ class UserViewModel(private val userId: String, private val repository: Reposito
             }
 
             _isLoading.postValue(false)
-
-            _responseUser.value?.let {
-                _isFollowed.postValue(it.followed)
-            }
         }
     }
 
-    //TODO edit this to return User data class
     fun followUser() {
         coroutineScope.launch {
-            if (_isFollowed.value == true) {
-                repository.unFollowUser(userId)
-                _isFollowed.postValue(false)
+            if (_responseUser.value!!.followed) {
+                repository.unFollowUser(userId).let { dataWrapper ->
+                    when (dataWrapper) {
+                        is DataWrapper.Success -> _responseUser.postValue(dataWrapper.data)
+                        is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                    }
+                }
             } else {
-                repository.followUser(userId)
-                _isFollowed.postValue(true)
+                repository.followUser(userId).let { dataWrapper ->
+                    when (dataWrapper) {
+                        is DataWrapper.Success -> _responseUser.postValue(dataWrapper.data)
+                        is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+                    }
+                }
             }
         }
     }

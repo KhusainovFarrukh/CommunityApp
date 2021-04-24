@@ -67,13 +67,17 @@ class Repository(private val apiService: CommunityApiService) {
         DataWrapper.Error(e.message.toString())
     }
 
-    //TODO edit this to return User data class
-    suspend fun followUser(userId: String) =
-        apiService.followUser(userId)
+    suspend fun followUser(userId: String) = try {
+        DataWrapper.Success(apiService.followUser(userId))
+    } catch (e: Exception) {
+        DataWrapper.Error(e.message.toString())
+    }
 
-    //TODO edit this to return User data class
-    suspend fun unFollowUser(userId: String) =
-        apiService.unFollowUser(userId)
+    suspend fun unFollowUser(userId: String) = try {
+        DataWrapper.Success(apiService.unFollowUser(userId))
+    } catch (e: Exception) {
+        DataWrapper.Error(e.message.toString())
+    }
 
     suspend fun getTopic(topicId: String) = try {
         DataWrapper.Success(apiService.getTopic(topicId))
@@ -81,14 +85,14 @@ class Repository(private val apiService: CommunityApiService) {
         DataWrapper.Error(e.message.toString())
     }
 
-    suspend fun likeArticle(articleId: String) = try {
-        DataWrapper.Success(apiService.likeArticle(articleId))
+    suspend fun likePost(postId: String) = try {
+        DataWrapper.Success(apiService.likePost(postId))
     } catch (e: Exception) {
         DataWrapper.Error(e.message.toString())
     }
 
-    suspend fun removeLikeArticle(articleId: String) = try {
-        DataWrapper.Success(apiService.removeLikeArticle(articleId))
+    suspend fun removeLikePost(postId: String) = try {
+        DataWrapper.Success(apiService.removeLikePost(postId))
     } catch (e: Exception) {
         DataWrapper.Error(e.message.toString())
     }
@@ -99,20 +103,25 @@ class Repository(private val apiService: CommunityApiService) {
         DataWrapper.Error(e.message.toString())
     }
 
-    suspend fun addCommentToComment(body: String, parent: Post, replyTo: String) = try {
-        DataWrapper.Success(apiService.addCommentToComment(SubCommentValue(content = body,
+    suspend fun replyToComment(body: String, parent: Post, replyTo: String) = try {
+        DataWrapper.Success(apiService.replyToComment(SubCommentValue(content = body,
             parent = parent,
             replyTo = replyTo)))
     } catch (e: Exception) {
         DataWrapper.Error(e.message.toString())
     }
 
-    suspend fun reportArticle(articleId: String, reportValue: ReportValue) =
-        apiService.reportArticle(articleId, reportValue)
+    suspend fun reportPost(postId: String, reportValue: ReportValue) = try {
+        DataWrapper.Success(apiService.reportPost(postId, reportValue))
+    } catch (e: Exception) {
+        DataWrapper.Error(e.message.toString())
+    }
 
-    suspend fun deleteArticle(articleId: String) =
-        apiService.deleteArticle(articleId)
-
+    suspend fun deletePost(postId: String) = try {
+        DataWrapper.Success(apiService.deletePost(postId))
+    } catch (e: Exception) {
+        DataWrapper.Error(e.message.toString())
+    }
 
     fun getPostsOfTopic(topicId: String, sortBy: String): LiveData<PagingData<Post>> {
         return Pager(

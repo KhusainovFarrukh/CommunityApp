@@ -56,17 +56,18 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
             _isLoadingArticle.postValue(false)
         }
     }
+
     fun likeArticle(articleId: String) {
         viewModelScope.launch {
             if (_responseArticle.value!!.isLiked) {
-                repository.removeLikeArticle(articleId).let { dataWrapper ->
+                repository.removeLikePost(articleId).let { dataWrapper ->
                     when (dataWrapper) {
                         is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
                         is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
                     }
                 }
             } else {
-                repository.likeArticle(articleId).let { dataWrapper ->
+                repository.likePost(articleId).let { dataWrapper ->
                     when (dataWrapper) {
                         is DataWrapper.Success -> _responseArticle.postValue(dataWrapper.data)
                         is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
@@ -78,14 +79,14 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 
     suspend fun likeCommentTemp(comment: Post, refresh: () -> Unit) {
         if (comment.isLiked) {
-            repository.removeLikeArticle(comment.id).let { dataWrapper ->
+            repository.removeLikePost(comment.id).let { dataWrapper ->
                 when (dataWrapper) {
                     is DataWrapper.Success -> refresh.invoke()
                     is DataWrapper.Error -> Log.wtf("VM", dataWrapper.message)
                 }
             }
         } else {
-            repository.likeArticle(comment.id).let { dataWrapper ->
+            repository.likePost(comment.id).let { dataWrapper ->
                 when (dataWrapper) {
                     is DataWrapper.Success -> refresh.invoke()
                     is DataWrapper.Error -> Log.wtf("VM", dataWrapper.message)
@@ -95,13 +96,16 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
     }
 
     suspend fun deleteCommentTemp(commentId: String, refresh: () -> Unit) {
-        //TODO add wrapper
-        repository.deleteArticle(commentId)
-        refresh.invoke()
+        repository.deletePost(commentId).let { dataWrapper ->
+            when (dataWrapper) {
+                is DataWrapper.Success -> refresh.invoke()
+                is DataWrapper.Error -> Log.wtf("error", dataWrapper.message)
+            }
+        }
     }
 
     suspend fun replyCommentTemp(replyBody: String, replyTo: String, refresh: () -> Unit) {
-        repository.addCommentToComment(replyBody, _responseArticle.value!!, replyTo)
+        repository.replyToComment(replyBody, _responseArticle.value!!, replyTo)
             .let { dataWrapper ->
                 when (dataWrapper) {
                     is DataWrapper.Success -> refresh.invoke()

@@ -98,14 +98,6 @@ class UserFragment : Fragment() {
         userViewModel.responseUser.observe(viewLifecycleOwner) {
             setUserDataToViews(it)
         }
-        //TODO edit this to return User data class
-        userViewModel.isFollowed.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.txvFollow.text = "Unfollow"
-            } else {
-                binding.txvFollow.text = "Follow"
-            }
-        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -119,8 +111,13 @@ class UserFragment : Fragment() {
             txvPostsCount.text = "${user.profile.stats.posts} posts"
             txvReputation.text = "${user.profile.score} reputation"
 
+            if (user.followed) {
+                binding.txvFollow.text = "Unfollow"
+            } else {
+                binding.txvFollow.text = "Follow"
+            }
+
             txvFollow.setOnClickListener {
-                //TODO edit this to return User data class
                 userViewModel.followUser()
             }
             imvProfile.load(user.profile.photo) {
@@ -128,7 +125,6 @@ class UserFragment : Fragment() {
                 placeholder(R.drawable.ic_account_circle)
                 transformations(CircleCropTransformation())
             }
-
             imvBanner.load(user.profile.banner) {
                 crossfade(true)
             }

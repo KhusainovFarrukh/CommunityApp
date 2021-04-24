@@ -75,7 +75,7 @@ class ReportDialogFragment : DialogFragment() {
         binding.apply {
             btnReport.setOnClickListener {
                 if (etDescription.text.isNotEmpty()) {
-                    reportViewModel.reportArticle(
+                    reportViewModel.reportPost(
                         articleId,
                         ReportValue(
                             spTypeOfReport.selectedItem.toString(),
@@ -100,7 +100,9 @@ class ReportDialogFragment : DialogFragment() {
     private fun setObservers() {
         reportViewModel.isLoading.observe(viewLifecycleOwner) {
             binding.rlLoading.isVisible = it
-            if (!it) {
+        }
+        reportViewModel.isReported.observe(viewLifecycleOwner) {
+            if (it) {
                 Toast.makeText(
                     requireContext(),
                     "Done",
