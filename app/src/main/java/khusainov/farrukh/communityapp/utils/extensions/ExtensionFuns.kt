@@ -57,7 +57,7 @@ fun ViewholderCommentBinding.setCommentToViews(
 		popUp.setOnMenuItemClickListener {
 			when (it.itemId) {
                 R.id.item_report -> {
-                    commentClickListener.showReportDialog(comment.id)
+                    commentClickListener.onReportClick(comment.id)
                 }
                 R.id.item_delete -> {
                     commentClickListener.onDeleteCommentClick(comment.id)

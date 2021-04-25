@@ -2,20 +2,22 @@ package khusainov.farrukh.communityapp.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
-import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfUserAdapter
+import khusainov.farrukh.communityapp.utils.Constants.KEY_SORT_BY
+import khusainov.farrukh.communityapp.utils.Constants.KEY_TYPE
+import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
+import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.PostsOfUserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.PostsOfUserViewModel
@@ -29,25 +31,46 @@ class PostsOfUserFragment : Fragment() {
 
 	private var activityListener: HomeActivityListener? = null
 	private var _binding: FragmentListPostsOfUserBinding? = null
-	private lateinit var postsViewModel: PostsOfUserViewModel
-	private lateinit var postsOfUserAdapter: PostsOfUserAdapter
 	private val binding get() = _binding!!
+	private val postsOfUserAdapter by lazy { PostsOfUserAdapter(ItemClickListener(activityListener)) }
+
+	private val userId by lazy {
+		arguments?.getString(KEY_USER_ID) ?: throw NullPointerException(getString(
+			R.string.no_user_id))
+	}
+	private val type by lazy {
+		arguments?.getString(KEY_TYPE) ?: throw NullPointerException(getString(
+			R.string.no_type))
+	}
+	private val sortBy by lazy {
+		arguments?.getString(KEY_SORT_BY) ?: throw NullPointerException(getString(
+			R.string.no_sort_by))
+	}
+
+	private val postsViewModel by lazy {
+		ViewModelProvider(this,
+			PostsOfUserVMFactory(userId,
+				type,
+				sortBy,
+				Repository(RetrofitInstance(requireContext()).communityApiService)))
+			.get(PostsOfUserViewModel::class.java)
+	}
 
 	fun newInstance(userId: String, postsType: String, sortBy: String): PostsOfUserFragment {
 		val fragment = PostsOfUserFragment()
 		val bundle = Bundle()
-		bundle.putString("userId", userId)
-		bundle.putString("type", postsType)
-		bundle.putString("sortBy", sortBy)
+		bundle.putString(KEY_USER_ID, userId)
+		bundle.putString(KEY_TYPE, postsType)
+		bundle.putString(KEY_SORT_BY, sortBy)
 		fragment.arguments = bundle
 		return fragment
 	}
 
 	override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?,
+	): View {
 		_binding = FragmentListPostsOfUserBinding.inflate(layoutInflater)
 		return binding.root
 	}
@@ -55,29 +78,20 @@ class PostsOfUserFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		val userId = arguments?.getString("userId")!!
-		val type = arguments?.getString("type")!!
-		val sortBy = arguments?.getString("sortBy")!!
-
-		postsViewModel =
-			ViewModelProvider(
-                this,
-                PostsOfUserVMFactory(userId,
-                    type,
-                    sortBy,
-                    Repository(RetrofitInstance(requireContext()).communityApiService))
-            ).get(PostsOfUserViewModel::class.java)
-
-		binding.rvPosts.adapter = postsOfUserAdapter.withLoadStateHeaderAndFooter(
-            ListLoadStateAdapter { postsOfUserAdapter.retry() },
-            ListLoadStateAdapter { postsOfUserAdapter.retry() }
-        )
-
+		initRecyclerView()
 		setObservers()
 		setClickListeners()
 	}
 
-	private fun setObservers() {
+	private fun initRecyclerView() = with(binding) {
+		rvPosts.adapter = postsOfUserAdapter.withLoadStateHeaderAndFooter(
+			ListLoadStateAdapter { postsOfUserAdapter.retry() },
+			ListLoadStateAdapter { postsOfUserAdapter.retry() }
+		)
+	}
+
+	private fun setObservers() = with(postsViewModel) {
+		//observe posts' loading state
 		viewLifecycleOwner.lifecycleScope.launch {
 			postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
 				binding.pbLoading.isVisible = loadStates.refresh is LoadState.Loading
@@ -91,18 +105,18 @@ class PostsOfUserFragment : Fragment() {
 				}
 			}
 		}
-		postsViewModel.userPostsLiveData.observe(viewLifecycleOwner) {
+
+		//observe posts' value
+		userPostsLiveData.observe(viewLifecycleOwner) {
 			lifecycleScope.launch {
 				postsOfUserAdapter.submitData(it)
 			}
 		}
 	}
 
-	private fun setClickListeners() {
-		binding.apply {
-			btnRetry.setOnClickListener {
-				postsOfUserAdapter.retry()
-			}
+	private fun setClickListeners() = with(binding) {
+		btnRetry.setOnClickListener {
+			postsOfUserAdapter.retry()
 		}
 	}
 
@@ -115,9 +129,9 @@ class PostsOfUserFragment : Fragment() {
 		super.onAttach(context)
 		if (context is HomeActivityListener) {
 			activityListener = context
-			postsOfUserAdapter = PostsOfUserAdapter(ItemClickListener(activityListener))
 		} else {
-			throw IllegalArgumentException("$context is not HomeActivityListener")
+			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
+				context.toString()))
 		}
 	}
 

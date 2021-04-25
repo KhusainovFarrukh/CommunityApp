@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,13 +17,10 @@ import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
-import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.adapters.recycler.CommentAdapter
-import khusainov.farrukh.communityapp.ui.adapters.recycler.HashTagAdapter
-import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.*
 import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
-import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
-import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
+import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
+import khusainov.farrukh.communityapp.utils.clicklisteners.*
 import khusainov.farrukh.communityapp.vm.factories.ArticleVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -37,15 +32,29 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	private var _binding: FragmentArticleDetailsBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
-	private lateinit var articleViewModel: ArticleViewModel
 	private val commentAdapter = CommentAdapter(this)
-	private lateinit var hashTagAdapter: HashTagAdapter
+
+	private val articleId by lazy {
+		arguments?.getString(KEY_ARTICLE_ID)
+			?: throw NullPointerException(getString(R.string.no_article_id))
+	}
+
+	private val articleViewModel: ArticleViewModel by lazy {
+		ViewModelProvider(
+			this,
+			ArticleVMFactory(articleId, requireContext())
+		).get(ArticleViewModel::class.java)
+	}
+
+	private val hashTagAdapter: HashTagAdapter by lazy {
+		HashTagAdapter(ItemClickListener(activityListener))
+	}
 
 	override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?,
+	): View {
 		_binding = FragmentArticleDetailsBinding.inflate(inflater)
 		return binding.root
 	}
@@ -53,15 +62,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		val id = arguments?.getString(KEY_ARTICLE_ID)
-			?: throw NullPointerException("There is no article ID")
-
-		articleViewModel = ViewModelProvider(
-            this,
-            ArticleVMFactory(id, requireContext())
-        ).get(ArticleViewModel::class.java)
-
-		setRecyclerAdapters()
+		initRecyclerView()
 		setObservers()
 		setClickListeners()
 	}
@@ -75,9 +76,9 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		super.onAttach(context)
 		if (context is HomeActivityListener) {
 			activityListener = context
-			hashTagAdapter = HashTagAdapter(ItemClickListener(activityListener))
 		} else {
-			throw IllegalArgumentException("$context is not HomeActivityListener")
+			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
+				context.toString()))
 		}
 	}
 
@@ -86,49 +87,42 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		activityListener = null
 	}
 
-	private fun setClickListeners() {
-		binding.apply {
-			txvSendComment.setOnClickListener {
-				if (etComment.text.isNotEmpty()) {
-					lifecycleScope.launch {
-						articleViewModel.addCommentTemp(etComment.text.toString()) { commentAdapter.refresh() }
-					}
-					etComment.text.clear()
-				} else {
-					Toast.makeText(
-                        requireContext(),
-                        "Empty body",
-                        Toast.LENGTH_SHORT
-                    ).show()
+	private fun initRecyclerView() = with(binding) {
+		rvHashtags.adapter = hashTagAdapter
+		rvComments.adapter = commentAdapter.withLoadStateHeaderAndFooter(
+			ListLoadStateAdapter { commentAdapter.retry() },
+			ListLoadStateAdapter { commentAdapter.retry() }
+		)
+	}
+
+	private fun setClickListeners() = with(binding) {
+		txvSendComment.setOnClickListener {
+			if (etComment.text.isNotEmpty()) {
+				lifecycleScope.launch {
+					articleViewModel.addCommentTemp(etComment.text.toString()) { commentAdapter.refresh() }
 				}
+				etComment.text.clear()
+			} else {
+				Toast.makeText(
+					requireContext(),
+					getString(R.string.empty_text),
+					Toast.LENGTH_SHORT
+				).show()
 			}
-			btnRetryComments.setOnClickListener {
-				commentAdapter.retry()
-			}
-			btnRetryArticle.setOnClickListener {
-				articleViewModel.initArticle()
-			}
+		}
+		btnRetryComments.setOnClickListener {
+			commentAdapter.retry()
+		}
+		btnRetryArticle.setOnClickListener {
+			articleViewModel.initArticle()
 		}
 	}
 
-	private fun setObservers() {
-		articleViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
-			(Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
-				.setAction("Retry") {
-					otherError.retry.invoke()
-				}).show()
-		}
-		articleViewModel.articleLiveData.observe(viewLifecycleOwner) {
-			setDataToViews(it)
-		}
-		articleViewModel.comments.observe(viewLifecycleOwner) {
-			lifecycleScope.launch {
-				commentAdapter.submitData(it)
-			}
-		}
-		articleViewModel.isLoading.observe(viewLifecycleOwner) {
+	private fun setObservers() = with(articleViewModel) {
+		//observe article's loading state
+		isLoading.observe(viewLifecycleOwner) {
 			binding.pbLoadingArticle.isVisible = it
-			if (hashTagAdapter.currentList.isNullOrEmpty()) {
+			if (articleLiveData.value == null) {
 				binding.rlLoading.isVisible = true
 				binding.mcvSendComment.isVisible = false
 				binding.txvErrorArticle.isVisible = !it
@@ -140,9 +134,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
 				binding.btnRetryArticle.isVisible = false
 			}
 		}
-		articleViewModel.errorArticle.observe(viewLifecycleOwner) {
-			binding.txvErrorArticle.text = it
-		}
+
+		//observe comments' loading state
 		viewLifecycleOwner.lifecycleScope.launch {
 			commentAdapter.loadStateFlow.collectLatest { loadStates ->
 				binding.rlLoadingComments.isVisible =
@@ -158,93 +151,116 @@ class ArticleFragment : Fragment(), CommentClickListener {
 				}
 			}
 		}
+
+		//observe article's value
+		articleLiveData.observe(viewLifecycleOwner) {
+			setDataToViews(it)
+		}
+
+		//observe comments' value
+		comments.observe(viewLifecycleOwner) {
+			lifecycleScope.launch {
+				commentAdapter.submitData(it)
+			}
+		}
+
+		//observe error while initializing article
+		errorArticle.observe(viewLifecycleOwner) {
+			binding.txvErrorArticle.text = it
+		}
+
+		//observe other errors while making some requests
+		otherError.observe(viewLifecycleOwner) { otherError ->
+			(Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
+				.setAction(getString(R.string.retry)) {
+					otherError.retry.invoke()
+				}).show()
+		}
 	}
 
-	private fun setRecyclerAdapters() {
-		binding.rvHashtags.adapter = hashTagAdapter
-		binding.rvComments.adapter = commentAdapter.withLoadStateHeaderAndFooter(
-            ListLoadStateAdapter { commentAdapter.retry() },
-            ListLoadStateAdapter { commentAdapter.retry() }
-        )
+	@SuppressLint("SetJavaScriptEnabled")
+	private fun setDataToViews(article: Post) = with(binding) {
+		setClickListenersAfterArticleInit(article)
+
+		//set article's isLiked field to views
+		if (article.isLiked) {
+			txvLikeArticle.text = getString(R.string.liked)
+			txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
+				R.drawable.ic_favorite,
+				0,
+				0,
+				0
+			)
+		} else {
+			txvLikeArticle.text = getString(R.string.like)
+			txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
+				R.drawable.ic_favorite_border,
+				0,
+				0,
+				0
+			)
+		}
+
+		//Replacing '#' from encoded version. Because there is a bug with WebView
+		val content = article.content
+			.replace("#", Uri.encode("#"))
+
+		val html = Jsoup.parse(content)
+
+		//Changing some html and css attributes of image to make it match display width
+		html.select("img")
+			.attr("width", "100%")
+		html.body()
+			.appendElement("style")
+			.appendText("* {margin-top:4px; margin-bottom:4px; margin-left:0; margin-right:0; padding:0; } ")
+
+		wvArticle.settings.setSupportZoom(true)
+		wvArticle.settings.builtInZoomControls = true
+		wvArticle.settings.displayZoomControls = false
+		wvArticle.settings.javaScriptEnabled = true
+		wvArticle.loadData(
+			html.html(),
+			"text/html",
+			"UTF-8"
+		)
+
+		//set article's stats data to views
+		txvComments.text = getString(R.string.count_comment, article.stats.comments)
+		txvFollowers.text = getString(R.string.count_follower, article.stats.followers)
+		txvLikes.text = getString(R.string.count_like, article.stats.likes)
+		txvViews.text = getString(R.string.count_view, article.stats.viewsCount)
+		txvTime.text = article.getDifference()
+
+		//set author data to views
+		txvUserDescription.text = article.user?.profile?.title?.trim()
+		txvUserName.text =
+			article.user?.profile?.name?.trim() ?: getString(R.string.unknown_author)
+		imvProfilePhoto.load(article.user?.profile?.photo) {
+			crossfade(true)
+			placeholder(R.drawable.ic_account_circle)
+			transformations(CircleCropTransformation())
+		}
+
+		//set article title to views
+		txvTitle.text = article.title?.trim()
+
+		//submit topics of article to adapter
+		hashTagAdapter.submitList(article.topics)
 	}
 
-	//TODO remove this annotation in the future
-	@SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
-	private fun setDataToViews(article: Post) {
-		binding.apply {
-			txvLikeArticle.setOnClickListener {
-				articleViewModel.likeArticle()
-			}
-			txvShare.setOnClickListener {
-				activityListener?.shareIntent(article)
-			}
-			txvReportArticle.setOnClickListener {
-				activityListener?.showReportDialog(article.id)
-			}
-			txvSeeProfile.setOnClickListener {
-				activityListener?.showUserFragment(article.user!!.id)
-			}
-			if (article.isLiked) {
-				binding.txvLikeArticle.text = "Liked already"
-				binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_favorite,
-                    0,
-                    0,
-                    0
-                )
-			} else {
-				binding.txvLikeArticle.text = "Like"
-				binding.txvLikeArticle.setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_favorite_border,
-                    0,
-                    0,
-                    0
-                )
-			}
-
-			//Replacing '#' from encoded version. Because there is a bug with WebView
-			val content = article.content
-				.replace("#", Uri.encode("#"))
-
-			val html = Jsoup.parse(content)
-
-			//Changing some html and css attributes of image to make it match display width
-			html.select("img")
-				.attr("width", "100%")
-			html.body()
-				.appendElement("style")
-				.appendText("* {margin-top:4px; margin-bottom:4px; margin-left:0; margin-right:0; padding:0; } ")
-
-			wvArticle.settings.setSupportZoom(true)
-			wvArticle.settings.builtInZoomControls = true
-			wvArticle.settings.displayZoomControls = false
-
-			wvArticle.settings.javaScriptEnabled = true
-			wvArticle.loadData(
-                html.html(),
-                "text/html",
-                "UTF-8"
-            )
-
-			txvComments.text = "${article.stats.comments} comments"
-			txvFollowers.text = "${article.stats.followers} followers"
-			txvLikes.text = "${article.stats.likes} likes"
-			txvViews.text = "${article.stats.viewsCount} views"
-			txvTime.text = article.getDifference()
-
-			txvUserDescription.text = article.user?.profile?.title
-
-			hashTagAdapter.submitList(article.topics)
-
-			txvUserName.text = article.user?.profile?.name ?: "Unknown"
-
-			txvTitle.text = article.title?.trim()
-
-			imvProfilePhoto.load(article.user?.profile?.photo) {
-				crossfade(true)
-				placeholder(R.drawable.ic_account_circle)
-				transformations(CircleCropTransformation())
-			}
+	//fun to set some ClickListeners after article initialize
+	private fun setClickListenersAfterArticleInit(article: Post) = with(binding) {
+		txvLikeArticle.setOnClickListener {
+			articleViewModel.likeArticle()
+		}
+		txvShare.setOnClickListener {
+			activityListener?.shareIntent(article)
+		}
+		txvReportArticle.setOnClickListener {
+			activityListener?.showReportDialog(article.id)
+		}
+		txvSeeProfile.setOnClickListener {
+			activityListener?.showUserFragment(article.user!!.id)
 		}
 	}
 
@@ -252,21 +268,15 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		articleViewModel.likeCommentTemp(comment) { commentAdapter.refresh() }
 	}
 
-	override fun onLikeSubCommentClick(comment: Post) {
-		articleViewModel.likeCommentTemp(comment) { commentAdapter.refresh() }
-	}
-
 	override fun onCommentAuthorClick(userId: String) {
 		activityListener?.showUserFragment(userId)
 	}
 
-	override fun onWriteSubCommentClick(body: String, replyTo: String) {
+	override fun onReplyClick(body: String, replyTo: String) {
 		articleViewModel.replyCommentTemp(body, replyTo) { commentAdapter.refresh() }
 	}
 
-	override fun getUserId() = activityListener?.getUserId() ?: ""
-
-	override fun showReportDialog(commentId: String) {
+	override fun onReportClick(commentId: String) {
 		activityListener?.showReportDialog(commentId)
 	}
 
@@ -274,7 +284,5 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		articleViewModel.deleteCommentTemp(commentId) { commentAdapter.refresh() }
 	}
 
-	override fun onDeleteSubCommentClick(commentId: String) {
-		articleViewModel.deleteCommentTemp(commentId) { commentAdapter.refresh() }
-	}
+	override fun getUserId() = activityListener?.getUserId() ?: VALUE_DEFAULT
 }

@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import khusainov.farrukh.communityapp.data.models.Notification
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.ui.activities.HomeActivity
-import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_USER
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST_UPVOTE

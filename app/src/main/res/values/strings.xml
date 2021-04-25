@@ -1,10 +1,42 @@
 <resources>
     <string name="app_name">CommunityApp</string>
-    <string name="verb_post">%s %s ni chop etdi.</string>
-    <string name="verb_follow_user">%s sizga yozildi.</string>
-    <string name="verb_post_upvote">%s %s ga layk bosdi.</string>
-    <string name="verb_reply">%s %s ni sharhladi: \n%s.</string>
-    <string name="verb_else">%s turidagi xabarnoma. Dastur muallifiga xabar bering.</string>
+
+    <string name="notification_post">%s %s ni chop etdi.</string>
+    <string name="notification_follow_user">%s sizga yozildi.</string>
+    <string name="notification_post_upvote">%s %s ga layk bosdi.</string>
+    <string name="notification_reply">%s %s ni sharhladi: \n%s.</string>
+    <string name="notification_other">%s turidagi xabarnoma. Dastur muallifiga xabar bering.</string>
+
+    <string name="share_article">%s yozgan %s nomli maqolani o`qib ko`ring: \n%s</string>
+    <string name="unknown_article">Noma`lum maqola</string>
+    <string name="unknown_author">Noma`lum muallif</string>
+    <string name="comment">Komment</string>
+    <string name="share_intent_title">Bu maqolani boshqalarga ham ulashing…</string>
+    <string name="no_article_id" translatable="false">There is no article id</string>
+    <string name="no_topic_id" translatable="false">There is no topic id</string>
+    <string name="context_is_not_listener" translatable="false">%s is not listener</string>
+    <string name="empty_text">Matn kiritilmagan!</string>
+    <string name="retry">Qayta urinish</string>
+    <string name="liked">Layk bosilgan</string>
+    <string name="like">Layk</string>
+
+    <string name="count_comment">%d komment</string>
+    <string name="count_view">%d ko`rish</string>
+    <string name="count_like">%d layk</string>
+    <string name="count_follower">%d kuzatuvchi</string>
+    <string name="login_window_closed">Kirish oynasi yopildi</string>
+    <string name="error_et_email">Email manzilingizni yozing</string>
+    <string name="error_et_password">Parolingizni kiriting</string>
+    <string name="login_successful">Muvaffaqiyatli kirildi</string>
+    <string name="no_user_id">There is no user id</string>
+    <string name="no_type">There is no type</string>
+    <string name="no_sort_by">There is no sortBy</string>
+    <string name="report_window_closed">Report oynasi yopildi</string>
+    <string name="done">Bajarildi</string>
+    <string name="count_post">%d maqola</string>
+    <string name="count_reputation">%d reputatsiya</string>
+    <string name="unfollow">Obunani bekor qilish</string>
+    <string name="follow">Obuna bo`lish</string>
 
     <string-array name="report_types_values">
         <item>Harrasment</item>

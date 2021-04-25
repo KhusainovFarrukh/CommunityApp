@@ -1,11 +1,8 @@
 package khusainov.farrukh.communityapp.ui.fragments
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -16,9 +13,13 @@ import coil.load
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
-import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfUserAdapter
+import khusainov.farrukh.communityapp.utils.Constants.KEY_TOPIC_ID
+import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
+import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
+import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
+import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.TopicVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.TopicViewModel
@@ -33,14 +34,23 @@ class TopicFragment : Fragment() {
 	private var _binding: FragmentTopicBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
-	private lateinit var topicViewModel: TopicViewModel
-	private lateinit var postsOfUserAdapter: PostsOfUserAdapter
+	private val postsOfUserAdapter by lazy { PostsOfUserAdapter(ItemClickListener(activityListener)) }
+
+	private val topicId by lazy {
+		arguments?.getString(KEY_TOPIC_ID)
+			?: throw NullPointerException(getString(R.string.no_topic_id))
+	}
+
+	private val topicViewModel by lazy {
+		ViewModelProvider(this, TopicVMFactory(topicId, requireContext()))
+			.get(TopicViewModel::class.java)
+	}
 
 	override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?,
+	): View {
 		_binding = FragmentTopicBinding.inflate(layoutInflater, container, false)
 		return binding.root
 	}
@@ -48,20 +58,8 @@ class TopicFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		val topicId = arguments?.getString("topicId")
-			?: throw NullPointerException("There is no topic ID")
-
-		topicViewModel =
-			ViewModelProvider(
-                this,
-                TopicVMFactory(topicId, requireContext())
-            ).get(TopicViewModel::class.java)
-
+		initRecyclerView()
 		setSpinnerListener()
-		binding.rvPosts.adapter = postsOfUserAdapter.withLoadStateHeaderAndFooter(
-            ListLoadStateAdapter { postsOfUserAdapter.retry() },
-            ListLoadStateAdapter { postsOfUserAdapter.retry() }
-        )
 		setObservers()
 		setClickListeners()
 	}
@@ -75,9 +73,9 @@ class TopicFragment : Fragment() {
 		super.onAttach(context)
 		if (context is HomeActivityListener) {
 			activityListener = context
-			postsOfUserAdapter = PostsOfUserAdapter(ItemClickListener(activityListener))
 		} else {
-			throw IllegalArgumentException("$context is not HomeActivityListener")
+			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
+				context.toString()))
 		}
 	}
 
@@ -86,23 +84,18 @@ class TopicFragment : Fragment() {
 		activityListener = null
 	}
 
-	private fun setObservers() {
-		viewLifecycleOwner.lifecycleScope.launch {
-			postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
-				binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
-			}
-		}
-		topicViewModel.topicLiveData.observe(viewLifecycleOwner) {
-			setTopicDataToViews(it)
-		}
-		topicViewModel.topicPostsLiveData.observe(viewLifecycleOwner) {
-			lifecycleScope.launch {
-				postsOfUserAdapter.submitData(it)
-			}
-		}
-		topicViewModel.isLoading.observe(viewLifecycleOwner) {
+	private fun initRecyclerView() = with(binding) {
+		rvPosts.adapter = postsOfUserAdapter.withLoadStateHeaderAndFooter(
+			ListLoadStateAdapter { postsOfUserAdapter.retry() },
+			ListLoadStateAdapter { postsOfUserAdapter.retry() }
+		)
+	}
+
+	private fun setObservers() = with(topicViewModel) {
+		//observe topic's loading state
+		isLoading.observe(viewLifecycleOwner) {
 			binding.pbLoadingTopic.isVisible = it
-			if (topicViewModel.topicLiveData.value == null) {
+			if (topicLiveData.value == null) {
 				binding.rlLoading.isVisible = true
 				binding.txvErrorTopic.isVisible = !it
 				binding.btnRetryTopic.isVisible = !it
@@ -112,9 +105,18 @@ class TopicFragment : Fragment() {
 				binding.btnRetryTopic.isVisible = false
 			}
 		}
-		topicViewModel.errorTopic.observe(viewLifecycleOwner) {
+
+		//observe topic's value
+		topicLiveData.observe(viewLifecycleOwner) {
+			setTopicDataToViews(it)
+		}
+
+		//observe error while initializing topic
+		errorTopic.observe(viewLifecycleOwner) {
 			binding.txvErrorTopic.text = it
 		}
+
+		//observe posts' loading state
 		viewLifecycleOwner.lifecycleScope.launch {
 			postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
 				binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
@@ -128,52 +130,52 @@ class TopicFragment : Fragment() {
 				}
 			}
 		}
-	}
 
-	@SuppressLint("SetTextI18n")
-	private fun setTopicDataToViews(topic: Topic) {
-		binding.apply {
-			txvTopicTitle.text = topic.name
-			txvFollowersCount.text = "${topic.stats.followers} followers"
-			txvPostsCount.text = "${topic.stats.posts} posts"
-			imvTopicIcon.load(topic.picture) {
-				crossfade(true)
-				placeholder(R.drawable.ic_account_circle)
+		//observe posts' value
+		topicPostsLiveData.observe(viewLifecycleOwner) {
+			lifecycleScope.launch {
+				postsOfUserAdapter.submitData(it)
 			}
 		}
 	}
 
-	private fun setClickListeners() {
-		binding.apply {
-			btnRetryTopic.setOnClickListener {
-				topicViewModel.initTopic()
-			}
-			btnRetryArticles.setOnClickListener {
-				postsOfUserAdapter.retry()
-			}
+	private fun setClickListeners() = with(binding) {
+		btnRetryTopic.setOnClickListener {
+			topicViewModel.initTopic()
+		}
+		btnRetryArticles.setOnClickListener {
+			postsOfUserAdapter.retry()
 		}
 		//TODO set all click listeners in the fragment
 	}
 
-	private fun setSpinnerListener() {
-		binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+	private fun setSpinnerListener() = with(binding) {
+		spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 			override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long,
-            ) {
-				lifecycleScope.launch {
-					when (position) {
-                        0 -> topicViewModel.sortPosts("createdAt.desc")
-                        1 -> topicViewModel.sortPosts("createdAt.asc")
-                        2 -> topicViewModel.sortPosts("upvotes")
-					}
+				parent: AdapterView<*>?,
+				view: View?,
+				position: Int,
+				id: Long,
+			) {
+				when (position) {
+					0 -> topicViewModel.sortPosts(SORT_BY_TIME_DESC)
+					1 -> topicViewModel.sortPosts(SORT_BY_TIME_ASC)
+					2 -> topicViewModel.sortPosts(SORT_BY_UPVOTES)
 				}
 			}
 
 			override fun onNothingSelected(parent: AdapterView<*>?) {
 			}
+		}
+	}
+
+	private fun setTopicDataToViews(topic: Topic) = with(binding) {
+		txvTopicTitle.text = topic.name.trim()
+		txvFollowersCount.text = getString(R.string.count_follower, topic.stats.followers)
+		txvPostsCount.text = getString(R.string.count_post, topic.stats.posts)
+		imvTopicIcon.load(topic.picture) {
+			crossfade(true)
+			placeholder(R.drawable.ic_account_circle)
 		}
 	}
 }

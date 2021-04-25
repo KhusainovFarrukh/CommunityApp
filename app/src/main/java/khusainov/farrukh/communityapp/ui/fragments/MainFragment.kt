@@ -19,10 +19,10 @@ import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
-import khusainov.farrukh.communityapp.ui.activities.HomeActivityListener
 import khusainov.farrukh.communityapp.ui.adapters.recycler.ArticleAdapter
 import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.ui.adapters.recycler.TopicAdapter
+import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
 import khusainov.farrukh.communityapp.vm.factories.MainVMFactory
@@ -36,29 +36,29 @@ class MainFragment : Fragment() {
 	private var _binding: FragmentArticlesListBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
-	private lateinit var articleAdapter: ArticleAdapter
-	private lateinit var topicAdapter: TopicAdapter
-	private lateinit var mainViewModel: MainViewModel
+	private val articleAdapter by lazy { ArticleAdapter(ItemClickListener(activityListener)) }
+	private val topicAdapter by lazy { TopicAdapter(ItemClickListener(activityListener)) }
+
+	private val mainViewModel by lazy {
+		ViewModelProvider(this, MainVMFactory(requireContext()))
+			.get(MainViewModel::class.java)
+	}
+
 	private val loginViewModel: LoginViewModel by activityViewModels {
 		LoginVMFactory(requireContext())
 	}
 
 	override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+		inflater: LayoutInflater,
+		container: ViewGroup?,
+		savedInstanceState: Bundle?,
+	): View {
 		_binding = FragmentArticlesListBinding.inflate(inflater)
 		return binding.root
 	}
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
-		mainViewModel = ViewModelProvider(
-            this,
-            MainVMFactory(requireContext())
-        ).get(MainViewModel::class.java)
 
 		initRecyclerView()
 		setClickListeners()
@@ -75,10 +75,9 @@ class MainFragment : Fragment() {
 		super.onAttach(context)
 		if (context is HomeActivityListener) {
 			activityListener = context
-			topicAdapter = TopicAdapter(ItemClickListener(activityListener))
-			articleAdapter = ArticleAdapter(ItemClickListener(activityListener))
 		} else {
-			throw IllegalArgumentException("$context is not HomeActivityListener")
+			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
+				context.toString()))
 		}
 	}
 
@@ -88,100 +87,116 @@ class MainFragment : Fragment() {
 	}
 
 	private fun setObservers() {
-		loginViewModel.signInError.observe(viewLifecycleOwner) { otherError ->
-			(Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
-				.setAction("Retry") {
-					otherError.retry.invoke()
-				}).show()
-		}
-		loginViewModel.userLiveData.observe(viewLifecycleOwner) {
-			activityListener?.saveUserId(it.id)
-			setUserToViews(it)
-		}
-		mainViewModel.articlesLiveData.observe(viewLifecycleOwner) { responseList ->
-			viewLifecycleOwner.lifecycleScope.launch {
-				articleAdapter.submitData(responseList)
+		with(loginViewModel) {
+			//observe signing in state
+			isLoading.observe(viewLifecycleOwner) {
+				binding.pbLoadingLogin.isVisible = it
+				binding.btnLogin.isEnabled = !it
+			}
+
+			//observe signed user
+			userLiveData.observe(viewLifecycleOwner) {
+				activityListener?.saveUserId(it.id)
+				setUserToViews(it)
+			}
+
+			//observe error while signing in
+			signInError.observe(viewLifecycleOwner) { otherError ->
+				(Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
+					.setAction(getString(R.string.retry)) {
+						otherError.retry.invoke()
+					}).show()
 			}
 		}
-		mainViewModel.errorTopics.observe(viewLifecycleOwner) {
-			binding.txvErrorTopics.text = it
-		}
-		viewLifecycleOwner.lifecycleScope.launch {
-			articleAdapter.loadStateFlow.collectLatest { loadStates ->
-				binding.pbLoadingArticles.isVisible = loadStates.refresh is LoadState.Loading
-				binding.btnRetryArticles.isVisible = loadStates.refresh is LoadState.Error
-				binding.txvErrorArticles.isVisible = loadStates.refresh is LoadState.Error
 
-				loadStates.refresh.let {
-					if (it is LoadState.Error) {
-						binding.txvErrorArticles.text = it.error.message
+		with(mainViewModel) {
+			//observe topics' loading state
+			isLoadingTopics.observe(viewLifecycleOwner) {
+				binding.pbLoadingTopics.isVisible = it
+				if (topicAdapter.currentList.isNullOrEmpty()) {
+					binding.txvErrorTopics.isVisible = !it
+					binding.btnRetryTopics.isVisible = !it
+				} else {
+					binding.txvErrorTopics.isVisible = false
+					binding.btnRetryTopics.isVisible = false
+				}
+			}
+
+			//observe topics' value
+			topicsLiveData.observe(viewLifecycleOwner) {
+				topicAdapter.submitList(it)
+			}
+
+			//observe error while initializing tpoics
+			errorTopics.observe(viewLifecycleOwner) {
+				binding.txvErrorTopics.text = it
+			}
+
+			//observe articles' value
+			articlesLiveData.observe(viewLifecycleOwner) { responseList ->
+				viewLifecycleOwner.lifecycleScope.launch {
+					articleAdapter.submitData(responseList)
+				}
+			}
+
+			//observe articles' loading state
+			viewLifecycleOwner.lifecycleScope.launch {
+				articleAdapter.loadStateFlow.collectLatest { loadStates ->
+					binding.pbLoadingArticles.isVisible = loadStates.refresh is LoadState.Loading
+					binding.btnRetryArticles.isVisible = loadStates.refresh is LoadState.Error
+					binding.txvErrorArticles.isVisible = loadStates.refresh is LoadState.Error
+
+					loadStates.refresh.let {
+						if (it is LoadState.Error) {
+							binding.txvErrorArticles.text = it.error.message
+						}
 					}
 				}
 			}
 		}
-		mainViewModel.topicsLiveData.observe(viewLifecycleOwner) {
-			topicAdapter.submitList(it)
-		}
-		mainViewModel.isLoadingTopics.observe(viewLifecycleOwner) {
-			binding.pbLoadingTopics.isVisible = it
-			if (topicAdapter.currentList.isNullOrEmpty()) {
-				binding.txvErrorTopics.isVisible = !it
-				binding.btnRetryTopics.isVisible = !it
-			} else {
-				binding.txvErrorTopics.isVisible = false
-				binding.btnRetryTopics.isVisible = false
-			}
-		}
-		loginViewModel.isLoading.observe(viewLifecycleOwner) {
-			binding.pbLoadingLogin.isVisible = it
-			binding.btnLogin.isEnabled = !it
-		}
 	}
 
-	private fun setClickListeners() {
-		binding.btnLogin.setOnClickListener {
+	private fun setClickListeners() = with(binding) {
+		btnLogin.setOnClickListener {
 			activityListener?.showLoginDialog()
 		}
-		binding.imvNotif.setOnClickListener {
+		imvNotif.setOnClickListener {
 			activityListener?.showNotificationsFragment()
 		}
-		binding.btnRetryArticles.setOnClickListener {
+		btnRetryArticles.setOnClickListener {
 			articleAdapter.retry()
 		}
-		binding.btnRetryTopics.setOnClickListener {
+		btnRetryTopics.setOnClickListener {
 			mainViewModel.initTopics()
 		}
 	}
 
-	private fun setUserToViews(user: User) {
-		binding.apply {
-			btnLogin.visibility = Button.INVISIBLE
-			imvProfile.visibility = ImageView.VISIBLE
-			imvCreatePost.visibility = ImageView.VISIBLE
+	private fun setUserToViews(user: User) = with(binding) {
+		btnLogin.visibility = Button.INVISIBLE
+		imvProfile.visibility = ImageView.VISIBLE
+		imvCreatePost.visibility = ImageView.VISIBLE
 
-			imvProfile.load(user.profile.photo) {
-				crossfade(true)
-				placeholder(R.drawable.ic_account_circle)
-				transformations(CircleCropTransformation())
-			}
+		imvProfile.load(user.profile.photo) {
+			crossfade(true)
+			placeholder(R.drawable.ic_account_circle)
+			transformations(CircleCropTransformation())
 		}
 	}
 
-	private fun initRecyclerView() {
-		binding.apply {
-			rvTopics.adapter = topicAdapter
-			rvPosts.setHasFixedSize(true)
-			rvPosts.adapter = articleAdapter.withLoadStateHeaderAndFooter(
-                ListLoadStateAdapter { articleAdapter.retry() },
-                ListLoadStateAdapter { articleAdapter.retry() }
-            )
-		}
+	private fun initRecyclerView() = with(binding) {
+		rvTopics.adapter = topicAdapter
+		rvPosts.setHasFixedSize(true)
+		rvPosts.adapter = articleAdapter.withLoadStateHeaderAndFooter(
+			ListLoadStateAdapter { articleAdapter.retry() },
+			ListLoadStateAdapter { articleAdapter.retry() }
+		)
 	}
 
-	private fun signInAutomatically() {
-		if (loginViewModel.userLiveData.value == null) {
+	//fun to sign in user automatically if it is possible
+	private fun signInAutomatically() = with(loginViewModel) {
+		if (userLiveData.value == null) {
 			activityListener?.getSignInData()?.let {
-				loginViewModel.signInWithEmail(it)
+				signInWithEmail(it)
 			}
 		}
 	}

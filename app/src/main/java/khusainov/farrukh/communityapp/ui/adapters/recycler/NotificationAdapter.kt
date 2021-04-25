@@ -63,7 +63,7 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
                             "Noma`lum maqolani"
                         }
                         txvNotificationText.text = itemView.context.getString(
-                            R.string.verb_post,
+                            R.string.notification_post,
                             if (notification.from.isNotEmpty()) notification.from[0].profile.name else "Unknown",
                             tempString
                         )
@@ -81,7 +81,7 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
                             "Noma`lum maqolaga"
                         }
                         txvNotificationText.text = itemView.context.getString(
-                            R.string.verb_post_upvote,
+                            R.string.notification_post_upvote,
                             notification.from[0].profile.name,
                             tempString
                         )
@@ -94,7 +94,7 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
                     }
                     KEY_NOTIFICATION_REPLY -> {
                         txvNotificationText.text = itemView.context.getString(
-                            R.string.verb_reply,
+                            R.string.notification_reply,
                             notification.from[0].profile.name,
                             if (notification.objects[0].onlyParentId()) {
                                 "Maqola"
@@ -113,7 +113,7 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
                     }
                     KEY_NOTIFICATION_FOLLOW_USER -> {
                         txvNotificationText.text = itemView.context.getString(
-                            R.string.verb_follow_user,
+                            R.string.notification_follow_user,
                             notification.from[0].profile.name
                         )
                         imvIcon.setImageDrawable(
@@ -125,7 +125,7 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
                     }
 					else -> {
 						txvNotificationText.text = itemView.context.getString(
-                            R.string.verb_else,
+                            R.string.notification_other,
                             notification.verb
                         )
 						imvIcon.setImageDrawable(
