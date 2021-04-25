@@ -30,150 +30,150 @@ import kotlinx.coroutines.launch
  **/
 class TopicFragment : Fragment() {
 
-    private var _binding: FragmentTopicBinding? = null
-    private val binding get() = _binding!!
-    private var activityListener: HomeActivityListener? = null
-    private lateinit var topicViewModel: TopicViewModel
-    private lateinit var postsOfUserAdapter: PostsOfUserAdapter
+	private var _binding: FragmentTopicBinding? = null
+	private val binding get() = _binding!!
+	private var activityListener: HomeActivityListener? = null
+	private lateinit var topicViewModel: TopicViewModel
+	private lateinit var postsOfUserAdapter: PostsOfUserAdapter
 
-    override fun onCreateView(
+	override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentTopicBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+		_binding = FragmentTopicBinding.inflate(layoutInflater, container, false)
+		return binding.root
+	}
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 
-        val topicId = arguments?.getString("topicId")
-            ?: throw NullPointerException("There is no topic ID")
+		val topicId = arguments?.getString("topicId")
+			?: throw NullPointerException("There is no topic ID")
 
-        topicViewModel =
-            ViewModelProvider(
+		topicViewModel =
+			ViewModelProvider(
                 this,
                 TopicVMFactory(topicId, requireContext())
             ).get(TopicViewModel::class.java)
 
-        setSpinnerListener()
-        binding.rvPosts.adapter = postsOfUserAdapter.withLoadStateHeaderAndFooter(
+		setSpinnerListener()
+		binding.rvPosts.adapter = postsOfUserAdapter.withLoadStateHeaderAndFooter(
             ListLoadStateAdapter { postsOfUserAdapter.retry() },
             ListLoadStateAdapter { postsOfUserAdapter.retry() }
         )
-        setObservers()
-        setClickListeners()
-    }
+		setObservers()
+		setClickListeners()
+	}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+	override fun onDestroyView() {
+		super.onDestroyView()
+		_binding = null
+	}
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is HomeActivityListener) {
-            activityListener = context
-            postsOfUserAdapter = PostsOfUserAdapter(ItemClickListener(activityListener))
-        } else {
-            throw IllegalArgumentException("$context is not HomeActivityListener")
-        }
-    }
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		if (context is HomeActivityListener) {
+			activityListener = context
+			postsOfUserAdapter = PostsOfUserAdapter(ItemClickListener(activityListener))
+		} else {
+			throw IllegalArgumentException("$context is not HomeActivityListener")
+		}
+	}
 
-    override fun onDetach() {
-        super.onDetach()
-        activityListener = null
-    }
+	override fun onDetach() {
+		super.onDetach()
+		activityListener = null
+	}
 
-    private fun setObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
-                binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
-            }
-        }
-        topicViewModel.topicLiveData.observe(viewLifecycleOwner) {
-            setTopicDataToViews(it)
-        }
-        topicViewModel.topicPostsLiveData.observe(viewLifecycleOwner) {
-            lifecycleScope.launch {
-                postsOfUserAdapter.submitData(it)
-            }
-        }
-        topicViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.pbLoadingTopic.isVisible = it
-            if (topicViewModel.topicLiveData.value == null) {
-                binding.rlLoading.isVisible = true
-                binding.txvErrorTopic.isVisible = !it
-                binding.btnRetryTopic.isVisible = !it
-            } else {
-                binding.rlLoading.isVisible = it
-                binding.txvErrorTopic.isVisible = false
-                binding.btnRetryTopic.isVisible = false
-            }
-        }
-        topicViewModel.errorTopic.observe(viewLifecycleOwner) {
-            binding.txvErrorTopic.text = it
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
-                binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
-                binding.btnRetryArticles.isVisible = loadStates.refresh is LoadState.Error
-                binding.txvErrorArticles.isVisible = loadStates.refresh is LoadState.Error
+	private fun setObservers() {
+		viewLifecycleOwner.lifecycleScope.launch {
+			postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
+				binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
+			}
+		}
+		topicViewModel.topicLiveData.observe(viewLifecycleOwner) {
+			setTopicDataToViews(it)
+		}
+		topicViewModel.topicPostsLiveData.observe(viewLifecycleOwner) {
+			lifecycleScope.launch {
+				postsOfUserAdapter.submitData(it)
+			}
+		}
+		topicViewModel.isLoading.observe(viewLifecycleOwner) {
+			binding.pbLoadingTopic.isVisible = it
+			if (topicViewModel.topicLiveData.value == null) {
+				binding.rlLoading.isVisible = true
+				binding.txvErrorTopic.isVisible = !it
+				binding.btnRetryTopic.isVisible = !it
+			} else {
+				binding.rlLoading.isVisible = it
+				binding.txvErrorTopic.isVisible = false
+				binding.btnRetryTopic.isVisible = false
+			}
+		}
+		topicViewModel.errorTopic.observe(viewLifecycleOwner) {
+			binding.txvErrorTopic.text = it
+		}
+		viewLifecycleOwner.lifecycleScope.launch {
+			postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
+				binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
+				binding.btnRetryArticles.isVisible = loadStates.refresh is LoadState.Error
+				binding.txvErrorArticles.isVisible = loadStates.refresh is LoadState.Error
 
-                loadStates.refresh.let {
-                    if (it is LoadState.Error) {
-                        binding.txvErrorArticles.text = it.error.message
-                    }
-                }
-            }
-        }
-    }
+				loadStates.refresh.let {
+					if (it is LoadState.Error) {
+						binding.txvErrorArticles.text = it.error.message
+					}
+				}
+			}
+		}
+	}
 
-    @SuppressLint("SetTextI18n")
-    private fun setTopicDataToViews(topic: Topic) {
-        binding.apply {
-            txvTopicTitle.text = topic.name
-            txvFollowersCount.text = "${topic.stats.followers} followers"
-            txvPostsCount.text = "${topic.stats.posts} posts"
-            imvTopicIcon.load(topic.picture) {
-                crossfade(true)
-                placeholder(R.drawable.ic_account_circle)
-            }
-        }
-    }
+	@SuppressLint("SetTextI18n")
+	private fun setTopicDataToViews(topic: Topic) {
+		binding.apply {
+			txvTopicTitle.text = topic.name
+			txvFollowersCount.text = "${topic.stats.followers} followers"
+			txvPostsCount.text = "${topic.stats.posts} posts"
+			imvTopicIcon.load(topic.picture) {
+				crossfade(true)
+				placeholder(R.drawable.ic_account_circle)
+			}
+		}
+	}
 
-    private fun setClickListeners() {
-        binding.apply {
-            btnRetryTopic.setOnClickListener {
-                topicViewModel.initTopic()
-            }
-            btnRetryArticles.setOnClickListener {
-                postsOfUserAdapter.retry()
-            }
-        }
-        //TODO set all click listeners in the fragment
-    }
+	private fun setClickListeners() {
+		binding.apply {
+			btnRetryTopic.setOnClickListener {
+				topicViewModel.initTopic()
+			}
+			btnRetryArticles.setOnClickListener {
+				postsOfUserAdapter.retry()
+			}
+		}
+		//TODO set all click listeners in the fragment
+	}
 
-    private fun setSpinnerListener() {
-        binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
+	private fun setSpinnerListener() {
+		binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+			override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long,
             ) {
-                lifecycleScope.launch {
-                    when (position) {
+				lifecycleScope.launch {
+					when (position) {
                         0 -> topicViewModel.sortPosts("createdAt.desc")
                         1 -> topicViewModel.sortPosts("createdAt.asc")
                         2 -> topicViewModel.sortPosts("upvotes")
-                    }
-                }
-            }
+					}
+				}
+			}
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
-    }
+			override fun onNothingSelected(parent: AdapterView<*>?) {
+			}
+		}
+	}
 }

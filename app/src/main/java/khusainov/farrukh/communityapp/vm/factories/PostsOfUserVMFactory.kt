@@ -14,7 +14,7 @@ class PostsOfUserVMFactory(
     private val sortBy: String,
     private val repository: Repository,
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return PostsOfUserViewModel(userId, type, sortBy, repository) as T
-    }
+	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+		return PostsOfUserViewModel(userId, type, sortBy, repository) as T
+	}
 }

@@ -22,86 +22,86 @@ import kotlinx.coroutines.launch
 
 class NotificationsFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
-    private val binding get() = _binding!!
-    private var activityListener: HomeActivityListener? = null
-    private lateinit var notificationAdapter: NotificationAdapter
-    private lateinit var notificationsViewModel: NotificationsViewModel
+	private var _binding: FragmentNotificationsBinding? = null
+	private val binding get() = _binding!!
+	private var activityListener: HomeActivityListener? = null
+	private lateinit var notificationAdapter: NotificationAdapter
+	private lateinit var notificationsViewModel: NotificationsViewModel
 
-    override fun onCreateView(
+	override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentNotificationsBinding.inflate(inflater)
-        return binding.root
-    }
+		_binding = FragmentNotificationsBinding.inflate(inflater)
+		return binding.root
+	}
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 
-        notificationsViewModel = ViewModelProvider(
+		notificationsViewModel = ViewModelProvider(
             this,
             NotificationsVMFactory(requireContext())
         ).get(NotificationsViewModel::class.java)
 
-        initRecyclerView()
-        setClickListeners()
-        setObservers()
-    }
+		initRecyclerView()
+		setClickListeners()
+		setObservers()
+	}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+	override fun onDestroyView() {
+		super.onDestroyView()
+		_binding = null
+	}
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is HomeActivityListener) {
-            activityListener = context
-            notificationAdapter = NotificationAdapter(ItemClickListener(activityListener))
-        } else {
-            throw IllegalArgumentException("$context is not HomeActivityListener")
-        }
-    }
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		if (context is HomeActivityListener) {
+			activityListener = context
+			notificationAdapter = NotificationAdapter(ItemClickListener(activityListener))
+		} else {
+			throw IllegalArgumentException("$context is not HomeActivityListener")
+		}
+	}
 
-    override fun onDetach() {
-        super.onDetach()
-        activityListener = null
-    }
+	override fun onDetach() {
+		super.onDetach()
+		activityListener = null
+	}
 
-    private fun initRecyclerView() {
-        binding.rvNotifications.setHasFixedSize(true)
-        binding.rvNotifications.adapter = notificationAdapter.withLoadStateHeaderAndFooter(
+	private fun initRecyclerView() {
+		binding.rvNotifications.setHasFixedSize(true)
+		binding.rvNotifications.adapter = notificationAdapter.withLoadStateHeaderAndFooter(
             ListLoadStateAdapter { notificationAdapter.retry() },
             ListLoadStateAdapter { notificationAdapter.retry() }
         )
-    }
+	}
 
-    private fun setObservers() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            notificationAdapter.loadStateFlow.collectLatest { loadStates ->
-                binding.pbLoadingNotification.isVisible = loadStates.refresh is LoadState.Loading
-                binding.btnRetryNotification.isVisible = loadStates.refresh is LoadState.Error
-                binding.txvErrorNotification.isVisible = loadStates.refresh is LoadState.Error
+	private fun setObservers() {
+		viewLifecycleOwner.lifecycleScope.launch {
+			notificationAdapter.loadStateFlow.collectLatest { loadStates ->
+				binding.pbLoadingNotification.isVisible = loadStates.refresh is LoadState.Loading
+				binding.btnRetryNotification.isVisible = loadStates.refresh is LoadState.Error
+				binding.txvErrorNotification.isVisible = loadStates.refresh is LoadState.Error
 
-                loadStates.refresh.let {
-                    if (it is LoadState.Error) {
-                        binding.txvErrorNotification.text = it.error.message
-                    }
-                }
-            }
-        }
-        notificationsViewModel.notificationsLiveData.observe(viewLifecycleOwner) {
-            lifecycleScope.launch {
-                notificationAdapter.submitData(it)
-            }
-        }
-    }
+				loadStates.refresh.let {
+					if (it is LoadState.Error) {
+						binding.txvErrorNotification.text = it.error.message
+					}
+				}
+			}
+		}
+		notificationsViewModel.notificationsLiveData.observe(viewLifecycleOwner) {
+			lifecycleScope.launch {
+				notificationAdapter.submitData(it)
+			}
+		}
+	}
 
-    private fun setClickListeners() {
-        binding.btnRetryNotification.setOnClickListener {
-            notificationAdapter.retry()
-        }
-    }
+	private fun setClickListeners() {
+		binding.btnRetryNotification.setOnClickListener {
+			notificationAdapter.retry()
+		}
+	}
 }

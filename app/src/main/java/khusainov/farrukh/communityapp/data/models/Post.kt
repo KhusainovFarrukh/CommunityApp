@@ -29,40 +29,40 @@ data class Post(
     val responses: JsonArray,
     @SerializedName("upvotes")
     val likes: List<User>,
-    val type: String
+    val type: String,
 ) {
-    //Some requests return only id of parent post
-    fun onlyParentId() = parent.isJsonPrimitive
+	//Some requests return only id of parent post
+	fun onlyParentId() = parent.isJsonPrimitive
 
-    //Some requests return only ids of responses
-    fun onlyResponsesId(): Boolean {
-        responses.asJsonArray.let {
-            return if (it.size() > 0) {
-                it[0].isJsonPrimitive
-            } else {
-                true
-            }
-        }
-    }
+	//Some requests return only ids of responses
+	fun onlyResponsesId(): Boolean {
+		responses.asJsonArray.let {
+			return if (it.size() > 0) {
+				it[0].isJsonPrimitive
+			} else {
+				true
+			}
+		}
+	}
 
-    //fun to calculate written time of post
-    fun getDifference(): String {
-        val formatter = ISODateTimeFormat.dateTime()
-        val createdAtDate = formatter.parseDateTime(createdAt)
-        val currentDate = DateTime.now()
-        val difference = Period(createdAtDate, currentDate)
+	//fun to calculate written time of post
+	fun getDifference(): String {
+		val formatter = ISODateTimeFormat.dateTime()
+		val createdAtDate = formatter.parseDateTime(createdAt)
+		val currentDate = DateTime.now()
+		val difference = Period(createdAtDate, currentDate)
 
-        return when {
-            difference.years > 0 -> "${difference.years} yil avval"
-            difference.months > 0 -> "${difference.months} oy avval"
-            difference.weeks > 0 -> "${difference.weeks} hafta avval"
-            difference.days > 0 -> "${difference.days} kun avval"
-            difference.hours > 0 -> "${difference.hours} soat avval"
-            difference.minutes > 0 -> "${difference.minutes} daqiqa avval"
-            difference.seconds > 0 -> "${difference.seconds} soniya avval"
-            else -> "yaqinda"
-        }
-    }
+		return when {
+			difference.years > 0 -> "${difference.years} yil avval"
+			difference.months > 0 -> "${difference.months} oy avval"
+			difference.weeks > 0 -> "${difference.weeks} hafta avval"
+			difference.days > 0 -> "${difference.days} kun avval"
+			difference.hours > 0 -> "${difference.hours} soat avval"
+			difference.minutes > 0 -> "${difference.minutes} daqiqa avval"
+			difference.seconds > 0 -> "${difference.seconds} soniya avval"
+			else -> "yaqinda"
+		}
+	}
 }
 
 data class ImagesInPost(

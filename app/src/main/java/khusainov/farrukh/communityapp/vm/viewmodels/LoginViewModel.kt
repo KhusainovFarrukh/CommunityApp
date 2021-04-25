@@ -17,36 +17,36 @@ import kotlinx.coroutines.launch
  **/
 class LoginViewModel(private val repository: Repository) : ViewModel() {
 
-    /**
-    [_isLoading] - sign in loading state
-    [_userLiveData] - signed in user value
-    [_signInError] - error while signing in
-     */
+	/**
+	[_isLoading] - sign in loading state
+	[_userLiveData] - signed in user value
+	[_signInError] - error while signing in
+	 */
 
-    //private mutable live data:
-    private val _isLoading = MutableLiveData<Boolean>()
-    private val _userLiveData = MutableLiveData<User>()
-    private val _signInError = MutableLiveData<OtherError>()
+	//private mutable live data:
+	private val _isLoading = MutableLiveData<Boolean>()
+	private val _userLiveData = MutableLiveData<User>()
+	private val _signInError = MutableLiveData<OtherError>()
 
-    //public immutable live data:
-    val isLoading: LiveData<Boolean> get() = _isLoading
-    val userLiveData: LiveData<User> get() = _userLiveData
-    val signInError: LiveData<OtherError> get() = _signInError
+	//public immutable live data:
+	val isLoading: LiveData<Boolean> get() = _isLoading
+	val userLiveData: LiveData<User> get() = _userLiveData
+	val signInError: LiveData<OtherError> get() = _signInError
 
-    //fun to sign in user
-    fun signInWithEmail(signInData: SignInData) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.postValue(true)
+	//fun to sign in user
+	fun signInWithEmail(signInData: SignInData) {
+		viewModelScope.launch(Dispatchers.IO) {
+			_isLoading.postValue(true)
 
-            repository.signIn(signInData).let { dataWrapper ->
-                when (dataWrapper) {
+			repository.signIn(signInData).let { dataWrapper ->
+				when (dataWrapper) {
                     is DataWrapper.Success -> _userLiveData.postValue(dataWrapper.data)
                     is DataWrapper.Error -> _signInError.postValue(OtherError(dataWrapper.message)
                     { signInWithEmail(signInData) })
-                }
-            }
+				}
+			}
 
-            _isLoading.postValue(false)
-        }
-    }
+			_isLoading.postValue(false)
+		}
+	}
 }

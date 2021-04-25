@@ -7,17 +7,17 @@ import khusainov.farrukh.communityapp.data.models.Post
  *Created by FarrukhKhusainov on 4/22/21 1:06 PM
  **/
 class PostItemCallback : DiffUtil.ItemCallback<Post>() {
-    override fun getChangePayload(
+	override fun getChangePayload(
         oldItem: Post,
         newItem: Post,
     ) = false
 
-    override fun areItemsTheSame(
+	override fun areItemsTheSame(
         oldItem: Post,
         newItem: Post,
     ) = oldItem.id == newItem.id
 
-    override fun areContentsTheSame(
+	override fun areContentsTheSame(
         oldItem: Post,
         newItem: Post,
     ) = oldItem == newItem

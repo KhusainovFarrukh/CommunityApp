@@ -19,7 +19,7 @@ import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_REPLY
 import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 
 class NotificationAdapter(private val notificationClickListener: ItemClickListener) :
-    PagingDataAdapter<Notification, NotificationAdapter.NotificationViewHolder>(object :
+	PagingDataAdapter<Notification, NotificationAdapter.NotificationViewHolder>(object :
         DiffUtil.ItemCallback<Notification>() {
         override fun areItemsTheSame(oldItem: Notification, newItem: Notification) =
             oldItem.id == newItem.id
@@ -27,35 +27,35 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
         override fun areContentsTheSame(oldItem: Notification, newItem: Notification) =
             oldItem == newItem
     }) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
-        return NotificationViewHolder(
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NotificationViewHolder {
+		return NotificationViewHolder(
             ViewholderNotificationBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
             )
         )
-    }
+	}
 
-    override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            notificationClickListener.onNotificationClick(getItem(position)!!)
-        }
-        holder.onBindArticle(getItem(position)!!)
-    }
+	override fun onBindViewHolder(holder: NotificationViewHolder, position: Int) {
+		holder.itemView.setOnClickListener {
+			notificationClickListener.onNotificationClick(getItem(position)!!)
+		}
+		holder.onBindArticle(getItem(position)!!)
+	}
 
-    inner class NotificationViewHolder(private val binding: ViewholderNotificationBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+	inner class NotificationViewHolder(private val binding: ViewholderNotificationBinding) :
+		RecyclerView.ViewHolder(binding.root) {
 
-        fun onBindArticle(notification: Notification) {
-            binding.apply {
-                if (notification.isRead) {
-                    txvNotificationText.typeface = Typeface.DEFAULT
-                } else {
-                    txvNotificationText.typeface = Typeface.DEFAULT_BOLD
-                }
+		fun onBindArticle(notification: Notification) {
+			binding.apply {
+				if (notification.isRead) {
+					txvNotificationText.typeface = Typeface.DEFAULT
+				} else {
+					txvNotificationText.typeface = Typeface.DEFAULT_BOLD
+				}
 
-                when (notification.verb) {
+				when (notification.verb) {
                     KEY_NOTIFICATION_POST -> {
                         val tempString = if (notification.objects.isNotEmpty()) {
                             notification.objects[0].title
@@ -99,7 +99,8 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
                             if (notification.objects[0].onlyParentId()) {
                                 "Maqola"
                             } else {
-                                Gson().fromJson(notification.objects[0].parent, Post::class.java).title
+                                Gson().fromJson(notification.objects[0].parent,
+                                    Post::class.java).title
                             },
                             notification.objects[0].summary
                         )
@@ -122,20 +123,20 @@ class NotificationAdapter(private val notificationClickListener: ItemClickListen
                             )
                         )
                     }
-                    else -> {
-                        txvNotificationText.text = itemView.context.getString(
+					else -> {
+						txvNotificationText.text = itemView.context.getString(
                             R.string.verb_else,
                             notification.verb
                         )
-                        imvIcon.setImageDrawable(
+						imvIcon.setImageDrawable(
                             ContextCompat.getDrawable(
                                 itemView.context,
                                 R.drawable.ic_view
                             )
                         )
-                    }
-                }
-            }
-        }
-    }
+					}
+				}
+			}
+		}
+	}
 }

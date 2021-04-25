@@ -28,146 +28,146 @@ import khusainov.farrukh.communityapp.vm.viewmodels.UserViewModel
  **/
 class UserFragment : Fragment() {
 
-    private var _binding: FragmentUserBinding? = null
-    private val binding get() = _binding!!
-    private var activityListener: HomeActivityListener? = null
-    private lateinit var userViewModel: UserViewModel
-    private lateinit var pagerAdapter: ViewPagerAdapter
+	private var _binding: FragmentUserBinding? = null
+	private val binding get() = _binding!!
+	private var activityListener: HomeActivityListener? = null
+	private lateinit var userViewModel: UserViewModel
+	private lateinit var pagerAdapter: ViewPagerAdapter
 
-    override fun onCreateView(
+	override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentUserBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+		_binding = FragmentUserBinding.inflate(layoutInflater, container, false)
+		return binding.root
+	}
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 
-        val userId = arguments?.getString(KEY_USER_ID)
-            ?: throw NullPointerException("There is no user ID")
+		val userId = arguments?.getString(KEY_USER_ID)
+			?: throw NullPointerException("There is no user ID")
 
-        userViewModel =
-            ViewModelProvider(
+		userViewModel =
+			ViewModelProvider(
                 this,
                 UserVMFactory(userId, requireContext())
             ).get(UserViewModel::class.java)
 
-        pagerAdapter = ViewPagerAdapter(userId, childFragmentManager)
-        binding.vpPosts.adapter = pagerAdapter
-        binding.tlPosts.setupWithViewPager(binding.vpPosts)
+		pagerAdapter = ViewPagerAdapter(userId, childFragmentManager)
+		binding.vpPosts.adapter = pagerAdapter
+		binding.tlPosts.setupWithViewPager(binding.vpPosts)
 
-        setSpinnerListener()
-        setObservers()
-        setClickListeners()
-    }
+		setSpinnerListener()
+		setObservers()
+		setClickListeners()
+	}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+	override fun onDestroyView() {
+		super.onDestroyView()
+		_binding = null
+	}
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is HomeActivityListener) {
-            activityListener = context
-        } else {
-            throw IllegalArgumentException("$context is not HomeActivityListener")
-        }
-    }
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		if (context is HomeActivityListener) {
+			activityListener = context
+		} else {
+			throw IllegalArgumentException("$context is not HomeActivityListener")
+		}
+	}
 
-    override fun onDetach() {
-        super.onDetach()
-        activityListener = null
-    }
+	override fun onDetach() {
+		super.onDetach()
+		activityListener = null
+	}
 
-    private fun setObservers() {
-        userViewModel.errorUser.observe(viewLifecycleOwner) {
-            binding.txvErrorUser.text = it
-        }
-        userViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
-            (Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
-                .setAction("Retry") {
-                    otherError.retry.invoke()
-                }).show()
-        }
-        userViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.pbLoadingUser.isVisible = it
-            if (userViewModel.userLiveData.value == null) {
-                binding.rlLoading.isVisible = true
-                binding.txvErrorUser.isVisible = !it
-                binding.btnRetryUser.isVisible = !it
-            } else {
-                binding.rlLoading.isVisible = it
-                binding.rlLoading.isVisible = false
-                binding.btnRetryUser.isVisible = false
-            }
-        }
-        userViewModel.userLiveData.observe(viewLifecycleOwner) {
-            setUserDataToViews(it)
-        }
-    }
+	private fun setObservers() {
+		userViewModel.errorUser.observe(viewLifecycleOwner) {
+			binding.txvErrorUser.text = it
+		}
+		userViewModel.otherError.observe(viewLifecycleOwner) { otherError ->
+			(Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
+				.setAction("Retry") {
+					otherError.retry.invoke()
+				}).show()
+		}
+		userViewModel.isLoading.observe(viewLifecycleOwner) {
+			binding.pbLoadingUser.isVisible = it
+			if (userViewModel.userLiveData.value == null) {
+				binding.rlLoading.isVisible = true
+				binding.txvErrorUser.isVisible = !it
+				binding.btnRetryUser.isVisible = !it
+			} else {
+				binding.rlLoading.isVisible = it
+				binding.rlLoading.isVisible = false
+				binding.btnRetryUser.isVisible = false
+			}
+		}
+		userViewModel.userLiveData.observe(viewLifecycleOwner) {
+			setUserDataToViews(it)
+		}
+	}
 
-    @SuppressLint("SetTextI18n")
-    private fun setUserDataToViews(user: User) {
-        binding.apply {
-            txvName.text = user.profile.name
-            txvTitle.text = user.profile.title
-            txvDescription.text = Html.fromHtml(user.profile.description)
-            txvLikes.text = "${user.profile.stats.likes} received likes"
-            txvFollowers.text = "${user.profile.stats.followers} followers"
-            txvPostsCount.text = "${user.profile.stats.posts} posts"
-            txvReputation.text = "${user.profile.score} reputation"
+	@SuppressLint("SetTextI18n")
+	private fun setUserDataToViews(user: User) {
+		binding.apply {
+			txvName.text = user.profile.name
+			txvTitle.text = user.profile.title
+			txvDescription.text = Html.fromHtml(user.profile.description)
+			txvLikes.text = "${user.profile.stats.likes} received likes"
+			txvFollowers.text = "${user.profile.stats.followers} followers"
+			txvPostsCount.text = "${user.profile.stats.posts} posts"
+			txvReputation.text = "${user.profile.score} reputation"
 
-            if (user.isFollowed) {
-                binding.txvFollow.text = "Unfollow"
-            } else {
-                binding.txvFollow.text = "Follow"
-            }
+			if (user.isFollowed) {
+				binding.txvFollow.text = "Unfollow"
+			} else {
+				binding.txvFollow.text = "Follow"
+			}
 
-            txvFollow.setOnClickListener {
-                userViewModel.followUser()
-            }
-            imvProfile.load(user.profile.photo) {
-                crossfade(true)
-                placeholder(R.drawable.ic_account_circle)
-                transformations(CircleCropTransformation())
-            }
-            imvBanner.load(user.profile.banner) {
-                crossfade(true)
-            }
-        }
-    }
+			txvFollow.setOnClickListener {
+				userViewModel.followUser()
+			}
+			imvProfile.load(user.profile.photo) {
+				crossfade(true)
+				placeholder(R.drawable.ic_account_circle)
+				transformations(CircleCropTransformation())
+			}
+			imvBanner.load(user.profile.banner) {
+				crossfade(true)
+			}
+		}
+	}
 
-    private fun setClickListeners() {
-        //TODO set all click listeners in the fragment
-        binding.apply {
-            btnRetryUser.setOnClickListener {
-                userViewModel.initUser()
-            }
-        }
-    }
+	private fun setClickListeners() {
+		//TODO set all click listeners in the fragment
+		binding.apply {
+			btnRetryUser.setOnClickListener {
+				userViewModel.initUser()
+			}
+		}
+	}
 
-    private fun setSpinnerListener() {
-        binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
+	private fun setSpinnerListener() {
+		binding.spSortBy.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+			override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long,
             ) {
-                when (position) {
+				when (position) {
                     0 -> pagerAdapter.sortBy = "createdAt.desc"
                     1 -> pagerAdapter.sortBy = "createdAt.asc"
                     2 -> pagerAdapter.sortBy = "upvotes"
-                }
-                pagerAdapter.notifyDataSetChanged()
-            }
+				}
+				pagerAdapter.notifyDataSetChanged()
+			}
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
-    }
+			override fun onNothingSelected(parent: AdapterView<*>?) {
+			}
+		}
+	}
 }

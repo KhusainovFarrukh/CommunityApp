@@ -6,5 +6,5 @@ package khusainov.farrukh.communityapp.data.models
 //Temporary data class for handling some exceptions
 data class OtherError(
     val message: String,
-    val retry: () -> Unit
+    val retry: () -> Unit,
 )

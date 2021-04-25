@@ -15,6 +15,6 @@ class PostsOfUserViewModel(
     repository: Repository,
 ) : ViewModel() {
 
-    //posts of user value
-    val userPostsLiveData = repository.getPostsOfUser(userId, type, sortBy).cachedIn(viewModelScope)
+	//posts of user value
+	val userPostsLiveData = repository.getPostsOfUser(userId, type, sortBy).cachedIn(viewModelScope)
 }

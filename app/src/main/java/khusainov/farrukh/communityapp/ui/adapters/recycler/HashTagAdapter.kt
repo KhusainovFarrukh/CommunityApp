@@ -21,23 +21,23 @@ class HashTagAdapter(
 
     override fun areContentsTheSame(oldItem: Topic, newItem: Topic) = oldItem == newItem
 }) {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HashtagViewHolder(
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = HashtagViewHolder(
         ViewholderHashtagBinding.inflate(LayoutInflater.from(parent.context))
     )
 
-    override fun onBindViewHolder(holder: HashtagViewHolder, position: Int) {
-        holder.onBind(getItem(position))
-    }
+	override fun onBindViewHolder(holder: HashtagViewHolder, position: Int) {
+		holder.onBind(getItem(position))
+	}
 
-    inner class HashtagViewHolder(private val binding: ViewholderHashtagBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun onBind(topic: Topic) {
-            binding.apply {
-                txvHashtag.text = "#${topic.name.trim().toLowerCase(Locale.ROOT).replace(" ", "_")}"
-                txvHashtag.setOnClickListener {
-                    topicClickListener.onTopicClick(topic.id)
-                }
-            }
-        }
-    }
+	inner class HashtagViewHolder(private val binding: ViewholderHashtagBinding) :
+		RecyclerView.ViewHolder(binding.root) {
+		fun onBind(topic: Topic) {
+			binding.apply {
+				txvHashtag.text = "#${topic.name.trim().toLowerCase(Locale.ROOT).replace(" ", "_")}"
+				txvHashtag.setOnClickListener {
+					topicClickListener.onTopicClick(topic.id)
+				}
+			}
+		}
+	}
 }

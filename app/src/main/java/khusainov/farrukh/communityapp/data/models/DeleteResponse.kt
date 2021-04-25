@@ -5,5 +5,5 @@ package khusainov.farrukh.communityapp.data.models
  **/
 //data class to get DELETE request for 'Delete post' functionality
 data class DeleteResponse(
-    val success: Boolean
+    val success: Boolean,
 )

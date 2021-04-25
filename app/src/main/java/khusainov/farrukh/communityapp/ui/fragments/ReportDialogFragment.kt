@@ -19,104 +19,104 @@ import khusainov.farrukh.communityapp.vm.viewmodels.ReportViewModel
 
 class ReportDialogFragment : DialogFragment() {
 
-    private var _binding: FragmentDialogReportBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var articleId: String
-    private lateinit var reportViewModel: ReportViewModel
+	private var _binding: FragmentDialogReportBinding? = null
+	private val binding get() = _binding!!
+	private lateinit var articleId: String
+	private lateinit var reportViewModel: ReportViewModel
 
-    override fun onCreateView(
+	override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentDialogReportBinding.inflate(inflater)
-        return binding.root
-    }
+		_binding = FragmentDialogReportBinding.inflate(inflater)
+		return binding.root
+	}
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 
-        articleId = arguments?.getString(KEY_ARTICLE_ID)
-            ?: throw NullPointerException("There is no article ID")
+		articleId = arguments?.getString(KEY_ARTICLE_ID)
+			?: throw NullPointerException("There is no article ID")
 
-        reportViewModel =
-            ViewModelProvider(
+		reportViewModel =
+			ViewModelProvider(
                 this,
                 ReportVMFactory(requireContext())
             ).get(
                 ReportViewModel::class.java
             )
 
-        setClickListeners()
-        setObservers()
-    }
+		setClickListeners()
+		setObservers()
+	}
 
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
+	override fun onCancel(dialog: DialogInterface) {
+		super.onCancel(dialog)
 
-        Toast.makeText(
+		Toast.makeText(
             context,
             "Report oynasi yopildi",
             Toast.LENGTH_SHORT
         ).show()
-    }
+	}
 
-    override fun onStart() {
-        super.onStart()
-        val width = (resources.displayMetrics.widthPixels * 1)
-        dialog?.window?.setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT)
-    }
+	override fun onStart() {
+		super.onStart()
+		val width = (resources.displayMetrics.widthPixels * 1)
+		dialog?.window?.setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT)
+	}
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+	override fun onDestroyView() {
+		super.onDestroyView()
+		_binding = null
+	}
 
-    private fun setClickListeners() {
-        binding.apply {
-            btnReport.setOnClickListener {
-                if (etDescription.text.isNotEmpty()) {
-                    reportViewModel.reportPost(
+	private fun setClickListeners() {
+		binding.apply {
+			btnReport.setOnClickListener {
+				if (etDescription.text.isNotEmpty()) {
+					reportViewModel.reportPost(
                         articleId,
                         ReportValue(
                             spTypeOfReport.selectedItem.toString(),
                             etDescription.text.toString()
                         )
                     )
-                } else {
-                    Toast.makeText(
+				} else {
+					Toast.makeText(
                         context,
                         "Description is EMPTY",
                         Toast.LENGTH_LONG
                     ).show()
-                }
-            }
+				}
+			}
 
-            btnCancel.setOnClickListener {
-                this@ReportDialogFragment.dismiss()
-            }
-        }
-    }
+			btnCancel.setOnClickListener {
+				this@ReportDialogFragment.dismiss()
+			}
+		}
+	}
 
-    private fun setObservers() {
-        reportViewModel.reportError.observe(viewLifecycleOwner) { otherError ->
-            (Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
-                .setAction("Retry") {
-                    otherError.retry.invoke()
-                }).show()
-        }
-        reportViewModel.isLoading.observe(viewLifecycleOwner) {
-            binding.rlLoading.isVisible = it
-        }
-        reportViewModel.isReported.observe(viewLifecycleOwner) {
-            if (it) {
-                Toast.makeText(
+	private fun setObservers() {
+		reportViewModel.reportError.observe(viewLifecycleOwner) { otherError ->
+			(Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
+				.setAction("Retry") {
+					otherError.retry.invoke()
+				}).show()
+		}
+		reportViewModel.isLoading.observe(viewLifecycleOwner) {
+			binding.rlLoading.isVisible = it
+		}
+		reportViewModel.isReported.observe(viewLifecycleOwner) {
+			if (it) {
+				Toast.makeText(
                     requireContext(),
                     "Done",
                     Toast.LENGTH_SHORT
                 ).show()
-                this@ReportDialogFragment.dismiss()
-            }
-        }
-    }
+				this@ReportDialogFragment.dismiss()
+			}
+		}
+	}
 }

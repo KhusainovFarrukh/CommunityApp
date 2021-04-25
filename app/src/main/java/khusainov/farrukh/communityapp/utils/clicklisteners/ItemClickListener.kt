@@ -15,12 +15,12 @@ import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_REPLY
  *Created by FarrukhKhusainov on 3/23/21 11:23 PM
  **/
 class ItemClickListener(private val activityListener: HomeActivityListener?) {
-    fun onArticleClick(articleId: String) {
-        activityListener?.showArticleDetailsFragment(articleId)
-    }
+	fun onArticleClick(articleId: String) {
+		activityListener?.showArticleDetailsFragment(articleId)
+	}
 
-    fun onNotificationClick(notification: Notification) {
-        when (notification.verb) {
+	fun onNotificationClick(notification: Notification) {
+		when (notification.verb) {
             KEY_NOTIFICATION_POST -> {
                 activityListener?.showArticleDetailsFragment(notification.objects[0].id)
             }
@@ -39,18 +39,18 @@ class ItemClickListener(private val activityListener: HomeActivityListener?) {
             KEY_NOTIFICATION_FOLLOW_USER -> {
                 activityListener?.showUserFragment(notification.from[0].id)
             }
-            else -> {
-                Toast.makeText(
+			else -> {
+				Toast.makeText(
                     (activityListener as HomeActivity),
                     "${notification.verb} turidagi noma`lum xabarnoma. Dastur muallifiga xabar bering",
                     Toast.LENGTH_SHORT
                 ).show()
-            }
-        }
-    }
+			}
+		}
+	}
 
-    fun onTopicClick(topicId: String) {
-        activityListener?.showTopicFragment(topicId)
-    }
+	fun onTopicClick(topicId: String) {
+		activityListener?.showTopicFragment(topicId)
+	}
 
 }

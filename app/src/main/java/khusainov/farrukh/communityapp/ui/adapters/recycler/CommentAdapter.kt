@@ -20,63 +20,63 @@ import khusainov.farrukh.communityapp.utils.itemcallbacks.PostItemCallback
 //TODO remove it
 @Suppress("DEPRECATION")
 class CommentAdapter(private val commentClickListener: CommentClickListener) :
-    PagingDataAdapter<Post, CommentAdapter.CommentViewHolder>(PostItemCallback()) {
+	PagingDataAdapter<Post, CommentAdapter.CommentViewHolder>(PostItemCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(
         ViewholderCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        holder.onBind(getItem(position)!!)
-    }
+	override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
+		holder.onBind(getItem(position)!!)
+	}
 
-    inner class CommentViewHolder(private val binding: ViewholderCommentBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun onBind(comment: Post) {
-            binding.apply {
-                //set comment to views
-                setCommentToViews(comment, commentClickListener)
+	inner class CommentViewHolder(private val binding: ViewholderCommentBinding) :
+		RecyclerView.ViewHolder(binding.root) {
+		fun onBind(comment: Post) {
+			binding.apply {
+				//set comment to views
+				setCommentToViews(comment, commentClickListener)
 
-                //set ClickListener for sending new response
-                txvSendComment.setOnClickListener {
-                    if (etComment.text.isNotEmpty()) {
-                        commentClickListener.onWriteSubCommentClick(etComment.text.toString(),
+				//set ClickListener for sending new response
+				txvSendComment.setOnClickListener {
+					if (etComment.text.isNotEmpty()) {
+						commentClickListener.onWriteSubCommentClick(etComment.text.toString(),
                             comment.id)
-                        etComment.text.clear()
-                        etComment.isVisible = false
-                        txvSendComment.isVisible = false
-                    } else {
-                        Toast.makeText(
+						etComment.text.clear()
+						etComment.isVisible = false
+						txvSendComment.isVisible = false
+					} else {
+						Toast.makeText(
                             root.context,
                             "Type your response!",
                             Toast.LENGTH_SHORT
                         ).show()
-                    }
-                }
+					}
+				}
 
-                //set adapter for responses of current comment
-                val adapter = SubCommentAdapter(commentClickListener, snapshot().items)
-                rvResponses.adapter = adapter
+				//set adapter for responses of current comment
+				val adapter = SubCommentAdapter(commentClickListener, snapshot().items)
+				rvResponses.adapter = adapter
 
-                if (comment.onlyResponsesId()) {
-                    if (comment.responses.size() > 0) {
-                        txvAnotherComments.text =
-                            "There is another ${comment.responses.size()} comments..."
-                        txvAnotherComments.isVisible = true
-                    } else {
-                        txvAnotherComments.isVisible = false
-                    }
-                } else {
-                    txvAnotherComments.isVisible = false
-                    val list = mutableListOf<Post>()
-                    comment.responses.forEach {
-                        list.add(Gson().fromJson(it, Post::class.java))
-                    }
-                    adapter.submitList(list)
-                }
-            }
-        }
-    }
+				if (comment.onlyResponsesId()) {
+					if (comment.responses.size() > 0) {
+						txvAnotherComments.text =
+							"There is another ${comment.responses.size()} comments..."
+						txvAnotherComments.isVisible = true
+					} else {
+						txvAnotherComments.isVisible = false
+					}
+				} else {
+					txvAnotherComments.isVisible = false
+					val list = mutableListOf<Post>()
+					comment.responses.forEach {
+						list.add(Gson().fromJson(it, Post::class.java))
+					}
+					adapter.submitList(list)
+				}
+			}
+		}
+	}
 }
 
 class SubCommentAdapter(
@@ -84,45 +84,45 @@ class SubCommentAdapter(
     private val parentComments: List<Post>,
 ) : ListAdapter<Post, SubCommentAdapter.CommentViewHolder>(PostItemCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = CommentViewHolder(
         ViewholderCommentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        holder.onBind(getItem(position))
-    }
+	override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
+		holder.onBind(getItem(position))
+	}
 
-    inner class CommentViewHolder(private val binding: ViewholderCommentBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun onBind(comment: Post) {
-            binding.apply {
-                //set comment to views
-                setCommentToViews(comment, commentClickListener)
+	inner class CommentViewHolder(private val binding: ViewholderCommentBinding) :
+		RecyclerView.ViewHolder(binding.root) {
+		fun onBind(comment: Post) {
+			binding.apply {
+				//set comment to views
+				setCommentToViews(comment, commentClickListener)
 
-                //set ClickListener for sending new response
-                txvSendComment.setOnClickListener {
-                    if (etComment.text.isNotEmpty()) {
-                        parentComments.forEach {
-                            if (comment.replyTo.asString == it.id) {
-                                commentClickListener.onWriteSubCommentClick(
+				//set ClickListener for sending new response
+				txvSendComment.setOnClickListener {
+					if (etComment.text.isNotEmpty()) {
+						parentComments.forEach {
+							if (comment.replyTo.asString == it.id) {
+								commentClickListener.onWriteSubCommentClick(
                                     etComment.text.toString(),
                                     it.id
                                 )
-                                return@forEach
-                            }
-                        }
-                        etComment.text.clear()
-                        etComment.isVisible = false
-                        txvSendComment.isVisible = false
-                    } else {
-                        Toast.makeText(
+								return@forEach
+							}
+						}
+						etComment.text.clear()
+						etComment.isVisible = false
+						txvSendComment.isVisible = false
+					} else {
+						Toast.makeText(
                             root.context,
                             "Type your response!",
                             Toast.LENGTH_SHORT
                         ).show()
-                    }
-                }
-            }
-        }
-    }
+					}
+				}
+			}
+		}
+	}
 }

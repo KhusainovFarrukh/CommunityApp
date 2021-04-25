@@ -16,55 +16,55 @@ import kotlinx.coroutines.launch
  **/
 class UserViewModel(private val userId: String, private val repository: Repository) : ViewModel() {
 
-    /**
-    [_isLoading] - user loading state
-    [_userLiveData] - user value
-    [_errorUser] - error while initializing user
-    [_otherError] - error while executing some functions (follow)
-     */
+	/**
+	[_isLoading] - user loading state
+	[_userLiveData] - user value
+	[_errorUser] - error while initializing user
+	[_otherError] - error while executing some functions (follow)
+	 */
 
-    //private mutable live data:
-    private val _isLoading = MutableLiveData<Boolean>()
-    private val _userLiveData = MutableLiveData<User>()
-    private val _errorUser = MutableLiveData<String>()
-    private val _otherError = MutableLiveData<OtherError>()
+	//private mutable live data:
+	private val _isLoading = MutableLiveData<Boolean>()
+	private val _userLiveData = MutableLiveData<User>()
+	private val _errorUser = MutableLiveData<String>()
+	private val _otherError = MutableLiveData<OtherError>()
 
-    //public immutable live data:
-    val isLoading: LiveData<Boolean> = _isLoading
-    val userLiveData: LiveData<User> = _userLiveData
-    val errorUser: LiveData<String> get() = _errorUser
-    val otherError: LiveData<OtherError> get() = _otherError
+	//public immutable live data:
+	val isLoading: LiveData<Boolean> = _isLoading
+	val userLiveData: LiveData<User> = _userLiveData
+	val errorUser: LiveData<String> get() = _errorUser
+	val otherError: LiveData<OtherError> get() = _otherError
 
 
-    init {
-        initUser()
-    }
+	init {
+		initUser()
+	}
 
-    //fun to initialize user
-    fun initUser() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.postValue(true)
+	//fun to initialize user
+	fun initUser() {
+		viewModelScope.launch(Dispatchers.IO) {
+			_isLoading.postValue(true)
 
-            repository.getUser(userId).let { dataWrapper ->
-                when (dataWrapper) {
+			repository.getUser(userId).let { dataWrapper ->
+				when (dataWrapper) {
                     is DataWrapper.Success -> _userLiveData.postValue(dataWrapper.data)
                     is DataWrapper.Error -> _errorUser.postValue(dataWrapper.message)
-                }
-            }
+				}
+			}
 
-            _isLoading.postValue(false)
-        }
-    }
+			_isLoading.postValue(false)
+		}
+	}
 
-    //fun to follow/unfollow user
-    fun followUser() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.followUser(_userLiveData.value!!).let { dataWrapper ->
-                when (dataWrapper) {
+	//fun to follow/unfollow user
+	fun followUser() {
+		viewModelScope.launch(Dispatchers.IO) {
+			repository.followUser(_userLiveData.value!!).let { dataWrapper ->
+				when (dataWrapper) {
                     is DataWrapper.Success -> _userLiveData.postValue(dataWrapper.data)
                     is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message) { followUser() })
-                }
-            }
-        }
-    }
+				}
+			}
+		}
+	}
 }

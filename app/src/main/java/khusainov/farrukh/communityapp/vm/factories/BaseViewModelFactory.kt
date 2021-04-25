@@ -18,11 +18,11 @@ open class BaseViewModelFactory(
     private val context: Context,
 ) : ViewModelProvider.Factory {
 
-    private val repository = Repository(RetrofitInstance(context).communityApiService)
+	private val repository = Repository(RetrofitInstance(context).communityApiService)
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return when (viewModelType) {
-            //return ViewModel depending on type (excluding postsOfUser type)
+	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+		return when (viewModelType) {
+			//return ViewModel depending on type (excluding postsOfUser type)
             context.resources.getStringArray(R.array.vm_factory_types)[0] -> UserViewModel(id,
                 repository) as T
             context.resources.getStringArray(R.array.vm_factory_types)[1] -> ArticleViewModel(id,
@@ -37,28 +37,28 @@ open class BaseViewModelFactory(
                 repository) as T
             context.resources.getStringArray(R.array.vm_factory_types)[6] -> ReportViewModel(
                 repository) as T
-            else -> throw IllegalArgumentException("$viewModelType is not supported")
-        }
-    }
+			else -> throw IllegalArgumentException("$viewModelType is not supported")
+		}
+	}
 }
 
 class ArticleVMFactory(articleId: String, context: Context) :
-    BaseViewModelFactory("article", articleId, context)
+	BaseViewModelFactory("article", articleId, context)
 
 class UserVMFactory(userId: String, context: Context) :
-    BaseViewModelFactory("user", userId, context)
+	BaseViewModelFactory("user", userId, context)
 
 class TopicVMFactory(topicId: String, context: Context) :
-    BaseViewModelFactory("topic", topicId, context)
+	BaseViewModelFactory("topic", topicId, context)
 
 class MainVMFactory(context: Context) :
-    BaseViewModelFactory("main", context = context)
+	BaseViewModelFactory("main", context = context)
 
 class LoginVMFactory(context: Context) :
-    BaseViewModelFactory("login", context = context)
+	BaseViewModelFactory("login", context = context)
 
 class NotificationsVMFactory(context: Context) :
-    BaseViewModelFactory("notification", context = context)
+	BaseViewModelFactory("notification", context = context)
 
 class ReportVMFactory(context: Context) :
-    BaseViewModelFactory("report", context = context)
+	BaseViewModelFactory("report", context = context)

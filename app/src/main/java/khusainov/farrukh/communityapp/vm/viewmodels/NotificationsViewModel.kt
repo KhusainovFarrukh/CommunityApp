@@ -10,6 +10,6 @@ import khusainov.farrukh.communityapp.data.repository.Repository
  **/
 class NotificationsViewModel(repository: Repository) : ViewModel() {
 
-    //notifications value
-    val notificationsLiveData = repository.getNotifications().cachedIn(viewModelScope)
+	//notifications value
+	val notificationsLiveData = repository.getNotifications().cachedIn(viewModelScope)
 }

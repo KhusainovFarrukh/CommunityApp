@@ -13,25 +13,25 @@ class PostsOfTopicPagingSource(
     private val topicId: String,
     private val sortBy: String,
 ) :
-    PagingSource<Int, Post>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {
-        val position = params.key ?: PAGE_STARTING_INDEX
+	PagingSource<Int, Post>() {
+	override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {
+		val position = params.key ?: PAGE_STARTING_INDEX
 
-        return try {
-            communityApiService.getPostsOfTopic(
+		return try {
+			communityApiService.getPostsOfTopic(
                 page = position,
                 limit = 25,
                 topicId = topicId,
                 sortBy = sortBy,
             ).let {
-                LoadResult.Page(
+				LoadResult.Page(
                     data = it,
                     prevKey = if (position == PAGE_STARTING_INDEX) null else position - 1,
                     nextKey = if (it.isEmpty()) null else position + 1
                 )
-            }
-        } catch (exception: Exception) {
-            LoadResult.Error(exception)
-        }
-    }
+			}
+		} catch (exception: Exception) {
+			LoadResult.Error(exception)
+		}
+	}
 }

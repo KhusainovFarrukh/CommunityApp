@@ -281,7 +281,6 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/bg_et_login"
-                    android:drawableStart="@drawable/ic_report"
                     android:drawablePadding="4dp"
                     android:gravity="center"
                     android:paddingHorizontal="16dp"
@@ -289,7 +288,8 @@
                     android:text="Report"
                     android:textColor="@color/purple_700"
                     app:layout_constraintBaseline_toBaselineOf="@id/txv_like_article"
-                    app:layout_constraintEnd_toEndOf="@id/gl_end" />
+                    app:layout_constraintEnd_toEndOf="@id/gl_end"
+                    app:drawableStartCompat="@drawable/ic_report" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
