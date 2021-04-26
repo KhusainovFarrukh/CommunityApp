@@ -20,7 +20,7 @@ import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.*
 import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
-import khusainov.farrukh.communityapp.utils.clicklisteners.*
+import khusainov.farrukh.communityapp.utils.listeners.*
 import khusainov.farrukh.communityapp.vm.factories.ArticleVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleViewModel
 import kotlinx.coroutines.flow.collectLatest

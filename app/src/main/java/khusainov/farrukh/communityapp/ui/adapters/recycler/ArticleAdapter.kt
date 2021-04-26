@@ -9,7 +9,6 @@ import coil.load
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderArticleBinding
-import khusainov.farrukh.communityapp.utils.Constants.VALUE_UNKNOWN
 import khusainov.farrukh.communityapp.utils.itemcallbacks.ArticleItemCallback
 
 class ArticleAdapter(private val itemClick: (String) -> Unit) :
@@ -40,7 +39,8 @@ class ArticleAdapter(private val itemClick: (String) -> Unit) :
 
 		fun onBindArticle(article: Post) = with(binding) {
 			txvTitle.text = article.title?.trim()
-			txvAuthor.text = article.user?.profile?.name?.trim() ?: VALUE_UNKNOWN
+			txvAuthor.text = article.user?.profile?.name?.trim()
+				?: root.context.getString(R.string.unknown_author)
 			txvViews.text = article.stats.viewsCount.toString()
 			txvLikes.text = article.stats.likes.toString()
 			txvComments.text = article.stats.comments.toString()

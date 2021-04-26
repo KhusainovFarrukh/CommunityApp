@@ -17,7 +17,7 @@ import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfUserAdapter
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SORT_BY
 import khusainov.farrukh.communityapp.utils.Constants.KEY_TYPE
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
-import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
+import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.PostsOfUserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.PostsOfUserViewModel
 import kotlinx.coroutines.flow.collectLatest

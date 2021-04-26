@@ -15,7 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.SignInData
 import khusainov.farrukh.communityapp.databinding.FragmentDialogLoginBinding
-import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
+import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
 

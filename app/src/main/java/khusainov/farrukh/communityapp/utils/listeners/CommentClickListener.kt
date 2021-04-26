@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.utils.clicklisteners
+package khusainov.farrukh.communityapp.utils.listeners
 
 import khusainov.farrukh.communityapp.data.models.Post
 

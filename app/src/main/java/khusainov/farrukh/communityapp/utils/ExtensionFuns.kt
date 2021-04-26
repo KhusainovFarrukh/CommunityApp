@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.utils.extensions
+package khusainov.farrukh.communityapp.utils
 
 import android.text.Html
 import android.widget.PopupMenu
@@ -8,18 +8,19 @@ import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderCommentBinding
-import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
+import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
+import khusainov.farrukh.communityapp.utils.listeners.CommentClickListener
 
 /**
  *Created by FarrukhKhusainov on 4/22/21 1:08 PM
  **/
 //extension fun for setting Comment data to Views
 fun ViewholderCommentBinding.setCommentToViews(
-    comment: Post,
-    commentClickListener: CommentClickListener,
+	comment: Post,
+	commentClickListener: CommentClickListener,
 ) {
 	//set TextViews
-	txvName.text = comment.user?.profile?.name ?: "Unknown"
+	txvName.text = comment.user?.profile?.name ?: root.context.getString(R.string.unknown_author)
 	txvTime.text = comment.getDifference()
 	txvComment.text = Html.fromHtml(comment.content).trim()
 	txvLike.text = comment.stats.likes.toString()
@@ -34,10 +35,10 @@ fun ViewholderCommentBinding.setCommentToViews(
 
 	//set ClickListeners
 	imvProfile.setOnClickListener {
-		commentClickListener.onCommentAuthorClick(comment.user?.id ?: "")
+		commentClickListener.onCommentAuthorClick(comment.user?.id ?: VALUE_DEFAULT)
 	}
 	txvName.setOnClickListener {
-		commentClickListener.onCommentAuthorClick(comment.user?.id ?: "")
+		commentClickListener.onCommentAuthorClick(comment.user?.id ?: VALUE_DEFAULT)
 	}
 	txvLike.setOnClickListener {
 		commentClickListener.onLikeCommentClick(comment)
@@ -56,12 +57,12 @@ fun ViewholderCommentBinding.setCommentToViews(
 
 		popUp.setOnMenuItemClickListener {
 			when (it.itemId) {
-                R.id.item_report -> {
-                    commentClickListener.onReportClick(comment.id)
-                }
-                R.id.item_delete -> {
-                    commentClickListener.onDeleteCommentClick(comment.id)
-                }
+				R.id.item_report -> {
+					commentClickListener.onReportClick(comment.id)
+				}
+				R.id.item_delete -> {
+					commentClickListener.onDeleteCommentClick(comment.id)
+				}
 			}
 			true
 		}
@@ -71,17 +72,17 @@ fun ViewholderCommentBinding.setCommentToViews(
 	//set isLiked state to ImageView
 	if (comment.isLiked) {
 		txvLike.setCompoundDrawablesWithIntrinsicBounds(
-            R.drawable.ic_favorite,
-            0,
-            0,
-            0
-        )
+			R.drawable.ic_favorite,
+			0,
+			0,
+			0
+		)
 	} else {
 		txvLike.setCompoundDrawablesWithIntrinsicBounds(
-            R.drawable.ic_favorite_border,
-            0,
-            0,
-            0
-        )
+			R.drawable.ic_favorite_border,
+			0,
+			0,
+			0
+		)
 	}
 }

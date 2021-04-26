@@ -17,7 +17,7 @@ import khusainov.farrukh.communityapp.utils.Constants.KEY_TOPIC_ID
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
 import khusainov.farrukh.communityapp.utils.Constants.TYPE_INTENT_TEXT
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
-import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
+import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 
 @SuppressLint("CommitPrefEdits")
 class HomeActivity : AppCompatActivity(), HomeActivityListener {

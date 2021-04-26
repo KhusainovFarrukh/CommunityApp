@@ -18,7 +18,7 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.*
-import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
+import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
 import khusainov.farrukh.communityapp.vm.factories.MainVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel

@@ -11,8 +11,8 @@ import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderCommentBinding
-import khusainov.farrukh.communityapp.utils.clicklisteners.CommentClickListener
-import khusainov.farrukh.communityapp.utils.extensions.setCommentToViews
+import khusainov.farrukh.communityapp.utils.listeners.CommentClickListener
+import khusainov.farrukh.communityapp.utils.setCommentToViews
 import khusainov.farrukh.communityapp.utils.itemcallbacks.CommentItemCallback
 
 /**

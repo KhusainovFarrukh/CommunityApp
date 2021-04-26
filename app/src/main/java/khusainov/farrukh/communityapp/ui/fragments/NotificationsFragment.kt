@@ -20,7 +20,7 @@ import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_US
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST_UPVOTE
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_REPLY
-import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
+import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.NotificationsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel
 import kotlinx.coroutines.flow.collectLatest
