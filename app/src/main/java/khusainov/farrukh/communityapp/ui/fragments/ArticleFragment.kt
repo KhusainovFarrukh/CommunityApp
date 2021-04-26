@@ -40,10 +40,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	}
 
 	private val articleViewModel: ArticleViewModel by lazy {
-		ViewModelProvider(
-			this,
-			ArticleVMFactory(articleId, requireContext())
-		).get(ArticleViewModel::class.java)
+		ViewModelProvider(this, ArticleVMFactory(articleId, requireContext()))
+			.get(ArticleViewModel::class.java)
 	}
 
 	private val topicOfArticleAdapter = TopicOfArticleAdapter { topicId ->

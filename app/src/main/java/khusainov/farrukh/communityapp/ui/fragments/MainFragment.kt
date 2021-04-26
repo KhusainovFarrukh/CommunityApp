@@ -33,9 +33,7 @@ class MainFragment : Fragment() {
 	private var activityListener: HomeActivityListener? = null
 
 	private val articleAdapter by lazy {
-		ArticleAdapter { articleId ->
-			activityListener?.showArticleDetailsFragment(articleId)
-		}
+		ArticleAdapter { articleId -> activityListener?.showArticleDetailsFragment(articleId) }
 	}
 
 	private val topicAdapter by lazy {

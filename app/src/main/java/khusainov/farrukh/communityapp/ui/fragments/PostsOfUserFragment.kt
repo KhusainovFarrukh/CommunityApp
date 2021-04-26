@@ -13,7 +13,7 @@ import khusainov.farrukh.communityapp.data.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.repository.Repository
 import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
-import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfUserAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfAdapter
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SORT_BY
 import khusainov.farrukh.communityapp.utils.Constants.KEY_TYPE
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
@@ -32,7 +32,7 @@ class PostsOfUserFragment : Fragment() {
 	private var _binding: FragmentListPostsOfUserBinding? = null
 	private val binding get() = _binding!!
 	private val postsOfUserAdapter by lazy {
-		PostsOfUserAdapter({ topicId -> activityListener?.showTopicFragment(topicId) },
+		PostsOfAdapter({ topicId -> activityListener?.showTopicFragment(topicId) },
 			{ postId -> activityListener?.showArticleDetailsFragment(postId) })
 	}
 
@@ -50,11 +50,11 @@ class PostsOfUserFragment : Fragment() {
 	}
 
 	private val postsViewModel by lazy {
-		ViewModelProvider(this,
-			PostsOfUserVMFactory(userId,
-				type,
-				sortBy,
-				Repository(RetrofitInstance(requireContext()).communityApiService)))
+		ViewModelProvider(this, PostsOfUserVMFactory(
+			userId,
+			type,
+			sortBy,
+			Repository(RetrofitInstance(requireContext()).communityApiService)))
 			.get(PostsOfUserViewModel::class.java)
 	}
 

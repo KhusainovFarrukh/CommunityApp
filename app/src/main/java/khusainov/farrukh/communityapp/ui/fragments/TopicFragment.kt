@@ -14,7 +14,7 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
-import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfUserAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfAdapter
 import khusainov.farrukh.communityapp.utils.Constants.KEY_TOPIC_ID
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
@@ -33,8 +33,8 @@ class TopicFragment : Fragment() {
 	private var _binding: FragmentTopicBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
-	private val postsOfUserAdapter by lazy {
-		PostsOfUserAdapter({ topicId -> activityListener?.showTopicFragment(topicId) },
+	private val postsOfTopicAdapter by lazy {
+		PostsOfAdapter({ topicId -> activityListener?.showTopicFragment(topicId) },
 			{ postId -> activityListener?.showArticleDetailsFragment(postId) })
 	}
 
@@ -87,9 +87,9 @@ class TopicFragment : Fragment() {
 	}
 
 	private fun initRecyclerView() = with(binding) {
-		rvPosts.adapter = postsOfUserAdapter.withLoadStateHeaderAndFooter(
-			ListLoadStateAdapter { postsOfUserAdapter.retry() },
-			ListLoadStateAdapter { postsOfUserAdapter.retry() }
+		rvPosts.adapter = postsOfTopicAdapter.withLoadStateHeaderAndFooter(
+			ListLoadStateAdapter { postsOfTopicAdapter.retry() },
+			ListLoadStateAdapter { postsOfTopicAdapter.retry() }
 		)
 	}
 
@@ -120,7 +120,7 @@ class TopicFragment : Fragment() {
 
 		//observe posts' loading state
 		viewLifecycleOwner.lifecycleScope.launch {
-			postsOfUserAdapter.loadStateFlow.collectLatest { loadStates ->
+			postsOfTopicAdapter.loadStateFlow.collectLatest { loadStates ->
 				binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
 				binding.btnRetryArticles.isVisible = loadStates.refresh is LoadState.Error
 				binding.txvErrorArticles.isVisible = loadStates.refresh is LoadState.Error
@@ -136,7 +136,7 @@ class TopicFragment : Fragment() {
 		//observe posts' value
 		topicPostsLiveData.observe(viewLifecycleOwner) {
 			lifecycleScope.launch {
-				postsOfUserAdapter.submitData(it)
+				postsOfTopicAdapter.submitData(it)
 			}
 		}
 	}
@@ -146,7 +146,7 @@ class TopicFragment : Fragment() {
 			topicViewModel.initTopic()
 		}
 		btnRetryArticles.setOnClickListener {
-			postsOfUserAdapter.retry()
+			postsOfTopicAdapter.retry()
 		}
 		//TODO set all click listeners in the fragment
 	}

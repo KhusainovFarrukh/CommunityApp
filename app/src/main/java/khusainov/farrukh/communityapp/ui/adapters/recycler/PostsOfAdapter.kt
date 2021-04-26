@@ -12,10 +12,10 @@ import khusainov.farrukh.communityapp.databinding.ViewholderArticleOfUserBinding
 import khusainov.farrukh.communityapp.utils.Constants.KEY_RESPONSE
 import khusainov.farrukh.communityapp.utils.itemcallbacks.ArticleItemCallback
 
-class PostsOfUserAdapter(
+class PostsOfAdapter(
 	private val topicClick: (String) -> Unit,
 	private val postClick: (String) -> Unit,
-) : PagingDataAdapter<Post, PostsOfUserAdapter.ArticleInUserViewHolder>(ArticleItemCallback()) {
+) : PagingDataAdapter<Post, PostsOfAdapter.ArticleInUserViewHolder>(ArticleItemCallback()) {
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ArticleInUserViewHolder(
 		ViewholderArticleOfUserBinding.inflate(
