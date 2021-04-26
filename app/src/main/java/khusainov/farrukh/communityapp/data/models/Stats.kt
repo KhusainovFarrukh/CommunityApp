@@ -7,17 +7,21 @@ import com.google.gson.annotations.SerializedName
  **/
 //data class for using as Statistics in other data classes
 data class Stats(
-    @SerializedName("downvotes")
-    val dislikes: Int,
-    @SerializedName("upvotes")
-    val likes: Int,
-    @SerializedName("followers")
-    val followers: Int,
-    @SerializedName("views")
-    val viewsCount: Int,
-    @SerializedName("responses")
-    val comments: Int,
-    val groups: Int,
-    val posts: Int,
-    val followings: Int,
+	@SerializedName("downvotes")
+	val dislikes: Int,
+	@SerializedName("upvotes")
+	val likes: Int,
+	@SerializedName("receivedLikes")
+	val likesOfUser: Int,
+	@SerializedName("followers")
+	val followers: Int,
+	@SerializedName("views")
+	val viewsCount: Int,
+	@SerializedName("responses")
+	val comments: Int,
+	@SerializedName("replies")
+	val commentsOfUser: Int,
+	val groups: Int,
+	val posts: Int,
+	val followings: Int,
 )

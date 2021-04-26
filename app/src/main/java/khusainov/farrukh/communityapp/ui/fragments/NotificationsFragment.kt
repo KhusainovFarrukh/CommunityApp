@@ -3,17 +3,24 @@ package khusainov.farrukh.communityapp.ui.fragments
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
+import khusainov.farrukh.communityapp.data.models.Notification
+import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.ui.adapters.recycler.NotificationAdapter
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_USER
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST_UPVOTE
+import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_REPLY
 import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
-import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.NotificationsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -24,7 +31,10 @@ class NotificationsFragment : Fragment() {
 	private var _binding: FragmentNotificationsBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
-	private val notificationAdapter by lazy { NotificationAdapter(ItemClickListener(activityListener)) }
+
+	private val notificationAdapter by lazy {
+		NotificationAdapter { notification -> onNotificationClick(notification) }
+	}
 
 	private val notificationsViewModel by lazy {
 		ViewModelProvider(this, NotificationsVMFactory(requireContext()))
@@ -103,6 +113,40 @@ class NotificationsFragment : Fragment() {
 	private fun setClickListeners() = with(binding) {
 		btnRetryNotification.setOnClickListener {
 			notificationAdapter.retry()
+		}
+	}
+
+	private fun onNotificationClick(notification: Notification) {
+		when (notification.verb) {
+
+			KEY_NOTIFICATION_POST -> {
+				activityListener?.showArticleDetailsFragment(notification.objects[0].id)
+			}
+
+			KEY_NOTIFICATION_POST_UPVOTE -> {
+				activityListener?.showUserFragment(notification.from[0].id)
+			}
+
+			KEY_NOTIFICATION_REPLY -> {
+				if (notification.objects[0].onlyParentId()) {
+					activityListener?.showArticleDetailsFragment(notification.objects[0].id)
+				} else {
+					activityListener?.showArticleDetailsFragment(Gson().fromJson(notification.objects[0].parent,
+						Post::class.java).id)
+				}
+			}
+
+			KEY_NOTIFICATION_FOLLOW_USER -> {
+				activityListener?.showUserFragment(notification.from[0].id)
+			}
+
+			else -> {
+				Toast.makeText(
+					context,
+					getString(R.string.notification_other, notification.verb),
+					Toast.LENGTH_SHORT
+				).show()
+			}
 		}
 	}
 }

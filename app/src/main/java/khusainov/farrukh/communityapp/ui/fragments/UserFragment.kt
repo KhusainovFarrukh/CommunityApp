@@ -123,7 +123,7 @@ class UserFragment : Fragment() {
 		txvName.text = user.profile.name.trim()
 		txvTitle.text = user.profile.title.trim()
 		txvDescription.text = Html.fromHtml(user.profile.description.trim())
-		txvLikes.text = getString(R.string.count_like, user.profile.stats.likes)
+		txvLikes.text = getString(R.string.count_like, user.profile.stats.likesOfUser)
 		txvFollowers.text = getString(R.string.count_follower, user.profile.stats.followers)
 		txvPostsCount.text = getString(R.string.count_post, user.profile.stats.posts)
 		txvReputation.text = getString(R.string.count_reputation, user.profile.score)

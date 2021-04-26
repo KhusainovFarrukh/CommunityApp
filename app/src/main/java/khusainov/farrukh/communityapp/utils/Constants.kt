@@ -27,4 +27,9 @@ object Constants {
 	const val SORT_BY_TIME_DESC = "createdAt.desc"
 	const val SORT_BY_TIME_ASC = "createdAt.asc"
 	const val SORT_BY_UPVOTES = "upvotes"
+	const val KEY_ARTICLE = "article"
+	const val KEY_RESPONSE = "response"
+	const val TITLE_ARTICLES = "Articles"
+	const val TITLE_COMMENTS = "Comments"
+	const val VALUE_UNKNOWN = "Unknown"
 }

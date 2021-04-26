@@ -20,7 +20,6 @@ import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
 import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
-import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.TopicVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.TopicViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -34,7 +33,10 @@ class TopicFragment : Fragment() {
 	private var _binding: FragmentTopicBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
-	private val postsOfUserAdapter by lazy { PostsOfUserAdapter(ItemClickListener(activityListener)) }
+	private val postsOfUserAdapter by lazy {
+		PostsOfUserAdapter({ topicId -> activityListener?.showTopicFragment(topicId) },
+			{ postId -> activityListener?.showArticleDetailsFragment(postId) })
+	}
 
 	private val topicId by lazy {
 		arguments?.getString(KEY_TOPIC_ID)

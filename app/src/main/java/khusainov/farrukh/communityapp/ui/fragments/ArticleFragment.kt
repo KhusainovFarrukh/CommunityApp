@@ -46,8 +46,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		).get(ArticleViewModel::class.java)
 	}
 
-	private val hashTagAdapter: HashTagAdapter by lazy {
-		HashTagAdapter(ItemClickListener(activityListener))
+	private val topicOfArticleAdapter = TopicOfArticleAdapter { topicId ->
+		activityListener?.showTopicFragment(topicId)
 	}
 
 	override fun onCreateView(
@@ -88,7 +88,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	}
 
 	private fun initRecyclerView() = with(binding) {
-		rvHashtags.adapter = hashTagAdapter
+		rvHashtags.adapter = topicOfArticleAdapter
 		rvComments.adapter = commentAdapter.withLoadStateHeaderAndFooter(
 			ListLoadStateAdapter { commentAdapter.retry() },
 			ListLoadStateAdapter { commentAdapter.retry() }
@@ -245,7 +245,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		txvTitle.text = article.title?.trim()
 
 		//submit topics of article to adapter
-		hashTagAdapter.submitList(article.topics)
+		topicOfArticleAdapter.submitList(article.topics)
 	}
 
 	//fun to set some ClickListeners after article initialize

@@ -14,14 +14,12 @@ import khusainov.farrukh.communityapp.databinding.ViewholderLoadStateBinding
 class ListLoadStateAdapter(private val retry: () -> Unit) :
 	LoadStateAdapter<ListLoadStateAdapter.ListLoadStateViewHolder>() {
 
-	override fun onCreateViewHolder(
-        parent: ViewGroup,
-        loadState: LoadState,
-    ) = ListLoadStateViewHolder(
-        ViewholderLoadStateBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
-        )
-    )
+	override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState) =
+		ListLoadStateViewHolder(
+			ViewholderLoadStateBinding.inflate(
+				LayoutInflater.from(parent.context), parent, false
+			)
+		)
 
 	override fun onBindViewHolder(holder: ListLoadStateViewHolder, loadState: LoadState) {
 		holder.onBindLoadState(loadState)
@@ -34,14 +32,12 @@ class ListLoadStateAdapter(private val retry: () -> Unit) :
 			binding.btnRetry.setOnClickListener { retry.invoke() }
 		}
 
-		fun onBindLoadState(loadState: LoadState) {
-			binding.apply {
-				pbLoading.isVisible = loadState is LoadState.Loading
-				txvError.isVisible = loadState !is LoadState.Loading
-				btnRetry.isVisible = loadState !is LoadState.Loading
-				if (loadState is LoadState.Error) {
-					txvError.text = loadState.error.message
-				}
+		fun onBindLoadState(loadState: LoadState) = with(binding) {
+			pbLoading.isVisible = loadState is LoadState.Loading
+			txvError.isVisible = loadState !is LoadState.Loading
+			btnRetry.isVisible = loadState !is LoadState.Loading
+			if (loadState is LoadState.Error) {
+				txvError.text = loadState.error.message
 			}
 		}
 	}

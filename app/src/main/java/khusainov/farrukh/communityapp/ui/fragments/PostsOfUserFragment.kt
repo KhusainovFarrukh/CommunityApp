@@ -18,7 +18,6 @@ import khusainov.farrukh.communityapp.utils.Constants.KEY_SORT_BY
 import khusainov.farrukh.communityapp.utils.Constants.KEY_TYPE
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
 import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
-import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.PostsOfUserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.PostsOfUserViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -32,7 +31,10 @@ class PostsOfUserFragment : Fragment() {
 	private var activityListener: HomeActivityListener? = null
 	private var _binding: FragmentListPostsOfUserBinding? = null
 	private val binding get() = _binding!!
-	private val postsOfUserAdapter by lazy { PostsOfUserAdapter(ItemClickListener(activityListener)) }
+	private val postsOfUserAdapter by lazy {
+		PostsOfUserAdapter({ topicId -> activityListener?.showTopicFragment(topicId) },
+			{ postId -> activityListener?.showArticleDetailsFragment(postId) })
+	}
 
 	private val userId by lazy {
 		arguments?.getString(KEY_USER_ID) ?: throw NullPointerException(getString(

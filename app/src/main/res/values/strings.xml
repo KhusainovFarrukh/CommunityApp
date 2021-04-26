@@ -37,6 +37,10 @@
     <string name="count_reputation">%d reputatsiya</string>
     <string name="unfollow">Obunani bekor qilish</string>
     <string name="follow">Obuna bo`lish</string>
+    <string name="other_comments">Yana %d komment mavjud</string>
+    <string name="hashtag" translatable="false">#%s</string>
+    <string name="reply_to_comment">Kommentga javoban:</string>
+    <string name="reply_to">\"%s ga javoban:\"</string>
 
     <string-array name="report_types_values">
         <item>Harrasment</item>

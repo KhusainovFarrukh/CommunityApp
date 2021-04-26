@@ -6,7 +6,7 @@ import khusainov.farrukh.communityapp.data.models.Post
 /**
  *Created by FarrukhKhusainov on 4/22/21 1:06 PM
  **/
-class PostItemCallback : DiffUtil.ItemCallback<Post>() {
+class CommentItemCallback : DiffUtil.ItemCallback<Post>() {
 	override fun getChangePayload(
         oldItem: Post,
         newItem: Post,

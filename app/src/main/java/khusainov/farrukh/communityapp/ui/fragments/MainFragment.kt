@@ -2,9 +2,7 @@ package khusainov.farrukh.communityapp.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import androidx.core.view.isVisible
@@ -19,11 +17,8 @@ import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
-import khusainov.farrukh.communityapp.ui.adapters.recycler.ArticleAdapter
-import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
-import khusainov.farrukh.communityapp.ui.adapters.recycler.TopicAdapter
+import khusainov.farrukh.communityapp.ui.adapters.recycler.*
 import khusainov.farrukh.communityapp.utils.clicklisteners.HomeActivityListener
-import khusainov.farrukh.communityapp.utils.clicklisteners.ItemClickListener
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
 import khusainov.farrukh.communityapp.vm.factories.MainVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.LoginViewModel
@@ -36,8 +31,16 @@ class MainFragment : Fragment() {
 	private var _binding: FragmentArticlesListBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
-	private val articleAdapter by lazy { ArticleAdapter(ItemClickListener(activityListener)) }
-	private val topicAdapter by lazy { TopicAdapter(ItemClickListener(activityListener)) }
+
+	private val articleAdapter by lazy {
+		ArticleAdapter { articleId ->
+			activityListener?.showArticleDetailsFragment(articleId)
+		}
+	}
+
+	private val topicAdapter by lazy {
+		TopicAdapter { topicId -> activityListener?.showTopicFragment(topicId) }
+	}
 
 	private val mainViewModel by lazy {
 		ViewModelProvider(this, MainVMFactory(requireContext()))
