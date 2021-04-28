@@ -8,7 +8,11 @@
         android:id="@+id/rv_posts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fadingEdgeLength="32dp"
         android:orientation="vertical"
+        android:overScrollMode="never"
+        android:requiresFadingEdge="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <ProgressBar
@@ -24,7 +28,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txv_error"
         android:layout_centerHorizontal="true"
-        android:text="Retry" />
+        android:text="Retry"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/txv_error"
@@ -35,6 +40,7 @@
         android:gravity="center"
         android:padding="8dp"
         android:paddingVertical="16dp"
-        android:text="Something went wrong" />
+        android:text="Something went wrong"
+        android:visibility="gone" />
 
 </RelativeLayout>

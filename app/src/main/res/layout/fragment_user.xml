@@ -10,48 +10,44 @@
     app:cardCornerRadius="20dp"
     app:cardElevation="8dp">
 
+    <RelativeLayout
+        android:id="@+id/rl_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:elevation="21dp">
+
+        <ProgressBar
+            android:id="@+id/pb_loading_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <Button
+            android:id="@+id/btn_retry_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txv_error_user"
+            android:layout_centerHorizontal="true"
+            android:text="Retry"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/txv_error_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="Something went wrong"
+            android:visibility="gone" />
+    </RelativeLayout>
+
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:id="@+id/motion_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutDescription="@xml/fragment_user_scene">
-
-        <RelativeLayout
-            android:id="@+id/rl_loading"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/white"
-            android:elevation="10dp"
-            android:translationZ="2dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <ProgressBar
-                android:id="@+id/pb_loading_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-
-            <Button
-                android:id="@+id/btn_retry_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txv_error_user"
-                android:layout_centerHorizontal="true"
-                android:text="Retry" />
-
-            <TextView
-                android:id="@+id/txv_error_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:padding="8dp"
-                android:text="Something went wrong" />
-        </RelativeLayout>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_user_details"
@@ -156,8 +152,8 @@
             android:layout_height="wrap_content"
             android:elevation="20dp"
             android:gravity="center"
-            android:textColor="@color/white"
             android:paddingBottom="8dp"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/gl_end"
             app:layout_constraintStart_toStartOf="@+id/gl_start"
             app:layout_constraintTop_toBottomOf="@+id/txv_name"
@@ -269,7 +265,10 @@
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_posts"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tl_posts" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>

@@ -170,6 +170,11 @@ class MainFragment : Fragment() {
 		btnRetryTopics.setOnClickListener {
 			mainViewModel.initTopics()
 		}
+		imvProfile.setOnClickListener {
+			activityListener?.getUserId()?.let {
+				activityListener?.showUserFragment(it)
+			}
+		}
 	}
 
 	private fun setUserToViews(user: User) = with(binding) {

@@ -188,7 +188,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txv_error_topic"
                     android:layout_centerHorizontal="true"
-                    android:text="Retry" />
+                    android:text="Retry"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/txv_error_topic"
@@ -197,7 +198,8 @@
                     android:layout_centerInParent="true"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:text="Something went wrong" />
+                    android:text="Something went wrong"
+                    android:visibility="gone" />
 
             </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
