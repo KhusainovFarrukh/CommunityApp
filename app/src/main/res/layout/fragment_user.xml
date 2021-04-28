@@ -1,271 +1,276 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_card_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:translationZ="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="8dp">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/motion_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:translationZ="8dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp">
+        android:layout_height="match_parent"
+        app:layoutDescription="@xml/fragment_user_scene">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/rl_loading"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:elevation="10dp"
+            android:translationZ="2dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <RelativeLayout
-                android:id="@+id/rl_loading"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:background="@color/white"
-                android:elevation="10dp"
-                android:translationZ="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ProgressBar
-                    android:id="@+id/pb_loading_user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true" />
-
-                <Button
-                    android:id="@+id/btn_retry_user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@id/txv_error_user"
-                    android:text="Retry" />
-
-                <TextView
-                    android:id="@+id/txv_error_user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:layout_centerInParent="true"
-                    android:text="Something went wrong"/>
-            </RelativeLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mcv_user_details"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:translationZ="8dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/gl_start"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_begin="16dp" />
-
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/gl_end"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_end="16dp" />
-
-                    <ImageView
-                        android:id="@+id/imv_banner"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginBottom="4dp"
-                        android:scaleType="centerCrop"
-                        app:layout_constraintBottom_toTopOf="@id/txv_reputation"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="#80000000"
-                        app:layout_constraintBottom_toBottomOf="@id/imv_banner"
-                        app:layout_constraintEnd_toEndOf="@id/imv_banner"
-                        app:layout_constraintStart_toStartOf="@id/imv_banner"
-                        app:layout_constraintTop_toTopOf="@id/imv_banner" />
-
-                    <ImageView
-                        android:id="@+id/imv_profile"
-                        android:layout_width="128dp"
-                        android:layout_height="128dp"
-                        android:layout_marginTop="32dp"
-                        app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                        app:layout_constraintStart_toStartOf="@+id/gl_start"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_account_circle" />
-
-                    <ImageView
-                        android:id="@+id/imv_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        app:layout_constraintStart_toStartOf="@+id/gl_start"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_arrow_back"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:id="@+id/txv_follow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/bg_btn_login"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="4dp"
-                        android:text="Follow"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/txv_name"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                        app:layout_constraintStart_toStartOf="@+id/gl_start"
-                        app:layout_constraintTop_toBottomOf="@+id/imv_profile"
-                        tools:text="John Wayne Smith" />
-
-                    <TextView
-                        android:id="@+id/txv_title"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                        app:layout_constraintStart_toStartOf="@+id/gl_start"
-                        app:layout_constraintTop_toBottomOf="@+id/txv_name"
-                        tools:text="Junior Android Developer, Trader, Businessman" />
-
-                    <TextView
-                        android:id="@+id/txv_reputation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:drawablePadding="8dp"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        app:drawableStartCompat="@drawable/ic_school"
-                        app:drawableTint="@color/black"
-                        app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                        app:layout_constraintStart_toStartOf="@+id/gl_start"
-                        app:layout_constraintTop_toBottomOf="@+id/txv_title"
-                        tools:text="248 reputation" />
-
-                    <TextView
-                        android:id="@+id/txv_likes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="4dp"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        app:drawableStartCompat="@drawable/ic_favorite"
-                        app:layout_constraintEnd_toStartOf="@+id/txv_posts_count"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toStartOf="@id/gl_start"
-                        app:layout_constraintTop_toTopOf="@+id/txv_posts_count"
-                        tools:text="56 likes" />
-
-                    <TextView
-                        android:id="@+id/txv_followers"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="4dp"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        app:drawableStartCompat="@drawable/ic_follower"
-                        app:drawableTint="@color/purple_700"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/txv_posts_count"
-                        app:layout_constraintTop_toTopOf="@+id/txv_posts_count"
-                        tools:text="247 followers" />
-
-                    <TextView
-                        android:id="@+id/txv_posts_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:drawablePadding="4dp"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        app:drawableStartCompat="@drawable/ic_article"
-                        app:layout_constraintEnd_toStartOf="@+id/txv_followers"
-                        app:layout_constraintHorizontal_bias="0.5"
-                        app:layout_constraintStart_toEndOf="@+id/txv_likes"
-                        app:layout_constraintTop_toBottomOf="@+id/txv_reputation"
-                        tools:text="36 posts" />
-
-                    <TextView
-                        android:id="@+id/txv_description"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="16dp"
-                        android:gravity="center"
-                        android:maxLines="10"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/gl_end"
-                        app:layout_constraintStart_toStartOf="@+id/gl_start"
-                        app:layout_constraintTop_toBottomOf="@+id/txv_posts_count"
-                        tools:text="@tools:sample/lorem/random" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <Spinner
-                android:id="@+id/sp_sort_by"
+            <ProgressBar
+                android:id="@+id/pb_loading_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:entries="@array/sort_by"
-                app:layout_constraintEnd_toEndOf="@id/tl_posts"
-                app:layout_constraintTop_toBottomOf="@+id/mcv_user_details" />
+                android:layout_centerInParent="true" />
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tl_posts"
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/btn_retry_user"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sp_sort_by"
-                app:tabIndicatorColor="@null"
-                app:tabMode="auto"
-                app:tabRippleColor="@null"
-                app:tabSelectedTextColor="@color/purple_700"
-                app:tabTextColor="#853700B3" />
+                android:layout_below="@id/txv_error_user"
+                android:layout_centerHorizontal="true"
+                android:text="Retry" />
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/vp_posts"
-                android:layout_width="match_parent"
-                android:layout_height="256dp"
-                app:layout_constraintTop_toBottomOf="@id/tl_posts" />
+            <TextView
+                android:id="@+id/txv_error_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="Something went wrong" />
+        </RelativeLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
-</ScrollView>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_user_details"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:translationZ="8dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/txv_description"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
+
+        <ImageView
+            android:id="@+id/imv_banner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:elevation="20dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="@id/txv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#80000000"
+            android:elevation="20dp"
+            app:layout_constraintBottom_toBottomOf="@id/imv_banner"
+            app:layout_constraintEnd_toEndOf="@id/imv_banner"
+            app:layout_constraintStart_toStartOf="@id/imv_banner"
+            app:layout_constraintTop_toTopOf="@id/imv_banner" />
+
+        <ImageView
+            android:id="@+id/imv_profile"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginTop="32dp"
+            android:elevation="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/gl_end"
+            app:layout_constraintStart_toStartOf="@+id/gl_start"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_account_circle" />
+
+        <ImageView
+            android:id="@+id/imv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:elevation="20dp"
+            app:layout_constraintStart_toStartOf="@+id/gl_start"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_arrow_back"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/txv_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_btn_login"
+            android:elevation="20dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="4dp"
+            android:text="Follow"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/gl_end"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txv_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/gl_end"
+            app:layout_constraintStart_toStartOf="@+id/gl_start"
+            app:layout_constraintTop_toBottomOf="@+id/imv_profile"
+            tools:text="John Wayne Smith" />
+
+        <TextView
+            android:id="@+id/txv_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/gl_end"
+            app:layout_constraintStart_toStartOf="@+id/gl_start"
+            app:layout_constraintTop_toBottomOf="@+id/txv_name"
+            tools:text="Junior Android Developer, Trader, Businessman" />
+
+        <TextView
+            android:id="@+id/txv_reputation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="8dp"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:drawableStartCompat="@drawable/ic_school"
+            app:drawableTint="@color/black"
+            app:layout_constraintEnd_toStartOf="@+id/gl_end"
+            app:layout_constraintStart_toStartOf="@+id/gl_start"
+            app:layout_constraintTop_toBottomOf="@+id/imv_banner"
+            tools:text="248 reputation" />
+
+        <TextView
+            android:id="@+id/txv_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="4dp"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            app:drawableStartCompat="@drawable/ic_favorite"
+            app:layout_constraintEnd_toStartOf="@+id/txv_posts_count"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@id/gl_start"
+            app:layout_constraintTop_toTopOf="@+id/txv_posts_count"
+            tools:text="56 likes" />
+
+        <TextView
+            android:id="@+id/txv_followers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="4dp"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            app:drawableStartCompat="@drawable/ic_follower"
+            app:drawableTint="@color/purple_700"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/gl_end"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/txv_posts_count"
+            app:layout_constraintTop_toTopOf="@+id/txv_posts_count"
+            tools:text="247 followers" />
+
+        <TextView
+            android:id="@+id/txv_posts_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:drawablePadding="4dp"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            app:drawableStartCompat="@drawable/ic_article"
+            app:layout_constraintEnd_toStartOf="@+id/txv_followers"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/txv_likes"
+            app:layout_constraintTop_toBottomOf="@+id/txv_reputation"
+            tools:text="36 posts" />
+
+        <TextView
+            android:id="@+id/txv_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:elevation="20dp"
+            android:gravity="center"
+            android:maxLines="10"
+            app:layout_constraintEnd_toStartOf="@+id/gl_end"
+            app:layout_constraintStart_toStartOf="@+id/gl_start"
+            app:layout_constraintTop_toBottomOf="@id/txv_posts_count"
+            tools:text="@tools:sample/lorem/random" />
+
+        <Spinner
+            android:id="@+id/sp_sort_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:entries="@array/sort_by"
+            app:layout_constraintEnd_toEndOf="@id/tl_posts"
+            app:layout_constraintTop_toBottomOf="@+id/mcv_user_details" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_posts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sp_sort_by"
+            app:tabIndicatorColor="@null"
+            app:tabMode="auto"
+            app:tabRippleColor="@null"
+            app:tabSelectedTextColor="@color/purple_700"
+            app:tabTextColor="#853700B3" />
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_posts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tl_posts" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+</com.google.android.material.card.MaterialCardView>

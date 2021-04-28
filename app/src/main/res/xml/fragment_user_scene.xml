@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="2000"
+        motion:motionInterpolator="linear">
+        <KeyFrameSet></KeyFrameSet>
+        <OnSwipe motion:touchAnchorId="@id/vp_posts" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start"></ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/imv_profile"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            motion:layout_constraintBottom_toBottomOf="@id/imv_banner"
+            motion:layout_constraintStart_toEndOf="@+id/imv_back"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@+id/txv_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            motion:layout_constraintBottom_toBottomOf="@+id/imv_profile"
+            motion:layout_constraintEnd_toEndOf="@id/gl_end"
+            motion:layout_constraintStart_toEndOf="@+id/imv_profile"
+            motion:layout_constraintTop_toTopOf="@+id/imv_profile" />
+        <Constraint
+            android:id="@+id/txv_title"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:visibility="invisible"
+            motion:layout_constraintEnd_toStartOf="@+id/gl_end"
+            motion:layout_constraintStart_toStartOf="@+id/gl_start"
+            motion:layout_constraintTop_toBottomOf="@+id/txv_name" />
+        <Constraint
+            android:id="@+id/txv_reputation"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:visibility="invisible"
+            motion:layout_constraintEnd_toStartOf="@+id/gl_end"
+            motion:layout_constraintStart_toStartOf="@+id/gl_start"
+            motion:layout_constraintTop_toBottomOf="@+id/imv_banner" />
+        <Constraint
+            android:id="@+id/txv_likes"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:visibility="invisible"
+            motion:layout_constraintEnd_toStartOf="@+id/txv_posts_count"
+            motion:layout_constraintHorizontal_bias="0.5"
+            motion:layout_constraintStart_toStartOf="@id/gl_start"
+            motion:layout_constraintTop_toTopOf="@+id/txv_posts_count" />
+        <Constraint
+            android:id="@+id/txv_posts_count"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:visibility="invisible"
+            motion:layout_constraintEnd_toStartOf="@+id/txv_followers"
+            motion:layout_constraintHorizontal_bias="0.5"
+            motion:layout_constraintStart_toEndOf="@+id/txv_likes"
+            motion:layout_constraintTop_toBottomOf="@+id/txv_reputation" />
+        <Constraint
+            android:id="@+id/txv_followers"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:visibility="invisible"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintEnd_toStartOf="@+id/gl_end"
+            motion:layout_constraintHorizontal_bias="0.5"
+            motion:layout_constraintStart_toEndOf="@+id/txv_posts_count"
+            motion:layout_constraintTop_toTopOf="@+id/txv_posts_count" />
+        <Constraint
+            android:id="@+id/txv_description"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:visibility="invisible"
+            motion:layout_constraintEnd_toStartOf="@+id/gl_end"
+            motion:layout_constraintStart_toStartOf="@+id/gl_start"
+            motion:layout_constraintTop_toBottomOf="@id/txv_posts_count" />
+        <Constraint
+            android:id="@+id/txv_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleX="0"
+            android:scaleY="0"
+            android:visibility="invisible"
+            motion:layout_constraintEnd_toStartOf="@+id/gl_end"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@+id/imv_banner"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            motion:layout_constraintEnd_toEndOf="parent"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toTopOf="parent" />
+        <Constraint
+            android:id="@+id/imv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            motion:layout_constraintBottom_toBottomOf="@+id/imv_profile"
+            motion:layout_constraintStart_toStartOf="@+id/gl_start"
+            motion:layout_constraintTop_toTopOf="@+id/imv_profile" />
+    </ConstraintSet>
+</MotionScene>
