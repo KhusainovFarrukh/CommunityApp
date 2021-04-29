@@ -93,7 +93,7 @@ interface CommunityApiService {
     ): Topic
 
 	//function to get posts of topic (with paging)
-	@GET("api/v1/topics/{topicId}/posts?limit=20")
+	@GET("api/v1/topics/{topicId}/posts")
 	suspend fun getPostsOfTopic(
         @Path("topicId") topicId: String,
         @Query("page") page: Int = 1,

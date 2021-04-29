@@ -47,8 +47,8 @@ class TopicViewModel(private val topicId: String, private val repository: Reposi
 
 			repository.getTopic(topicId).let { dataWrapper ->
 				when (dataWrapper) {
-                    is DataWrapper.Success -> _topicLiveData.postValue(dataWrapper.data)
-                    is DataWrapper.Error -> _errorTopic.postValue(dataWrapper.message)
+					is DataWrapper.Success -> _topicLiveData.postValue(dataWrapper.data)
+					is DataWrapper.Error -> _errorTopic.postValue(dataWrapper.message)
 				}
 			}
 
@@ -58,6 +58,8 @@ class TopicViewModel(private val topicId: String, private val repository: Reposi
 
 	//fun to sort posts of topic
 	fun sortPosts(sortBy: String) {
-		_sortBy.value = sortBy
+		if (_sortBy.value != sortBy) {
+			_sortBy.postValue(sortBy)
+		}
 	}
 }

@@ -121,6 +121,8 @@ class TopicFragment : Fragment() {
 		//observe posts' loading state
 		viewLifecycleOwner.lifecycleScope.launch {
 			postsOfTopicAdapter.loadStateFlow.collectLatest { loadStates ->
+				binding.rlLoadingPosts.isVisible =
+					loadStates.refresh is LoadState.Loading || loadStates.refresh is LoadState.Error
 				binding.pbLoadingPosts.isVisible = loadStates.refresh is LoadState.Loading
 				binding.btnRetryArticles.isVisible = loadStates.refresh is LoadState.Error
 				binding.txvErrorArticles.isVisible = loadStates.refresh is LoadState.Error
