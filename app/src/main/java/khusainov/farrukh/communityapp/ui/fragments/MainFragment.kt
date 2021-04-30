@@ -115,9 +115,11 @@ class MainFragment : Fragment() {
 			isLoadingTopics.observe(viewLifecycleOwner) {
 				binding.pbLoadingTopics.isVisible = it
 				if (topicAdapter.currentList.isNullOrEmpty()) {
+					binding.rlLoadingTopics.isVisible = true
 					binding.txvErrorTopics.isVisible = !it
 					binding.btnRetryTopics.isVisible = !it
 				} else {
+					binding.rlLoadingTopics.isVisible = it
 					binding.txvErrorTopics.isVisible = false
 					binding.btnRetryTopics.isVisible = false
 				}
@@ -128,7 +130,7 @@ class MainFragment : Fragment() {
 				topicAdapter.submitList(it)
 			}
 
-			//observe error while initializing tpoics
+			//observe error while initializing topics
 			errorTopics.observe(viewLifecycleOwner) {
 				binding.txvErrorTopics.text = it
 			}
@@ -143,6 +145,8 @@ class MainFragment : Fragment() {
 			//observe articles' loading state
 			viewLifecycleOwner.lifecycleScope.launch {
 				articleAdapter.loadStateFlow.collectLatest { loadStates ->
+					binding.rlLoadingPosts.isVisible =
+						loadStates.refresh is LoadState.Loading || loadStates.refresh is LoadState.Error
 					binding.pbLoadingArticles.isVisible = loadStates.refresh is LoadState.Loading
 					binding.btnRetryArticles.isVisible = loadStates.refresh is LoadState.Error
 					binding.txvErrorArticles.isVisible = loadStates.refresh is LoadState.Error

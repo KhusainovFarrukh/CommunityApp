@@ -103,6 +103,7 @@ class NotificationAdapter(private val itemClick: (Notification) -> Unit) :
 					)
 				}
 
+				//TODO throwing exception if objects is empty
 				KEY_NOTIFICATION_REPLY -> {
 					txvNotificationText.text = itemView.context.getString(
 						R.string.notification_reply,

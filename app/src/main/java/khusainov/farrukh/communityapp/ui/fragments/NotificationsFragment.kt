@@ -127,6 +127,7 @@ class NotificationsFragment : Fragment() {
 				activityListener?.showUserFragment(notification.from[0].id)
 			}
 
+			//TODO throwing exception if objects is empty. See NotificationAdapter
 			KEY_NOTIFICATION_REPLY -> {
 				if (notification.objects[0].onlyParentId()) {
 					activityListener?.showArticleDetailsFragment(notification.objects[0].id)
