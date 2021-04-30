@@ -1,6 +1,5 @@
 package khusainov.farrukh.communityapp.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Html
 import android.view.*
@@ -8,6 +7,7 @@ import android.widget.AdapterView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
@@ -15,11 +15,9 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
 import khusainov.farrukh.communityapp.ui.adapters.viewpager.ViewPagerAdapter
-import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
-import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.UserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.UserViewModel
 
@@ -30,12 +28,10 @@ class UserFragment : Fragment() {
 
 	private var _binding: FragmentUserBinding? = null
 	private val binding get() = _binding!!
-	private var activityListener: HomeActivityListener? = null
 	private val pagerAdapter by lazy { ViewPagerAdapter(userId, childFragmentManager) }
 
 	private val userId by lazy {
-		arguments?.getString(KEY_USER_ID)
-			?: throw NullPointerException(getString(R.string.no_user_id))
+		UserFragmentArgs.fromBundle(requireArguments()).userId
 	}
 
 	private val userViewModel by lazy {
@@ -64,21 +60,6 @@ class UserFragment : Fragment() {
 	override fun onDestroyView() {
 		super.onDestroyView()
 		_binding = null
-	}
-
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		if (context is HomeActivityListener) {
-			activityListener = context
-		} else {
-			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
-				context.toString()))
-		}
-	}
-
-	override fun onDetach() {
-		super.onDetach()
-		activityListener = null
 	}
 
 	private fun initViewPagerAdapter() = with(binding) {
@@ -152,6 +133,9 @@ class UserFragment : Fragment() {
 		//TODO set all click listeners in the fragment
 		btnRetryUser.setOnClickListener {
 			userViewModel.initUser()
+		}
+		imvBack.setOnClickListener {
+			binding.root.findNavController().popBackStack()
 		}
 	}
 

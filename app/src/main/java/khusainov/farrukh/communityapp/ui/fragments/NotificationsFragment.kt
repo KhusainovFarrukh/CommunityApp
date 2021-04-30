@@ -1,6 +1,5 @@
 package khusainov.farrukh.communityapp.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -8,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
@@ -20,7 +20,6 @@ import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_US
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST_UPVOTE
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_REPLY
-import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.NotificationsVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.NotificationsViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +29,7 @@ class NotificationsFragment : Fragment() {
 
 	private var _binding: FragmentNotificationsBinding? = null
 	private val binding get() = _binding!!
-	private var activityListener: HomeActivityListener? = null
+	private val navController by lazy { binding.root.findNavController() }
 
 	private val notificationAdapter by lazy {
 		NotificationAdapter { notification -> onNotificationClick(notification) }
@@ -61,21 +60,6 @@ class NotificationsFragment : Fragment() {
 	override fun onDestroyView() {
 		super.onDestroyView()
 		_binding = null
-	}
-
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		if (context is HomeActivityListener) {
-			activityListener = context
-		} else {
-			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
-				context.toString()))
-		}
-	}
-
-	override fun onDetach() {
-		super.onDetach()
-		activityListener = null
 	}
 
 	private fun initRecyclerView() = with(binding) {
@@ -120,25 +104,29 @@ class NotificationsFragment : Fragment() {
 		when (notification.verb) {
 
 			KEY_NOTIFICATION_POST -> {
-				activityListener?.showArticleDetailsFragment(notification.objects[0].id)
+				navController.navigate(NotificationsFragmentDirections.actionNotificationsFragmentToArticleFragment(
+					notification.objects[0].id))
 			}
 
 			KEY_NOTIFICATION_POST_UPVOTE -> {
-				activityListener?.showUserFragment(notification.from[0].id)
+				navController.navigate(NotificationsFragmentDirections.actionNotificationsFragmentToUserFragment(
+					notification.from[0].id))
 			}
 
 			//TODO throwing exception if objects is empty. See NotificationAdapter
 			KEY_NOTIFICATION_REPLY -> {
 				if (notification.objects[0].onlyParentId()) {
-					activityListener?.showArticleDetailsFragment(notification.objects[0].id)
+					navController.navigate(NotificationsFragmentDirections.actionNotificationsFragmentToArticleFragment(
+						notification.objects[0].id))
 				} else {
-					activityListener?.showArticleDetailsFragment(Gson().fromJson(notification.objects[0].parent,
-						Post::class.java).id)
+					navController.navigate(NotificationsFragmentDirections.actionNotificationsFragmentToArticleFragment(
+						Gson().fromJson(notification.objects[0].parent, Post::class.java).id))
 				}
 			}
 
 			KEY_NOTIFICATION_FOLLOW_USER -> {
-				activityListener?.showUserFragment(notification.from[0].id)
+				navController.navigate(NotificationsFragmentDirections.actionNotificationsFragmentToUserFragment(
+					notification.from[0].id))
 			}
 
 			else -> {

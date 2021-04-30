@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="khusainov.farrukh.communityapp.ui.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_articleFragment"
+            app:destination="@id/articleFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_userFragment"
+            app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_topicFragment"
+            app:destination="@id/topicFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_notificationsFragment"
+            app:destination="@id/notificationsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_loginDialogFragment"
+            app:destination="@id/loginDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/topicFragment"
+        android:name="khusainov.farrukh.communityapp.ui.fragments.TopicFragment"
+        android:label="TopicFragment"
+        tools:layout="@layout/fragment_topic">
+        <argument
+            android:name="topicId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_topicFragment_to_articleFragment"
+            app:destination="@id/articleFragment" />
+        <action
+            android:id="@+id/action_topicFragment_self"
+            app:destination="@id/topicFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="khusainov.farrukh.communityapp.ui.fragments.UserFragment"
+        android:label="UserFragment"
+        tools:layout="@layout/fragment_user">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_userFragment_to_articleFragment"
+            app:destination="@id/articleFragment" />
+        <action
+            android:id="@+id/action_userFragment_to_topicFragment"
+            app:destination="@id/topicFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/articleFragment"
+        android:name="khusainov.farrukh.communityapp.ui.fragments.ArticleFragment"
+        android:label="ArticleFragment"
+        tools:layout="@layout/fragment_article_details">
+        <argument
+            android:name="articleId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_articleFragment_to_topicFragment"
+            app:destination="@id/topicFragment" />
+        <action
+            android:id="@+id/action_articleFragment_to_userFragment"
+            app:destination="@id/userFragment" />
+        <action
+            android:id="@+id/action_articleFragment_to_reportDialogFragment"
+            app:destination="@id/reportDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationsFragment"
+        android:name="khusainov.farrukh.communityapp.ui.fragments.NotificationsFragment"
+        android:label="NotificationsFragment"
+        tools:layout="@layout/fragment_notifications">
+        <action
+            android:id="@+id/action_notificationsFragment_to_articleFragment"
+            app:destination="@id/articleFragment" />
+        <action
+            android:id="@+id/action_notificationsFragment_to_userFragment"
+            app:destination="@id/userFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/loginDialogFragment"
+        android:name="khusainov.farrukh.communityapp.ui.fragments.LoginDialogFragment"
+        android:label="LoginDialogFragment"
+        tools:layout="@layout/fragment_dialog_login" />
+    <dialog
+        android:id="@+id/reportDialogFragment"
+        android:name="khusainov.farrukh.communityapp.ui.fragments.ReportDialogFragment"
+        android:label="ReportDialogFragment"
+        tools:layout="@layout/fragment_dialog_report" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </dialog>
+</navigation>

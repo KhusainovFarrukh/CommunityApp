@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutDescription="@xml/fragment_articles_list_scene"
-    tools:context=".ui.fragments.MainFragment">
+    app:layoutDescription="@xml/fragment_home_scene"
+    tools:context=".ui.fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_start"

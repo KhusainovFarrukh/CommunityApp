@@ -1,6 +1,5 @@
 package khusainov.farrukh.communityapp.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.AdapterView
@@ -8,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import coil.load
 import khusainov.farrukh.communityapp.R
@@ -15,11 +15,9 @@ import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfAdapter
-import khusainov.farrukh.communityapp.utils.Constants.KEY_TOPIC_ID
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
-import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.TopicVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.TopicViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -32,15 +30,23 @@ class TopicFragment : Fragment() {
 
 	private var _binding: FragmentTopicBinding? = null
 	private val binding get() = _binding!!
-	private var activityListener: HomeActivityListener? = null
+	private val navController by lazy { binding.root.findNavController() }
+
 	private val postsOfTopicAdapter by lazy {
-		PostsOfAdapter({ topicId -> activityListener?.showTopicFragment(topicId) },
-			{ postId -> activityListener?.showArticleDetailsFragment(postId) })
+		PostsOfAdapter(
+			{ topicId ->
+				navController.navigate(TopicFragmentDirections.actionTopicFragmentSelf(topicId))
+			},
+
+			{ postId ->
+				navController.navigate(TopicFragmentDirections.actionTopicFragmentToArticleFragment(
+					postId))
+			}
+		)
 	}
 
 	private val topicId by lazy {
-		arguments?.getString(KEY_TOPIC_ID)
-			?: throw NullPointerException(getString(R.string.no_topic_id))
+		TopicFragmentArgs.fromBundle(requireArguments()).topicId
 	}
 
 	private val topicViewModel by lazy {
@@ -69,21 +75,6 @@ class TopicFragment : Fragment() {
 	override fun onDestroyView() {
 		super.onDestroyView()
 		_binding = null
-	}
-
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		if (context is HomeActivityListener) {
-			activityListener = context
-		} else {
-			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
-				context.toString()))
-		}
-	}
-
-	override fun onDetach() {
-		super.onDetach()
-		activityListener = null
 	}
 
 	private fun initRecyclerView() = with(binding) {
@@ -149,6 +140,9 @@ class TopicFragment : Fragment() {
 		}
 		btnRetryArticles.setOnClickListener {
 			postsOfTopicAdapter.retry()
+		}
+		imvBack.setOnClickListener {
+			navController.popBackStack()
 		}
 		//TODO set all click listeners in the fragment
 	}

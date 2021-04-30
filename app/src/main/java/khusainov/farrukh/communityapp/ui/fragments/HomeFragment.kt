@@ -10,13 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.User
-import khusainov.farrukh.communityapp.databinding.FragmentArticlesListBinding
+import khusainov.farrukh.communityapp.databinding.FragmentHomeBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.*
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
@@ -26,18 +27,24 @@ import khusainov.farrukh.communityapp.vm.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class MainFragment : Fragment() {
+class HomeFragment : Fragment() {
 
-	private var _binding: FragmentArticlesListBinding? = null
+	private var _binding: FragmentHomeBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
+	private val navController by lazy { Navigation.findNavController(binding.root) }
 
 	private val articleAdapter by lazy {
-		ArticleAdapter { articleId -> activityListener?.showArticleDetailsFragment(articleId) }
+		ArticleAdapter { articleId ->
+			navController.navigate(HomeFragmentDirections.actionHomeFragmentToArticleFragment(
+				articleId))
+		}
 	}
 
 	private val topicAdapter by lazy {
-		TopicAdapter { topicId -> activityListener?.showTopicFragment(topicId) }
+		TopicAdapter { topicId ->
+			navController.navigate(HomeFragmentDirections.actionHomeFragmentToTopicFragment(topicId))
+		}
 	}
 
 	private val mainViewModel by lazy {
@@ -54,7 +61,7 @@ class MainFragment : Fragment() {
 		container: ViewGroup?,
 		savedInstanceState: Bundle?,
 	): View {
-		_binding = FragmentArticlesListBinding.inflate(inflater)
+		_binding = FragmentHomeBinding.inflate(inflater)
 		return binding.root
 	}
 
@@ -163,10 +170,10 @@ class MainFragment : Fragment() {
 
 	private fun setClickListeners() = with(binding) {
 		btnLogin.setOnClickListener {
-			activityListener?.showLoginDialog()
+			navController.navigate(HomeFragmentDirections.actionHomeFragmentToLoginDialogFragment())
 		}
 		imvNotif.setOnClickListener {
-			activityListener?.showNotificationsFragment()
+			navController.navigate(HomeFragmentDirections.actionHomeFragmentToNotificationsFragment())
 		}
 		btnRetryArticles.setOnClickListener {
 			articleAdapter.retry()
@@ -175,8 +182,8 @@ class MainFragment : Fragment() {
 			mainViewModel.initTopics()
 		}
 		imvProfile.setOnClickListener {
-			activityListener?.getUserId()?.let {
-				activityListener?.showUserFragment(it)
+			activityListener?.getUserId()?.let { userId ->
+				navController.navigate(HomeFragmentDirections.actionHomeFragmentToUserFragment(userId))
 			}
 		}
 	}

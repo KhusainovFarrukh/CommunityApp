@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -18,9 +19,9 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.*
-import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
-import khusainov.farrukh.communityapp.utils.listeners.*
+import khusainov.farrukh.communityapp.utils.listeners.CommentClickListener
+import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.ArticleVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ArticleViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -32,11 +33,11 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	private var _binding: FragmentArticleDetailsBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
-	private val commentAdapter = CommentAdapter(this)
+	private val commentAdapter by lazy { CommentAdapter(this) }
+	private val navController by lazy { binding.root.findNavController() }
 
 	private val articleId by lazy {
-		arguments?.getString(KEY_ARTICLE_ID)
-			?: throw NullPointerException(getString(R.string.no_article_id))
+		ArticleFragmentArgs.fromBundle(requireArguments()).articleId
 	}
 
 	private val articleViewModel: ArticleViewModel by lazy {
@@ -45,7 +46,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	}
 
 	private val topicOfArticleAdapter = TopicOfArticleAdapter { topicId ->
-		activityListener?.showTopicFragment(topicId)
+		navController.navigate(ArticleFragmentDirections.actionArticleFragmentToTopicFragment(
+			topicId))
 	}
 
 	override fun onCreateView(
@@ -167,7 +169,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
 			binding.txvErrorArticle.text = it
 		}
 
-		//observe other errors while making some requests
+		//observe other errors while making some requests//		activityListener?.showUserFragment(userId)
+
 		otherError.observe(viewLifecycleOwner) { otherError ->
 			(Snackbar.make(binding.root, otherError.message, Snackbar.LENGTH_LONG)
 				.setAction(getString(R.string.retry)) {
@@ -255,10 +258,11 @@ class ArticleFragment : Fragment(), CommentClickListener {
 			activityListener?.shareIntent(article)
 		}
 		txvReportArticle.setOnClickListener {
-			activityListener?.showReportDialog(article.id)
+			navController.navigate(ArticleFragmentDirections.actionArticleFragmentToReportDialogFragment(article.id))
 		}
 		txvSeeProfile.setOnClickListener {
-			activityListener?.showUserFragment(article.user!!.id)
+			navController.navigate(ArticleFragmentDirections.actionArticleFragmentToUserFragment(
+				article.user!!.id))
 		}
 	}
 
@@ -267,7 +271,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	}
 
 	override fun onCommentAuthorClick(userId: String) {
-		activityListener?.showUserFragment(userId)
+		navController.navigate(ArticleFragmentDirections.actionArticleFragmentToUserFragment(userId))
 	}
 
 	override fun onReplyClick(body: String, replyTo: String) {
@@ -275,7 +279,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	}
 
 	override fun onReportClick(commentId: String) {
-		activityListener?.showReportDialog(commentId)
+		navController.navigate(ArticleFragmentDirections.actionArticleFragmentToReportDialogFragment(commentId))
 	}
 
 	override fun onDeleteCommentClick(commentId: String) {

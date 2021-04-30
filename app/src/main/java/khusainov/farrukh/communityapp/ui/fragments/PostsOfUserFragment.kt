@@ -1,12 +1,12 @@
 package khusainov.farrukh.communityapp.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.api.RetrofitInstance
@@ -17,7 +17,6 @@ import khusainov.farrukh.communityapp.ui.adapters.recycler.PostsOfAdapter
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SORT_BY
 import khusainov.farrukh.communityapp.utils.Constants.KEY_TYPE
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
-import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.PostsOfUserVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.PostsOfUserViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -28,12 +27,22 @@ import kotlinx.coroutines.launch
  **/
 class PostsOfUserFragment : Fragment() {
 
-	private var activityListener: HomeActivityListener? = null
 	private var _binding: FragmentListPostsOfUserBinding? = null
 	private val binding get() = _binding!!
+	private val navController by lazy { binding.root.findNavController() }
+
 	private val postsOfUserAdapter by lazy {
-		PostsOfAdapter({ topicId -> activityListener?.showTopicFragment(topicId) },
-			{ postId -> activityListener?.showArticleDetailsFragment(postId) })
+		PostsOfAdapter(
+			{ topicId ->
+				navController.navigate(UserFragmentDirections.actionUserFragmentToTopicFragment(
+					topicId))
+			},
+
+			{ postId ->
+				navController.navigate(UserFragmentDirections.actionUserFragmentToArticleFragment(
+					postId))
+			}
+		)
 	}
 
 	private val userId by lazy {
@@ -125,20 +134,5 @@ class PostsOfUserFragment : Fragment() {
 	override fun onDestroyView() {
 		super.onDestroyView()
 		_binding = null
-	}
-
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		if (context is HomeActivityListener) {
-			activityListener = context
-		} else {
-			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
-				context.toString()))
-		}
-	}
-
-	override fun onDetach() {
-		super.onDetach()
-		activityListener = null
 	}
 }
