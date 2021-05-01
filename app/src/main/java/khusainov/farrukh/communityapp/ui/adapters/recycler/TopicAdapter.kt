@@ -2,6 +2,7 @@ package khusainov.farrukh.communityapp.ui.adapters.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -35,6 +36,9 @@ class TopicAdapter(private val itemClick: (String) -> Unit) :
 		}
 
 		fun onBindTopic(topic: Topic) = with(binding) {
+
+			root.startAnimation(AnimationUtils.loadAnimation(root.context, R.anim.enlarge_with_alpha))
+
 			txvTitle.text = topic.name
 			txvPosts.text = topic.stats.posts.toString()
 			imvIcon.load(topic.picture) {

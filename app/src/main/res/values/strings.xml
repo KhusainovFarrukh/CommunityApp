@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">CommunityApp</string>
 
-    <string name="notification_post">%s %s ni chop etdi.</string>
+    <string name="notification_post">%s \"%s\" ni chop etdi.</string>
     <string name="notification_follow_user">%s sizga yozildi.</string>
-    <string name="notification_post_upvote">%s %s ga layk bosdi.</string>
-    <string name="notification_reply">%s %s ni sharhladi: \n%s.</string>
+    <string name="notification_post_upvote">%s \"%s\" ga layk bosdi.</string>
+    <string name="notification_reply">%s \"%s\" ni sharhladi: \n%s.</string>
     <string name="notification_other">%s turidagi xabarnoma. Dastur muallifiga xabar bering.</string>
 
-    <string name="share_article">%s yozgan %s nomli maqolani o`qib ko`ring: \n%s</string>
+    <string name="share_article">%s yozgan \"%s\" nomli maqolani o`qib ko`ring: \n%s</string>
     <string name="unknown_article">Noma`lum maqola</string>
     <string name="unknown_author">Noma`lum muallif</string>
     <string name="comment">Komment</string>
@@ -35,12 +35,12 @@
     <string name="done">Bajarildi</string>
     <string name="count_post">%d maqola</string>
     <string name="count_reputation">%d reputatsiya</string>
-    <string name="unfollow">Obunani bekor qilish</string>
+    <string name="unfollow">Bekor qilish</string>
     <string name="follow">Obuna bo`lish</string>
     <string name="other_comments">Yana %d komment mavjud</string>
     <string name="hashtag" translatable="false">#%s</string>
     <string name="reply_to_comment">Kommentga javoban:</string>
-    <string name="reply_to">\"%s ga javoban:\"</string>
+    <string name="reply_to">\"%s\" ga javoban:</string>
 
     <string-array name="report_types_values">
         <item>Harrasment</item>

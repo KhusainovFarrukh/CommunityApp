@@ -2,6 +2,7 @@ package khusainov.farrukh.communityapp.ui.adapters.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +39,9 @@ class ArticleAdapter(private val itemClick: (String) -> Unit) :
 		}
 
 		fun onBindArticle(article: Post) = with(binding) {
+
+			root.startAnimation(AnimationUtils.loadAnimation(root.context, R.anim.enlarge_with_alpha))
+
 			txvTitle.text = article.title?.trim()
 			txvAuthor.text = article.user?.profile?.name?.trim()
 				?: root.context.getString(R.string.unknown_author)

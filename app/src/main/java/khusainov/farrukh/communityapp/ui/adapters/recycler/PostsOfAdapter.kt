@@ -3,6 +3,7 @@ package khusainov.farrukh.communityapp.ui.adapters.recycler
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
@@ -33,6 +34,9 @@ class PostsOfAdapter(
 		RecyclerView.ViewHolder(binding.root) {
 
 		fun onBindArticle(article: Post) = with(binding) {
+
+			root.startAnimation(AnimationUtils.loadAnimation(root.context, R.anim.enlarge_with_alpha))
+
 			root.setOnClickListener {
 				if (article.type == KEY_RESPONSE) {
 					if (article.onlyParentId()) {

@@ -3,6 +3,7 @@ package khusainov.farrukh.communityapp.ui.adapters.recycler
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +44,9 @@ class NotificationAdapter(private val itemClick: (Notification) -> Unit) :
 		}
 
 		fun onBindArticle(notification: Notification) = with(binding) {
+
+			root.startAnimation(AnimationUtils.loadAnimation(root.context, R.anim.left_to_right))
+
 			if (notification.isRead) {
 				txvNotificationText.typeface = Typeface.DEFAULT
 			} else {
@@ -103,7 +107,7 @@ class NotificationAdapter(private val itemClick: (Notification) -> Unit) :
 					)
 				}
 
-				//TODO throwing exception if objects is empty
+				//TODO notifications with empty objects???
 				KEY_NOTIFICATION_REPLY -> {
 					txvNotificationText.text = itemView.context.getString(
 						R.string.notification_reply,
@@ -113,13 +117,21 @@ class NotificationAdapter(private val itemClick: (Notification) -> Unit) :
 							root.context.getString(
 								R.string.unknown_author)
 						},
-						if (notification.objects[0].onlyParentId()) {
-							root.context.getString(R.string.unknown_article)
+						if (notification.objects.isNotEmpty()) {
+							if (notification.objects[0].onlyParentId()) {
+								root.context.getString(R.string.unknown_article)
+							} else {
+								Gson().fromJson(notification.objects[0].parent,
+									Post::class.java).title
+							}
 						} else {
-							Gson().fromJson(notification.objects[0].parent,
-								Post::class.java).title
+							root.context.getString(R.string.unknown_article)
 						},
-						notification.objects[0].summary
+						if (notification.objects.isNotEmpty()) {
+							notification.objects[0].summary
+						} else {
+							root.context.getString(R.string.unknown_article)
+						}
 					)
 
 					imvIcon.setImageDrawable(
