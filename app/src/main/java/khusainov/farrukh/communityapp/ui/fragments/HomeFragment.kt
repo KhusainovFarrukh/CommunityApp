@@ -19,6 +19,7 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.User
 import khusainov.farrukh.communityapp.databinding.FragmentHomeBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.*
+import khusainov.farrukh.communityapp.utils.comingSoon
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.LoginVMFactory
 import khusainov.farrukh.communityapp.vm.factories.MainVMFactory
@@ -183,9 +184,12 @@ class HomeFragment : Fragment() {
 		}
 		imvProfile.setOnClickListener {
 			activityListener?.getUserId()?.let { userId ->
-				navController.navigate(HomeFragmentDirections.actionHomeFragmentToUserFragment(userId))
+				navController.navigate(HomeFragmentDirections.actionHomeFragmentToUserFragment(
+					userId))
 			}
 		}
+		imvSearch.comingSoon()
+		imvCreatePost.comingSoon()
 	}
 
 	private fun setUserToViews(user: User) = with(binding) {

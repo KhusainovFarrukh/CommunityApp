@@ -20,6 +20,7 @@ import khusainov.farrukh.communityapp.data.models.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.adapters.recycler.*
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
+import khusainov.farrukh.communityapp.utils.comingSoon
 import khusainov.farrukh.communityapp.utils.listeners.CommentClickListener
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import khusainov.farrukh.communityapp.vm.factories.ArticleVMFactory
@@ -116,6 +117,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		btnRetryArticle.setOnClickListener {
 			articleViewModel.initArticle()
 		}
+		txvSeeStats.comingSoon()
 	}
 
 	private fun setObservers() = with(articleViewModel) {

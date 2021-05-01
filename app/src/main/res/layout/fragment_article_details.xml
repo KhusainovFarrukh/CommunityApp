@@ -84,7 +84,8 @@
                     android:id="@+id/txv_see_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="See profile"
+                    android:padding="8dp"
+                    android:text="@string/see_profile"
                     android:textColor="#1400FF"
                     android:textSize="12sp"
                     android:textStyle="italic"
@@ -107,7 +108,8 @@
                     android:id="@+id/txv_see_stats"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="See stats"
+                    android:padding="8dp"
+                    android:text="@string/see_stats"
                     android:textColor="#1400FF"
                     android:textSize="12sp"
                     android:textStyle="italic"
@@ -152,7 +154,7 @@
                     android:gravity="center_vertical"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="4dp"
-                    android:text="Share"
+                    android:text="@string/share"
                     android:textColor="@color/white"
                     app:drawableStartCompat="@drawable/ic_share"
                     app:drawableTint="@color/white"
@@ -266,7 +268,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="4dp"
-                    android:text="Like"
+                    android:text="@string/like"
                     android:textColor="@color/purple_700"
                     app:drawableStartCompat="@drawable/ic_favorite_border"
                     app:drawableTint="@color/purple_700"
@@ -285,7 +287,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="4dp"
-                    android:text="Report"
+                    android:text="@string/liked"
                     android:textColor="@color/purple_700"
                     app:drawableStartCompat="@drawable/ic_report"
                     app:layout_constraintBaseline_toBaselineOf="@id/txv_like_article"
@@ -311,7 +313,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txv_error_article"
                     android:layout_centerHorizontal="true"
-                    android:text="Retry"
+                    android:text="@string/retry"
                     android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/txv_error_article" />
 
@@ -322,7 +324,7 @@
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:text="Something went wrong"
+                    android:text="@string/something_went_wrong"
                     android:visibility="gone" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -350,7 +352,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="There is no comments yet..."
+                android:text="@string/there_is_no_comments_yet"
                 android:textColor="@color/black"
                 android:visibility="gone" />
 
@@ -372,7 +374,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/txv_error_comments"
                     android:layout_centerHorizontal="true"
-                    android:text="Retry"
+                    android:text="@string/retry"
                     android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@id/txv_error_comments" />
 
@@ -383,7 +385,7 @@
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:text="Something went wrong"
+                    android:text="@string/something_went_wrong"
                     android:visibility="gone" />
             </RelativeLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -411,7 +413,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
                     android:background="@null"
-                    android:hint="Type something..."
+                    android:hint="@string/type_something"
                     android:textColor="@color/black"
                     android:textColorHint="#99201C1C"
                     android:textSize="16sp"
@@ -429,7 +431,7 @@
                     android:background="@drawable/bg_btn_login"
                     android:paddingHorizontal="24dp"
                     android:paddingVertical="4dp"
-                    android:text="Send"
+                    android:text="@string/send"
                     android:textColor="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

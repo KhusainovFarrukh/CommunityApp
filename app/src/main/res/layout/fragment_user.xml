@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/txv_error_user"
             android:layout_centerHorizontal="true"
-            android:text="Retry"
+            android:text="@string/retry"
             android:visibility="gone" />
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:padding="8dp"
-            android:text="Something went wrong"
+            android:text="@string/something_went_wrong"
             android:visibility="gone" />
     </RelativeLayout>
 
@@ -126,7 +126,7 @@
             android:elevation="20dp"
             android:paddingHorizontal="16dp"
             android:paddingVertical="4dp"
-            android:text="Follow"
+            android:text="@string/follow"
             android:textColor="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/gl_end"
             app:layout_constraintTop_toTopOf="parent" />

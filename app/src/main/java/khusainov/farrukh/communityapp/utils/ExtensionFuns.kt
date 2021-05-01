@@ -1,7 +1,9 @@
 package khusainov.farrukh.communityapp.utils
 
 import android.text.Html
+import android.view.View
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.core.view.isVisible
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -84,5 +86,11 @@ fun ViewholderCommentBinding.setCommentToViews(
 			0,
 			0
 		)
+	}
+}
+
+fun View.comingSoon() {
+	setOnClickListener {
+		Toast.makeText(this.context, "Coming soon...", Toast.LENGTH_SHORT).show()
 	}
 }

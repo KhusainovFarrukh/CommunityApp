@@ -33,7 +33,7 @@
             android:id="@+id/btn_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kirish"
+            android:text="@string/login"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ProgressBar
@@ -92,15 +92,14 @@
 
     <ImageView
         android:id="@+id/imv_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
         android:layout_marginTop="16dp"
         android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="@+id/rl_login"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_foreground"
-        app:tint="@color/black" />
+        app:srcCompat="@drawable/omuc" />
 
     <TextView
         android:id="@+id/txv_slogan"
@@ -108,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:text="OMUC"
+        android:text="@string/omuc"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/rl_login"
@@ -121,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Bo`limlar"
+        android:text="@string/sections"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
@@ -144,7 +143,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Maqolalar"
+        android:text="@string/articles"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/gl_start"
@@ -187,7 +186,7 @@
             android:layout_below="@id/txv_error_topics"
             android:layout_centerHorizontal="true"
             android:layout_margin="16dp"
-            android:text="Retry"
+            android:text="@string/retry"
             android:visibility="gone" />
 
         <TextView
@@ -197,7 +196,7 @@
             android:layout_centerInParent="true"
             android:layout_margin="16dp"
             android:gravity="center"
-            android:text="Something went wrong"
+            android:text="@string/something_went_wrong"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -224,7 +223,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/txv_error_articles"
             android:layout_centerHorizontal="true"
-            android:text="Retry"
+            android:text="@string/retry"
             android:visibility="gone" />
 
         <TextView
@@ -234,7 +233,7 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:padding="8dp"
-            android:text="Something went wrong"
+            android:text="@string/something_went_wrong"
             android:visibility="gone" />
     </RelativeLayout>
 

@@ -19,7 +19,6 @@
     <string name="retry">Qayta urinish</string>
     <string name="liked">Layk bosilgan</string>
     <string name="like">Layk</string>
-
     <string name="count_comment">%d komment</string>
     <string name="count_view">%d ko`rish</string>
     <string name="count_like">%d layk</string>
@@ -41,6 +40,27 @@
     <string name="hashtag" translatable="false">#%s</string>
     <string name="reply_to_comment">Kommentga javoban:</string>
     <string name="reply_to">\"%s\" ga javoban:</string>
+
+    <string name="comuc_full">One Million Uzbek Coders Community</string>
+    <string name="see_profile">See profile</string>
+    <string name="see_stats">See stats</string>
+    <string name="share">Share</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="there_is_no_comments_yet">There is no comments yet…</string>
+    <string name="type_something">Type something…</string>
+    <string name="send">Send</string>
+    <string name="example_mail_com">example@mail.com</string>
+    <string name="example_password">*********</string>
+    <string name="login">Kirish</string>
+    <string name="type_of_report">Type of report:</string>
+    <string name="description">Description:</string>
+    <string name="some_description_for_report">Some description for report…</string>
+    <string name="report">Report</string>
+    <string name="cancel">Cancel</string>
+    <string name="omuc">OMUC</string>
+    <string name="sections">Bo`limlar</string>
+    <string name="articles">Maqolalar</string>
+    <string name="notifications">Xabarnomalar</string>
 
     <string-array name="report_types_values">
         <item>Harrasment</item>
