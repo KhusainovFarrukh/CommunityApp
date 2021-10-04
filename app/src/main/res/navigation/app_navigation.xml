@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="khusainov.farrukh.communityapp.ui.fragments.HomeFragment"
+        android:name="khusainov.farrukh.communityapp.ui.home.view.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
@@ -44,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/topicFragment"
-        android:name="khusainov.farrukh.communityapp.ui.fragments.TopicFragment"
+        android:name="khusainov.farrukh.communityapp.ui.topic_details.view.TopicFragment"
         android:label="TopicFragment"
         tools:layout="@layout/fragment_topic">
         <argument
@@ -67,7 +67,7 @@
     </fragment>
     <fragment
         android:id="@+id/userFragment"
-        android:name="khusainov.farrukh.communityapp.ui.fragments.UserFragment"
+        android:name="khusainov.farrukh.communityapp.ui.user.view.UserFragment"
         android:label="UserFragment"
         tools:layout="@layout/fragment_user">
         <argument
@@ -90,7 +90,7 @@
     </fragment>
     <fragment
         android:id="@+id/articleFragment"
-        android:name="khusainov.farrukh.communityapp.ui.fragments.ArticleFragment"
+        android:name="khusainov.farrukh.communityapp.ui.article_details.view.ArticleFragment"
         android:label="ArticleFragment"
         tools:layout="@layout/fragment_article_details">
         <argument
@@ -116,7 +116,7 @@
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="khusainov.farrukh.communityapp.ui.fragments.NotificationsFragment"
+        android:name="khusainov.farrukh.communityapp.ui.notifications.view.NotificationsFragment"
         android:label="NotificationsFragment"
         tools:layout="@layout/fragment_notifications">
         <action
@@ -136,12 +136,12 @@
     </fragment>
     <dialog
         android:id="@+id/loginDialogFragment"
-        android:name="khusainov.farrukh.communityapp.ui.fragments.LoginDialogFragment"
+        android:name="khusainov.farrukh.communityapp.ui.auth.view.LoginDialogFragment"
         android:label="LoginDialogFragment"
         tools:layout="@layout/fragment_dialog_login" />
     <dialog
         android:id="@+id/reportDialogFragment"
-        android:name="khusainov.farrukh.communityapp.ui.fragments.ReportDialogFragment"
+        android:name="khusainov.farrukh.communityapp.ui.article_details.view.ReportDialogFragment"
         android:label="ReportDialogFragment"
         tools:layout="@layout/fragment_dialog_report" >
         <argument

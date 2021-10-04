@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/fragment_home_scene"
-    tools:context=".ui.fragments.HomeFragment">
+    tools:context=".ui.home.view.HomeFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl_start"
