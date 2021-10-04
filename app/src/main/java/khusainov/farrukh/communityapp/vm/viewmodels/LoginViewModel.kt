@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import khusainov.farrukh.communityapp.data.models.DataWrapper
+import khusainov.farrukh.communityapp.data.DataWrapper
 import khusainov.farrukh.communityapp.data.models.OtherError
 import khusainov.farrukh.communityapp.data.models.SignInData
 import khusainov.farrukh.communityapp.data.models.User

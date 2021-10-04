@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import khusainov.farrukh.communityapp.data.models.DataWrapper
+import khusainov.farrukh.communityapp.data.DataWrapper
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.Dispatchers

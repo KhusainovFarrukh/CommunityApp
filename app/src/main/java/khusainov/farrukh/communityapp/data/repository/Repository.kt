@@ -3,6 +3,7 @@ package khusainov.farrukh.communityapp.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
+import khusainov.farrukh.communityapp.data.DataWrapper
 import khusainov.farrukh.communityapp.data.api.CommunityApiService
 import khusainov.farrukh.communityapp.data.models.*
 

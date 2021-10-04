@@ -2,7 +2,7 @@ package khusainov.farrukh.communityapp.vm.viewmodels
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import khusainov.farrukh.communityapp.data.models.DataWrapper
+import khusainov.farrukh.communityapp.data.DataWrapper
 import khusainov.farrukh.communityapp.data.models.Topic
 import khusainov.farrukh.communityapp.data.repository.Repository
 import kotlinx.coroutines.Dispatchers
