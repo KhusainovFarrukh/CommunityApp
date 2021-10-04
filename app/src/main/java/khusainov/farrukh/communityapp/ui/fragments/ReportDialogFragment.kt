@@ -2,10 +2,7 @@ package khusainov.farrukh.communityapp.ui.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
+import android.view.*
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -14,7 +11,6 @@ import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.models.ReportValue
 import khusainov.farrukh.communityapp.databinding.FragmentDialogReportBinding
-import khusainov.farrukh.communityapp.utils.Constants.KEY_ARTICLE_ID
 import khusainov.farrukh.communityapp.vm.factories.ReportVMFactory
 import khusainov.farrukh.communityapp.vm.viewmodels.ReportViewModel
 
@@ -24,8 +20,7 @@ class ReportDialogFragment : DialogFragment() {
 	private val binding get() = _binding!!
 
 	private val articleId by lazy {
-		arguments?.getString(KEY_ARTICLE_ID)
-			?: throw NullPointerException(getString(R.string.no_article_id))
+		ReportDialogFragmentArgs.fromBundle(requireArguments()).postId
 	}
 
 	private val reportViewModel by lazy {

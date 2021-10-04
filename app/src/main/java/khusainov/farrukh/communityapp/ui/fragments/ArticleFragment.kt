@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import android.webkit.WebSettings
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -181,7 +183,6 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		}
 	}
 
-	@SuppressLint("SetJavaScriptEnabled")
 	private fun setDataToViews(article: Post) = with(binding) {
 		setClickListenersAfterArticleInit(article)
 
@@ -204,28 +205,13 @@ class ArticleFragment : Fragment(), CommentClickListener {
 			)
 		}
 
-		//Replacing '#' from encoded version. Because there is a bug with WebView
-		val content = article.content
-			.replace("#", Uri.encode("#"))
+		if (articleViewModel.isFirstTime) {
+			wvArticle.settings.cacheMode = WebSettings.LOAD_DEFAULT;
+		} else {
+			wvArticle.settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+		}
+		setWebView(article)
 
-		val html = Jsoup.parse(content)
-
-		//Changing some html and css attributes of image to make it match display width
-		html.select("img")
-			.attr("width", "100%")
-		html.body()
-			.appendElement("style")
-			.appendText("* {margin-top:4px; margin-bottom:4px; margin-left:0; margin-right:0; padding:0; } ")
-
-		wvArticle.settings.setSupportZoom(true)
-		wvArticle.settings.builtInZoomControls = true
-		wvArticle.settings.displayZoomControls = false
-		wvArticle.settings.javaScriptEnabled = true
-		wvArticle.loadData(
-			html.html(),
-			"text/html",
-			"UTF-8"
-		)
 
 		//set article's stats data to views
 		txvComments.text = getString(R.string.count_comment, article.stats.comments)
@@ -260,7 +246,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
 			activityListener?.shareIntent(article)
 		}
 		txvReportArticle.setOnClickListener {
-			navController.navigate(ArticleFragmentDirections.actionArticleFragmentToReportDialogFragment(article.id))
+			navController.navigate(ArticleFragmentDirections.actionArticleFragmentToReportDialogFragment(
+				article.id))
 		}
 		txvSeeProfile.setOnClickListener {
 			navController.navigate(ArticleFragmentDirections.actionArticleFragmentToUserFragment(
@@ -281,7 +268,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	}
 
 	override fun onReportClick(commentId: String) {
-		navController.navigate(ArticleFragmentDirections.actionArticleFragmentToReportDialogFragment(commentId))
+		navController.navigate(ArticleFragmentDirections.actionArticleFragmentToReportDialogFragment(
+			commentId))
 	}
 
 	override fun onDeleteCommentClick(commentId: String) {
@@ -289,4 +277,38 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	}
 
 	override fun getUserId() = activityListener?.getUserId() ?: VALUE_DEFAULT
+
+	@SuppressLint("SetJavaScriptEnabled")
+	private fun setWebView(article: Post) = with(binding) {
+		articleViewModel.isFirstTime = false
+		//Replacing '#' from encoded version. Because there is a bug with WebView
+		val content = article.content
+			.replace("#", Uri.encode("#"))
+
+		val html = Jsoup.parse(content)
+
+		//Changing some html and css attributes of image to make it match display width
+		html.select("img")
+			.attr("width", "100%")
+		html.body()
+			.appendElement("style")
+			.appendText("* {margin-top:4px; margin-bottom:4px; margin-left:0; margin-right:0; padding:0; } ")
+
+		wvArticle.settings.allowFileAccess = true
+		wvArticle.settings.setAppCacheEnabled(true)
+		wvArticle.settings.setSupportZoom(true)
+		wvArticle.settings.builtInZoomControls = true
+		wvArticle.settings.displayZoomControls = false
+		wvArticle.settings.javaScriptEnabled = true
+		wvArticle.loadData(
+			html.html(),
+			"text/html",
+			"UTF-8"
+		)
+	}
+
+	override fun onSaveInstanceState(outState: Bundle) {
+		outState.putBoolean("is_first", false)
+		super.onSaveInstanceState(outState)
+	}
 }

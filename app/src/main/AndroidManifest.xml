@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CommunityApp">
         <activity
+            android:noHistory="false"
             android:name=".ui.activities.SplashActivity"
             android:theme="@style/Theme.CommunityApp.Splash">
             <intent-filter>

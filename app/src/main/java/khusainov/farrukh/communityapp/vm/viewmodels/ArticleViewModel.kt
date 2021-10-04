@@ -22,6 +22,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 	[_commentsLiveData] - comments of article
 	 */
 
+	var isFirstTime = true
 	//private mutable live data:
 	private val _isLoading = MutableLiveData<Boolean>()
 	private val _articleLiveData = MutableLiveData<Post>()
