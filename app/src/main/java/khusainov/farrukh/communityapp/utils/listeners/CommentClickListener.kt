@@ -1,6 +1,7 @@
 package khusainov.farrukh.communityapp.utils.listeners
 
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
+
 
 /**
  *Created by FarrukhKhusainov on 3/12/21 12:26 AM

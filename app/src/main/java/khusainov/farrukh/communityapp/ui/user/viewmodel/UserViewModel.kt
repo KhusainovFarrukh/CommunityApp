@@ -1,20 +1,17 @@
 package khusainov.farrukh.communityapp.ui.user.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import khusainov.farrukh.communityapp.data.DataWrapper
-import khusainov.farrukh.communityapp.data.models.OtherError
-import khusainov.farrukh.communityapp.data.models.User
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.utils.models.OtherError
+import khusainov.farrukh.communityapp.data.user.UserRepository
+import khusainov.farrukh.communityapp.data.user.remote.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:58 PM
  **/
-class UserViewModel(private val userId: String, private val repository: Repository) : ViewModel() {
+class UserViewModel(private val userId: String, private val repository: UserRepository) : ViewModel() {
 
 	/**
 	[_isLoading] - user loading state
@@ -66,5 +63,16 @@ class UserViewModel(private val userId: String, private val repository: Reposito
 				}
 			}
 		}
+	}
+}
+
+class UserViewModelFactory(
+	private val userId: String, private val repository: UserRepository
+) : ViewModelProvider.Factory {
+	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+		if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
+			return UserViewModel(userId, repository) as T
+		}
+		throw IllegalArgumentException("$modelClass is not UserViewModel")
 	}
 }

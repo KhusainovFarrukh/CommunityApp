@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.data.user
 
 import androidx.paging.PagingSource
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.data.user.remote.UserApi
 import khusainov.farrukh.communityapp.utils.Constants
 

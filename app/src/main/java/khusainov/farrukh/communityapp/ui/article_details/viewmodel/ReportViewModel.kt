@@ -1,20 +1,17 @@
 package khusainov.farrukh.communityapp.ui.article_details.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import khusainov.farrukh.communityapp.data.DataWrapper
-import khusainov.farrukh.communityapp.data.models.OtherError
-import khusainov.farrukh.communityapp.data.models.ReportValue
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.utils.models.OtherError
+import khusainov.farrukh.communityapp.data.posts.PostsRepository
+import khusainov.farrukh.communityapp.data.posts.remote.ReportPostRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
  *Created by FarrukhKhusainov on 3/16/21 4:22 PM
  **/
-class ReportViewModel(private val repository: Repository) : ViewModel() {
+class ReportViewModel(private val repository: PostsRepository) : ViewModel() {
 
 	/**
 	[_isLoading] - report loading state
@@ -33,19 +30,30 @@ class ReportViewModel(private val repository: Repository) : ViewModel() {
 	val reportError: LiveData<OtherError> get() = _reportError
 
 	//fun to report a post
-	fun reportPost(postId: String, reportValue: ReportValue) {
+	fun reportPost(postId: String, reportPostRequest: ReportPostRequest) {
 		viewModelScope.launch(Dispatchers.IO) {
 			_isLoading.postValue(true)
 
-			repository.reportPost(postId, reportValue).let { dataWrapper ->
+			repository.reportPost(postId, reportPostRequest).let { dataWrapper ->
 				when (dataWrapper) {
-                    is DataWrapper.Success -> _isReported.postValue(true)
-                    is DataWrapper.Error -> _reportError.postValue(OtherError(dataWrapper.message)
-                    { reportPost(postId, reportValue) })
+					is DataWrapper.Success -> _isReported.postValue(true)
+					is DataWrapper.Error -> _reportError.postValue(OtherError(dataWrapper.message)
+					{ reportPost(postId, reportPostRequest) })
 				}
 			}
 
 			_isLoading.postValue(false)
 		}
+	}
+}
+
+class ReportViewModelFactory(
+	private val repository: PostsRepository,
+) : ViewModelProvider.Factory {
+	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+		if (modelClass.isAssignableFrom(ReportViewModel::class.java)) {
+			return ReportViewModel(repository) as T
+		}
+		throw IllegalArgumentException("$modelClass is not ReportViewModel")
 	}
 }

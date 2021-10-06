@@ -9,8 +9,8 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Notification
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.notifications.remote.Notification
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderNotificationBinding
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_USER
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST

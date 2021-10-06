@@ -9,16 +9,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
+import khusainov.farrukh.communityapp.data.user.UserRepository
 import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
-import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
-import khusainov.farrukh.communityapp.utils.adapters.PostsOfAdapter
+import khusainov.farrukh.communityapp.ui.user.viewmodel.PostsOfUserViewModel
+import khusainov.farrukh.communityapp.ui.user.viewmodel.PostsOfUserViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SORT_BY
 import khusainov.farrukh.communityapp.utils.Constants.KEY_TYPE
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
-import khusainov.farrukh.communityapp.utils.vm_factories.PostsOfUserVMFactory
-import khusainov.farrukh.communityapp.ui.user.viewmodel.PostsOfUserViewModel
+import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
+import khusainov.farrukh.communityapp.utils.adapters.PostsOfAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -58,14 +58,7 @@ class PostsOfUserFragment : Fragment() {
 			R.string.no_sort_by))
 	}
 
-	private val postsViewModel by lazy {
-		ViewModelProvider(this, PostsOfUserVMFactory(
-			userId,
-			type,
-			sortBy,
-			Repository(RetrofitInstance(requireContext()).communityApiService)))
-			.get(PostsOfUserViewModel::class.java)
-	}
+	private val postsViewModel by lazy { initViewModel() }
 
 	fun newInstance(userId: String, postsType: String, sortBy: String): PostsOfUserFragment {
 		val fragment = PostsOfUserFragment()
@@ -135,4 +128,11 @@ class PostsOfUserFragment : Fragment() {
 		super.onDestroyView()
 		_binding = null
 	}
+
+	private fun initViewModel() = ViewModelProvider(this, PostsOfUserViewModelFactory(
+		userId,
+		type,
+		sortBy,
+		UserRepository(RetrofitInstance(requireContext()).userApi)))
+		.get(PostsOfUserViewModel::class.java)
 }

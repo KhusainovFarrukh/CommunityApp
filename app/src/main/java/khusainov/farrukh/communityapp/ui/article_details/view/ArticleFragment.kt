@@ -17,17 +17,20 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
+import khusainov.farrukh.communityapp.data.comments.CommentsRepository
+import khusainov.farrukh.communityapp.data.posts.PostsRepository
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
 import khusainov.farrukh.communityapp.ui.article_details.utils.CommentAdapter
 import khusainov.farrukh.communityapp.ui.article_details.utils.TopicOfArticleAdapter
+import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ArticleViewModel
+import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ArticleViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
+import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.comingSoon
 import khusainov.farrukh.communityapp.utils.listeners.CommentClickListener
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
-import khusainov.farrukh.communityapp.utils.vm_factories.ArticleVMFactory
-import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ArticleViewModel
-import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
@@ -44,14 +47,11 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		ArticleFragmentArgs.fromBundle(requireArguments()).articleId
 	}
 
-	private val articleViewModel: ArticleViewModel by lazy {
-		ViewModelProvider(this, ArticleVMFactory(articleId, requireContext()))
-			.get(ArticleViewModel::class.java)
-	}
+	private val articleViewModel: ArticleViewModel by lazy { initViewModel() }
 
 	private val topicOfArticleAdapter = TopicOfArticleAdapter { topicId ->
 		navController.navigate(ArticleFragmentDirections.actionArticleFragmentToTopicFragment(
-            topicId))
+			topicId))
 	}
 
 	override fun onCreateView(
@@ -248,11 +248,11 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		}
 		txvReportArticle.setOnClickListener {
 			navController.navigate(ArticleFragmentDirections.actionArticleFragmentToReportDialogFragment(
-                article.id))
+				article.id))
 		}
 		txvSeeProfile.setOnClickListener {
 			navController.navigate(ArticleFragmentDirections.actionArticleFragmentToUserFragment(
-                article.user!!.id))
+				article.user!!.id))
 		}
 	}
 
@@ -262,7 +262,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 
 	override fun onCommentAuthorClick(userId: String) {
 		navController.navigate(ArticleFragmentDirections.actionArticleFragmentToUserFragment(
-            userId))
+			userId))
 	}
 
 	override fun onReplyClick(body: String, replyTo: String) {
@@ -271,7 +271,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 
 	override fun onReportClick(commentId: String) {
 		navController.navigate(ArticleFragmentDirections.actionArticleFragmentToReportDialogFragment(
-            commentId))
+			commentId))
 	}
 
 	override fun onDeleteCommentClick(commentId: String) {
@@ -308,6 +308,12 @@ class ArticleFragment : Fragment(), CommentClickListener {
 			"UTF-8"
 		)
 	}
+
+	private fun initViewModel() = ViewModelProvider(this,
+		ArticleViewModelFactory(articleId,
+			PostsRepository(RetrofitInstance(requireContext()).postsApi),
+			CommentsRepository(RetrofitInstance(requireContext()).commentsApi)))
+		.get(ArticleViewModel::class.java)
 
 	override fun onSaveInstanceState(outState: Bundle) {
 		outState.putBoolean("is_first", false)

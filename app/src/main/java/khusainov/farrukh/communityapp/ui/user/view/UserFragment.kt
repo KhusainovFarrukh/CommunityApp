@@ -12,14 +12,16 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.User
+import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
+import khusainov.farrukh.communityapp.data.user.UserRepository
+import khusainov.farrukh.communityapp.data.user.remote.User
 import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
 import khusainov.farrukh.communityapp.ui.user.utils.ViewPagerAdapter
+import khusainov.farrukh.communityapp.ui.user.viewmodel.UserViewModel
+import khusainov.farrukh.communityapp.ui.user.viewmodel.UserViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
-import khusainov.farrukh.communityapp.utils.vm_factories.UserVMFactory
-import khusainov.farrukh.communityapp.ui.user.viewmodel.UserViewModel
 
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:55 PM
@@ -34,10 +36,7 @@ class UserFragment : Fragment() {
 		UserFragmentArgs.fromBundle(requireArguments()).userId
 	}
 
-	private val userViewModel by lazy {
-		ViewModelProvider(this, UserVMFactory(userId, requireContext()))
-			.get(UserViewModel::class.java)
-	}
+	private val userViewModel by lazy { initViewModel() }
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -159,4 +158,9 @@ class UserFragment : Fragment() {
 			}
 		}
 	}
+
+	private fun initViewModel() = ViewModelProvider(this,
+		UserViewModelFactory(userId,
+			UserRepository(RetrofitInstance(requireContext()).userApi)))
+		.get(UserViewModel::class.java)
 }

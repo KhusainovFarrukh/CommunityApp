@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Topic
+import khusainov.farrukh.communityapp.data.topics.remote.Topic
 import khusainov.farrukh.communityapp.databinding.ViewholderHashtagBinding
 import khusainov.farrukh.communityapp.utils.diff_utils.TopicItemCallback
 import java.util.*

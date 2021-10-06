@@ -3,15 +3,15 @@ package khusainov.farrukh.communityapp.ui.topic_details.viewmodel
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.DataWrapper
-import khusainov.farrukh.communityapp.data.models.Topic
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.topics.TopicsRepository
+import khusainov.farrukh.communityapp.data.topics.remote.Topic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
  *Created by FarrukhKhusainov on 3/22/21 11:33 PM
  **/
-class TopicViewModel(private val topicId: String, private val repository: Repository) :
+class TopicViewModel(private val topicId: String, private val repository: TopicsRepository) :
 	ViewModel() {
 
 	/**
@@ -61,5 +61,16 @@ class TopicViewModel(private val topicId: String, private val repository: Reposi
 		if (_sortBy.value != sortBy) {
 			_sortBy.postValue(sortBy)
 		}
+	}
+}
+
+class TopicViewModelFactory(
+	private val topicId: String, private val repository: TopicsRepository,
+) : ViewModelProvider.Factory {
+	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+		if (modelClass.isAssignableFrom(TopicViewModel::class.java)) {
+			return TopicViewModel(topicId, repository) as T
+		}
+		throw IllegalArgumentException("$modelClass is not TopicViewModel")
 	}
 }

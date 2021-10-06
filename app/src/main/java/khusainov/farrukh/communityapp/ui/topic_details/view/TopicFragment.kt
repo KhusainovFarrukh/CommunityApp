@@ -11,15 +11,17 @@ import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import coil.load
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Topic
+import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
+import khusainov.farrukh.communityapp.data.topics.TopicsRepository
+import khusainov.farrukh.communityapp.data.topics.remote.Topic
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
-import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
-import khusainov.farrukh.communityapp.utils.adapters.PostsOfAdapter
+import khusainov.farrukh.communityapp.ui.topic_details.viewmodel.TopicViewModel
+import khusainov.farrukh.communityapp.ui.topic_details.viewmodel.TopicViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
-import khusainov.farrukh.communityapp.utils.vm_factories.TopicVMFactory
-import khusainov.farrukh.communityapp.ui.topic_details.viewmodel.TopicViewModel
+import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
+import khusainov.farrukh.communityapp.utils.adapters.PostsOfAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -50,10 +52,7 @@ class TopicFragment : Fragment() {
 		TopicFragmentArgs.fromBundle(requireArguments()).topicId
 	}
 
-	private val topicViewModel by lazy {
-		ViewModelProvider(this, TopicVMFactory(topicId, requireContext()))
-			.get(TopicViewModel::class.java)
-	}
+	private val topicViewModel by lazy { initViewModel() }
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -177,4 +176,9 @@ class TopicFragment : Fragment() {
 			placeholder(R.drawable.ic_account_circle)
 		}
 	}
+
+	private fun initViewModel() = ViewModelProvider(this,
+		TopicViewModelFactory(topicId,
+			TopicsRepository(RetrofitInstance(requireContext()).topicsApi)))
+		.get(TopicViewModel::class.java)
 }

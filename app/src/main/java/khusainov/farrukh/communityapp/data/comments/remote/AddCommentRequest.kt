@@ -1,6 +1,7 @@
 package khusainov.farrukh.communityapp.data.comments.remote
 
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
+
 
 /**
  *Created by farrukh_kh on 10/4/21 11:10 PM

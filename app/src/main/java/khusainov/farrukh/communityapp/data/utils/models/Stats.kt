@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.data.models
+package khusainov.farrukh.communityapp.data.utils.models
 
 import com.google.gson.annotations.SerializedName
 

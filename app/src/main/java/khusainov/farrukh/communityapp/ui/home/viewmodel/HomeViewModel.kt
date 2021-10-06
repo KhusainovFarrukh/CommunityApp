@@ -1,17 +1,18 @@
 package khusainov.farrukh.communityapp.ui.home.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.DataWrapper
-import khusainov.farrukh.communityapp.data.models.Topic
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.posts.PostsRepository
+import khusainov.farrukh.communityapp.data.topics.TopicsRepository
+import khusainov.farrukh.communityapp.data.topics.remote.Topic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val repo: Repository) : ViewModel() {
+class HomeViewModel(
+	private val topicsRepository: TopicsRepository,
+	private val postsRepository: PostsRepository,
+) : ViewModel() {
 
 	/**
 	[_isLoadingTopics] - topics loading state
@@ -29,7 +30,7 @@ class HomeViewModel(private val repo: Repository) : ViewModel() {
 	val isLoadingTopics: LiveData<Boolean> get() = _isLoadingTopics
 	val topicsLiveData: LiveData<List<Topic>> get() = _topicsLiveData
 	val errorTopics: LiveData<String> get() = _errorTopics
-	val articlesLiveData = repo.getArticlesList().cachedIn(viewModelScope)
+	val articlesLiveData = postsRepository.getArticlesList().cachedIn(viewModelScope)
 
 	init {
 		initTopics()
@@ -39,14 +40,26 @@ class HomeViewModel(private val repo: Repository) : ViewModel() {
 		viewModelScope.launch(Dispatchers.IO) {
 			_isLoadingTopics.postValue(true)
 
-			repo.getTopics().let { dataWrapper ->
+			topicsRepository.getTopics().let { dataWrapper ->
 				when (dataWrapper) {
-                    is DataWrapper.Success -> _topicsLiveData.postValue(dataWrapper.data)
-                    is DataWrapper.Error -> _errorTopics.postValue(dataWrapper.message)
+					is DataWrapper.Success -> _topicsLiveData.postValue(dataWrapper.data)
+					is DataWrapper.Error -> _errorTopics.postValue(dataWrapper.message)
 				}
 			}
 
 			_isLoadingTopics.postValue(false)
 		}
+	}
+}
+
+class HomeViewModelFactory(
+	private val topicsRepository: TopicsRepository,
+	private val postsRepository: PostsRepository,
+) : ViewModelProvider.Factory {
+	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+		if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+			return HomeViewModel(topicsRepository, postsRepository) as T
+		}
+		throw IllegalArgumentException("$modelClass is not HomeViewModel")
 	}
 }

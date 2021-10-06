@@ -1,7 +1,5 @@
 package khusainov.farrukh.communityapp.data.posts.remote
 
-import khusainov.farrukh.communityapp.data.models.DeleteResponse
-import khusainov.farrukh.communityapp.data.models.ReportValue
 import retrofit2.http.*
 
 /**

@@ -2,7 +2,7 @@ package khusainov.farrukh.communityapp.data.comments
 
 import androidx.paging.PagingSource
 import khusainov.farrukh.communityapp.data.comments.remote.CommentsApi
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.utils.Constants
 
 /**

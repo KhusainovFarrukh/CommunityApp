@@ -9,10 +9,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.ReportValue
+import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
+import khusainov.farrukh.communityapp.data.posts.PostsRepository
+import khusainov.farrukh.communityapp.data.posts.remote.ReportPostRequest
 import khusainov.farrukh.communityapp.databinding.FragmentDialogReportBinding
-import khusainov.farrukh.communityapp.utils.vm_factories.ReportVMFactory
 import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ReportViewModel
+import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ReportViewModelFactory
 
 class ReportDialogFragment : DialogFragment() {
 
@@ -24,10 +26,7 @@ class ReportDialogFragment : DialogFragment() {
 			requireArguments()).postId
 	}
 
-	private val reportViewModel by lazy {
-		ViewModelProvider(this, ReportVMFactory(requireContext()))
-			.get(ReportViewModel::class.java)
-	}
+	private val reportViewModel by lazy { initViewModel() }
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -71,7 +70,7 @@ class ReportDialogFragment : DialogFragment() {
 			if (etDescription.text.isNotEmpty()) {
 				reportViewModel.reportPost(
 					articleId,
-					ReportValue(
+					ReportPostRequest(
 						spTypeOfReport.selectedItem.toString(),
 						etDescription.text.toString()
 					)
@@ -116,4 +115,8 @@ class ReportDialogFragment : DialogFragment() {
 				}).show()
 		}
 	}
+
+	private fun initViewModel() = ViewModelProvider(this,
+		ReportViewModelFactory(PostsRepository(RetrofitInstance(requireContext()).postsApi)))
+		.get(ReportViewModel::class.java)
 }

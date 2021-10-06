@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.data.topics
 
 import androidx.paging.PagingSource
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.data.topics.remote.TopicsApi
 import khusainov.farrukh.communityapp.utils.Constants
 
@@ -13,8 +13,7 @@ class PostsOfTopicPagingSource(
 	private val api: TopicsApi,
 	private val topicId: String,
 	private val sortBy: String,
-) :
-	PagingSource<Int, Post>() {
+) : PagingSource<Int, Post>() {
 	override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {
 		val position = params.key ?: Constants.PAGE_STARTING_INDEX
 

@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.ui.article_details.utils
+package khusainov.farrukh.communityapp.ui.home.utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderArticleBinding
 import khusainov.farrukh.communityapp.utils.diff_utils.ArticleItemCallback
 

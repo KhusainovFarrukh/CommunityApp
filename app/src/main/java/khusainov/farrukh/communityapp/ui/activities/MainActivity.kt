@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Post
-import khusainov.farrukh.communityapp.data.models.SignInData
+import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ActivityMainBinding
 import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SIGN_IN_DATA
@@ -29,7 +29,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 		setContentView(binding.root)
 	}
 
-	override fun saveSignInData(value: SignInData) {
+	override fun saveSignInData(value: SignInRequest) {
 		try {
 			editor.putString(KEY_SIGN_IN_DATA, Gson().toJson(value)).apply()
 		} catch (e: Exception) {
@@ -40,7 +40,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 	override fun getSignInData() = try {
 		Gson().fromJson(
 			sharedPreferences.getString(KEY_SIGN_IN_DATA, null),
-			SignInData::class.java
+			SignInRequest::class.java
 		)
 	} catch (e: Exception) {
 		e.printStackTrace()

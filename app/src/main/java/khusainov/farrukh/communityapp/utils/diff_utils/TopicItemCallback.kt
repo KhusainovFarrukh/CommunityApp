@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.utils.diff_utils
 
 import androidx.recyclerview.widget.DiffUtil
-import khusainov.farrukh.communityapp.data.models.Topic
+import khusainov.farrukh.communityapp.data.topics.remote.Topic
 
 /**
  *Created by farrukh_kh on 4/26/21 11:22 AM

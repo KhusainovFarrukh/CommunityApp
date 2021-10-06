@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.ui.topic_details.utils
+package khusainov.farrukh.communityapp.ui.home.utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Topic
+import khusainov.farrukh.communityapp.data.topics.remote.Topic
 import khusainov.farrukh.communityapp.databinding.ViewholderTopicBinding
 import khusainov.farrukh.communityapp.utils.diff_utils.TopicItemCallback
 
@@ -37,7 +37,8 @@ class TopicAdapter(private val itemClick: (String) -> Unit) :
 
 		fun onBindTopic(topic: Topic) = with(binding) {
 
-			root.startAnimation(AnimationUtils.loadAnimation(root.context, R.anim.enlarge_with_alpha))
+			root.startAnimation(AnimationUtils.loadAnimation(root.context,
+				R.anim.enlarge_with_alpha))
 
 			txvTitle.text = topic.name
 			txvPosts.text = topic.stats.posts.toString()

@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderCommentBinding
+import khusainov.farrukh.communityapp.utils.diff_utils.CommentItemCallback
 import khusainov.farrukh.communityapp.utils.listeners.CommentClickListener
 import khusainov.farrukh.communityapp.utils.setCommentToViews
-import khusainov.farrukh.communityapp.utils.diff_utils.CommentItemCallback
 
 /**
  *Created by FarrukhKhusainov on 3/8/21 9:59 PM

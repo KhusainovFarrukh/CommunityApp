@@ -1,7 +1,13 @@
-package khusainov.farrukh.communityapp.data.api
+package khusainov.farrukh.communityapp.data.utils.api
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import khusainov.farrukh.communityapp.data.auth.remote.AuthApi
+import khusainov.farrukh.communityapp.data.comments.remote.CommentsApi
+import khusainov.farrukh.communityapp.data.notifications.remote.NotificationsApi
+import khusainov.farrukh.communityapp.data.posts.remote.PostsApi
+import khusainov.farrukh.communityapp.data.topics.remote.TopicsApi
+import khusainov.farrukh.communityapp.data.user.remote.UserApi
 import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
 import khusainov.farrukh.communityapp.utils.Constants.DELIMITER_COOKIES
 import khusainov.farrukh.communityapp.utils.Constants.DELIMITER_CSRF
@@ -43,7 +49,12 @@ class RetrofitInstance(context: Context) {
 		.addConverterFactory(GsonConverterFactory.create())
 		.build()
 
-	val communityApiService: CommunityApiService = retrofit.create()
+	val authApi: AuthApi = retrofit.create()
+	val commentsApi: CommentsApi = retrofit.create()
+	val notificationsApi: NotificationsApi = retrofit.create()
+	val postsApi: PostsApi = retrofit.create()
+	val topicsApi: TopicsApi = retrofit.create()
+	val userApi: UserApi = retrofit.create()
 
 	//interceptor to save cookies from every request
 	inner class ReceivedCookiesInterceptor : Interceptor {

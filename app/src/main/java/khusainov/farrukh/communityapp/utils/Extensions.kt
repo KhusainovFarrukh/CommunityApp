@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import coil.load
 import coil.transform.CircleCropTransformation
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderCommentBinding
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
 import khusainov.farrukh.communityapp.utils.listeners.CommentClickListener

@@ -4,16 +4,21 @@ import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import khusainov.farrukh.communityapp.data.DataWrapper
-import khusainov.farrukh.communityapp.data.models.*
-import khusainov.farrukh.communityapp.data.repository.Repository
+import khusainov.farrukh.communityapp.data.comments.CommentsRepository
+import khusainov.farrukh.communityapp.data.utils.models.OtherError
+import khusainov.farrukh.communityapp.data.posts.PostsRepository
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
  *Created by FarrukhKhusainov on 3/4/21 10:53 PM
  **/
-class ArticleViewModel(private val articleId: String, private val repository: Repository) :
-	ViewModel() {
+class ArticleViewModel(
+	private val articleId: String,
+	private val postsRepository: PostsRepository,
+	private val commentsRepository: CommentsRepository,
+) : ViewModel() {
 
 	/**
 	[_isLoading] - article loading state
@@ -24,12 +29,13 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 	 */
 
 	var isFirstTime = true
+
 	//private mutable live data:
 	private val _isLoading = MutableLiveData<Boolean>()
 	private val _articleLiveData = MutableLiveData<Post>()
 	private val _errorArticle = MutableLiveData<String>()
 	private val _otherError = MutableLiveData<OtherError>()
-	private var _commentsLiveData = repository.getCommentsOfArticle(articleId)
+	private var _commentsLiveData = commentsRepository.getCommentsOfArticle(articleId)
 		.cachedIn(viewModelScope)
 
 	//public immutable live data:
@@ -48,7 +54,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 		viewModelScope.launch(Dispatchers.IO) {
 			_isLoading.postValue(true)
 
-			repository.getArticle(articleId).let { dataWrapper ->
+			postsRepository.getArticle(articleId).let { dataWrapper ->
 				when (dataWrapper) {
 					is DataWrapper.Success -> _articleLiveData.postValue(dataWrapper.data)
 					is DataWrapper.Error -> _errorArticle.postValue(dataWrapper.message)
@@ -62,7 +68,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 	//fun to add/remove like to/from article
 	fun likeArticle() {
 		viewModelScope.launch(Dispatchers.IO) {
-			repository.likePost(_articleLiveData.value!!).let { dataWrapper ->
+			postsRepository.likePost(_articleLiveData.value!!).let { dataWrapper ->
 				when (dataWrapper) {
 					is DataWrapper.Success -> _articleLiveData.postValue(dataWrapper.data)
 					is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message)
@@ -75,7 +81,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 	//TEMPORARY! fun to like comment
 	fun likeCommentTemp(comment: Post, refresh: () -> Unit) {
 		viewModelScope.launch(Dispatchers.IO) {
-			repository.likePost(comment).let { dataWrapper ->
+			postsRepository.likePost(comment).let { dataWrapper ->
 				when (dataWrapper) {
 					is DataWrapper.Success -> refresh.invoke()
 					is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message)
@@ -88,7 +94,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 	//TEMPORARY! fun to delete comment
 	fun deleteCommentTemp(commentId: String, refresh: () -> Unit) {
 		viewModelScope.launch(Dispatchers.IO) {
-			repository.deletePost(commentId).let { dataWrapper ->
+			postsRepository.deletePost(commentId).let { dataWrapper ->
 				when (dataWrapper) {
 					is DataWrapper.Success -> refresh.invoke()
 					is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message)
@@ -101,7 +107,7 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 	//TEMPORARY! fun for replying to comment
 	fun replyCommentTemp(replyBody: String, replyTo: String, refresh: () -> Unit) {
 		viewModelScope.launch(Dispatchers.IO) {
-			repository.replyToComment(replyBody, _articleLiveData.value!!, replyTo)
+			commentsRepository.replyToComment(replyBody, _articleLiveData.value!!, replyTo)
 				.let { dataWrapper ->
 					when (dataWrapper) {
 						is DataWrapper.Success -> refresh.invoke()
@@ -115,13 +121,27 @@ class ArticleViewModel(private val articleId: String, private val repository: Re
 	//TEMPORARY! fun to add comment to article
 	fun addCommentTemp(commentBody: String, refresh: () -> Unit) {
 		viewModelScope.launch(Dispatchers.IO) {
-			repository.addComment(commentBody, _articleLiveData.value!!).let { dataWrapper ->
-				when (dataWrapper) {
-					is DataWrapper.Success -> refresh.invoke()
-					is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message)
-					{ addCommentTemp(commentBody, refresh) })
+			commentsRepository.addComment(commentBody, _articleLiveData.value!!)
+				.let { dataWrapper ->
+					when (dataWrapper) {
+						is DataWrapper.Success -> refresh.invoke()
+						is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message)
+						{ addCommentTemp(commentBody, refresh) })
+					}
 				}
-			}
 		}
+	}
+}
+
+class ArticleViewModelFactory(
+	private val articleId: String,
+	private val postsRepository: PostsRepository,
+	private val commentsRepository: CommentsRepository,
+) : ViewModelProvider.Factory {
+	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+		if (modelClass.isAssignableFrom(ArticleViewModel::class.java)) {
+			return ArticleViewModel(articleId, postsRepository, commentsRepository) as T
+		}
+		throw IllegalArgumentException("$modelClass is not ArticleViewModel")
 	}
 }
