@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.ui.article_details.viewmodel
 
 import androidx.lifecycle.*
-import khusainov.farrukh.communityapp.data.DataWrapper
+import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.utils.models.OtherError
 import khusainov.farrukh.communityapp.data.posts.PostsRepository
 import khusainov.farrukh.communityapp.data.posts.remote.ReportPostRequest

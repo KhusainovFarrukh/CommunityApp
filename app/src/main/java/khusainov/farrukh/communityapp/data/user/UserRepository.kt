@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.data.user
 
 import androidx.paging.*
-import khusainov.farrukh.communityapp.data.DataWrapper
+import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.user.remote.User
 import khusainov.farrukh.communityapp.data.user.remote.UserApi
 

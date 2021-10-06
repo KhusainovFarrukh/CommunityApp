@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.data.comments
 
 import androidx.paging.*
-import khusainov.farrukh.communityapp.data.DataWrapper
+import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.comments.remote.*
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 

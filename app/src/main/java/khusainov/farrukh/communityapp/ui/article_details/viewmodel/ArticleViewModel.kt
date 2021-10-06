@@ -3,7 +3,7 @@ package khusainov.farrukh.communityapp.ui.article_details.viewmodel
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import khusainov.farrukh.communityapp.data.DataWrapper
+import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.comments.CommentsRepository
 import khusainov.farrukh.communityapp.data.utils.models.OtherError
 import khusainov.farrukh.communityapp.data.posts.PostsRepository

@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.ui.auth.viewmodel
 
 import androidx.lifecycle.*
-import khusainov.farrukh.communityapp.data.DataWrapper
+import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.auth.AuthRepository
 import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.data.utils.models.OtherError

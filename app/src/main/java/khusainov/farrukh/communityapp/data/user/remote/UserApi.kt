@@ -1,6 +1,6 @@
 package khusainov.farrukh.communityapp.data.user.remote
 
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import retrofit2.http.*
 
 /**

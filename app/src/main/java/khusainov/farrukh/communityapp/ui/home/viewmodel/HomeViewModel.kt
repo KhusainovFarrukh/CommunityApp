@@ -2,7 +2,7 @@ package khusainov.farrukh.communityapp.ui.home.viewmodel
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import khusainov.farrukh.communityapp.data.DataWrapper
+import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.posts.PostsRepository
 import khusainov.farrukh.communityapp.data.topics.TopicsRepository
 import khusainov.farrukh.communityapp.data.topics.remote.Topic

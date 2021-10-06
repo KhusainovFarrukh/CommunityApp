@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.ui.user.viewmodel
 
 import androidx.lifecycle.*
-import khusainov.farrukh.communityapp.data.DataWrapper
+import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.utils.models.OtherError
 import khusainov.farrukh.communityapp.data.user.UserRepository
 import khusainov.farrukh.communityapp.data.user.remote.User

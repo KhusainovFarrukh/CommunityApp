@@ -8,7 +8,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.models.Post
+import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ViewholderArticleOfUserBinding
 import khusainov.farrukh.communityapp.ui.article_details.utils.TopicOfArticleAdapter
 import khusainov.farrukh.communityapp.utils.Constants.KEY_RESPONSE
