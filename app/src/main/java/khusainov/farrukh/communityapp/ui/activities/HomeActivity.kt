@@ -9,24 +9,35 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ActivityMainBinding
+import khusainov.farrukh.communityapp.di.Car
+import khusainov.farrukh.communityapp.di.DaggerCarComponent
 import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SIGN_IN_DATA
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
 import khusainov.farrukh.communityapp.utils.Constants.TYPE_INTENT_TEXT
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
+import javax.inject.Inject
 
 @SuppressLint("CommitPrefEdits")
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
-	//sharedPrefs for saving some data (user email and password, api headers adn etc.)
+	//sharedPrefs for saving some data (user email and password, api headers and etc.)
 	private val sharedPreferences by lazy { getPreferences(MODE_PRIVATE) }
 	private val editor by lazy { sharedPreferences.edit() }
 	private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
+	@Inject
+	lateinit var car: Car
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
+
+		val carComponent = DaggerCarComponent.create()
+		carComponent.inject(this)
+
+		car.drive()
 	}
 
 	override fun saveSignInData(value: SignInRequest) {
