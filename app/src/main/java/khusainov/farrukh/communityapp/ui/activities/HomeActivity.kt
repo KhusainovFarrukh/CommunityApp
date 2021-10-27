@@ -9,8 +9,9 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ActivityMainBinding
-import khusainov.farrukh.communityapp.di.Car
-import khusainov.farrukh.communityapp.di.DaggerCarComponent
+import khusainov.farrukh.communityapp.di.*
+import khusainov.farrukh.communityapp.di.car.Car
+import khusainov.farrukh.communityapp.di.dagger.DaggerCarComponent
 import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SIGN_IN_DATA
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
@@ -34,7 +35,11 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
 
-		val carComponent = DaggerCarComponent.create()
+		val carComponent = DaggerCarComponent.builder()
+			.horsePower(120)
+			.fuelConsumePerKm(2)
+			.build()
+
 		carComponent.inject(this)
 
 		car.drive()

@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.di
+package khusainov.farrukh.communityapp.di.car
 
 import android.util.Log
 import javax.inject.Inject

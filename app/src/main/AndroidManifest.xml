@@ -12,8 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CommunityApp">
         <activity
-            android:noHistory="false"
             android:name=".ui.activities.SplashActivity"
+            android:exported="true"
+            android:noHistory="false"
             android:theme="@style/Theme.CommunityApp.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
