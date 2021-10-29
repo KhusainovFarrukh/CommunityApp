@@ -12,5 +12,6 @@ import javax.inject.Singleton
 @Component(modules = [DriverModule::class])
 interface AppComponent {
 
-	fun getDriver(): Driver
+//	fun getDriver(): Driver
+	fun getActivityComponentBuilder(): ActivityComponent.Builder
 }

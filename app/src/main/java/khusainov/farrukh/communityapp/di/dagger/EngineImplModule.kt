@@ -9,8 +9,11 @@ import khusainov.farrukh.communityapp.di.car.EngineImpl
  *khusainov.farrukh.communityapp.di
  **/
 @Module
-abstract class EngineImplModule {
+class EngineImplModule(private val horsePower: Int) {
 
-	@Binds
-	abstract fun provideEngine(engineImpl: EngineImpl): Engine
+	@Provides
+	fun provideHorsePower() = horsePower
+
+	@Provides
+	fun provideEngine(engineImpl: EngineImpl) = engineImpl as Engine
 }

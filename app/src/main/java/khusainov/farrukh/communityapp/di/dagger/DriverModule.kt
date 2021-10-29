@@ -13,7 +13,6 @@ import javax.inject.Singleton
 abstract class DriverModule {
 
 	companion object {
-
 		@Singleton
 		@Provides
 		fun provideDriver() = Driver()

@@ -1,7 +1,6 @@
 package khusainov.farrukh.communityapp.di.dagger
 
-import dagger.BindsInstance
-import dagger.Component
+import dagger.*
 import khusainov.farrukh.communityapp.di.car.Car
 import khusainov.farrukh.communityapp.ui.activities.HomeActivity
 import javax.inject.Singleton
@@ -11,8 +10,9 @@ import javax.inject.Singleton
  *khusainov.farrukh.communityapp.di
  **/
 @ActivityScope
-@Component(
-	dependencies = [AppComponent::class],
+@Subcomponent(
+//@Component(
+//	dependencies = [AppComponent::class],
 	modules = [WheelModule::class, SpecificEngineImplModule::class])
 interface ActivityComponent {
 
@@ -20,12 +20,10 @@ interface ActivityComponent {
 
 	fun inject(activity: HomeActivity)
 
-	@Component.Builder
+	@Subcomponent.Builder
 	interface Builder {
 
 		fun build(): ActivityComponent
-
-		fun appComponent(appComponent: AppComponent): Builder
 
 		@BindsInstance
 		fun horsePower(@HorsePower horsePower: Int): Builder

@@ -1,6 +1,5 @@
 package khusainov.farrukh.communityapp.ui.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +9,6 @@ import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ActivityMainBinding
 import khusainov.farrukh.communityapp.di.car.Car
-import khusainov.farrukh.communityapp.di.dagger.DaggerActivityComponent
 import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SIGN_IN_DATA
@@ -20,7 +18,6 @@ import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import javax.inject.Inject
 
-@SuppressLint("CommitPrefEdits")
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
 	//sharedPrefs for saving some data (user email and password, api headers and etc.)
@@ -45,13 +42,19 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
 //		carComponent.inject(this)
 
-		val activityComponent = DaggerActivityComponent.builder()
-			.horsePower(150)
-			.fuelConsumePerKm(1)
-			.appComponent(getAppComponent())
-			.build()
+//		val activityComponent = DaggerActivityComponent.builder()
+//			.horsePower(150)
+//			.fuelConsumePerKm(1)
+//			.appComponent(getAppComponent())
+//			.build()
 
-		activityComponent.inject(this)
+		getAppComponent().getActivityComponentBuilder()
+			.horsePower(130)
+			.fuelConsumePerKm(2)
+			.build()
+			.inject(this)
+
+//		activityComponent.inject(this)
 
 //		getAppComponent().inject(this)
 
@@ -78,7 +81,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 	}
 
 	override fun saveUserId(userId: String) {
-		editor.putString(KEY_USER_ID, userId).commit()
+		editor.putString(KEY_USER_ID, userId).apply()
 	}
 
 	override fun getUserId() =
