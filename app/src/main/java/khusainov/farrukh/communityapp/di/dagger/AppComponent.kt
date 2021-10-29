@@ -13,5 +13,8 @@ import javax.inject.Singleton
 interface AppComponent {
 
 //	fun getDriver(): Driver
-	fun getActivityComponentBuilder(): ActivityComponent.Builder
+
+//	fun getActivityComponentBuilder(): ActivityComponent.Builder
+
+	fun getActivityComponentFactory(): ActivityComponent.Factory
 }

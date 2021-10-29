@@ -48,10 +48,14 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 //			.appComponent(getAppComponent())
 //			.build()
 
-		getAppComponent().getActivityComponentBuilder()
+/*		getAppComponent().getActivityComponentBuilder()
 			.horsePower(130)
 			.fuelConsumePerKm(2)
 			.build()
+			.inject(this)*/
+
+		getAppComponent().getActivityComponentFactory()
+			.create(130, 2)
 			.inject(this)
 
 //		activityComponent.inject(this)

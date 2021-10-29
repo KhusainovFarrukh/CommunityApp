@@ -20,15 +20,19 @@ interface ActivityComponent {
 
 	fun inject(activity: HomeActivity)
 
-	@Subcomponent.Builder
+/*	@Subcomponent.Builder
 	interface Builder {
 
 		fun build(): ActivityComponent
 
-		@BindsInstance
-		fun horsePower(@HorsePower horsePower: Int): Builder
+		fun horsePower(@BindsInstance @HorsePower horsePower: Int): Builder
 
-		@BindsInstance
-		fun fuelConsumePerKm(@FuelConsumePerKm fuelConsumePerKm: Int): Builder
+		fun fuelConsumePerKm(@BindsInstance @FuelConsumePerKm fuelConsumePerKm: Int): Builder
+	}*/
+
+	@Subcomponent.Factory
+	interface Factory {
+
+		fun create(@BindsInstance @HorsePower horsePower: Int, @BindsInstance @FuelConsumePerKm fuelConsumePerKm: Int): ActivityComponent
 	}
 }
