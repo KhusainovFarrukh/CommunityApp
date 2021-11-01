@@ -2,6 +2,7 @@ package khusainov.farrukh.communityapp.data.utils.api
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import khusainov.farrukh.communityapp.data.auth.remote.AuthApi
 import khusainov.farrukh.communityapp.data.comments.remote.CommentsApi
 import khusainov.farrukh.communityapp.data.notifications.remote.NotificationsApi
@@ -24,10 +25,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class RetrofitInstance(context: Context) {
 
-	//SharedPref to save cookies
+/*	//SharedPref to save cookies
 	private val sharedPref = context.getSharedPreferences(KEY_COOKIES_REQUEST, MODE_PRIVATE)
 	private val editor = sharedPref.edit()
 
@@ -39,8 +41,8 @@ class RetrofitInstance(context: Context) {
 		.addInterceptor(ReceivedCookiesInterceptor())
 		.addInterceptor(AddCookiesInterceptor())
 		.addInterceptor(HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
-        })
+			setLevel(HttpLoggingInterceptor.Level.BODY)
+		})
 		.build()
 
 	private val retrofit = Retrofit.Builder()
@@ -54,10 +56,12 @@ class RetrofitInstance(context: Context) {
 	val notificationsApi: NotificationsApi = retrofit.create()
 	val postsApi: PostsApi = retrofit.create()
 	val topicsApi: TopicsApi = retrofit.create()
-	val userApi: UserApi = retrofit.create()
+	val userApi: UserApi = retrofit.create()*/
 
 	//interceptor to save cookies from every request
-	inner class ReceivedCookiesInterceptor : Interceptor {
+	class ReceivedCookiesInterceptor @Inject constructor(
+		private val editor: SharedPreferences.Editor,
+	) : Interceptor {
 		override fun intercept(chain: Interceptor.Chain): Response {
 			chain.proceed(chain.request()).let { response ->
 				response.headers(KEY_COOKIES_RESPONSE).forEach {
@@ -70,23 +74,25 @@ class RetrofitInstance(context: Context) {
 	}
 
 	//interceptor to add cookies to network request
-	inner class AddCookiesInterceptor : Interceptor {
+	class AddCookiesInterceptor @Inject constructor(
+		private val sharedPrefs: SharedPreferences,
+	) : Interceptor {
 		override fun intercept(chain: Interceptor.Chain): Response {
 
 			val originalRequest = chain.request()
 			val requestBuilder = originalRequest.newBuilder()
 
 			requestBuilder.addHeader(
-                KEY_COOKIES_REQUEST,
-                sharedPref.getString(KEY_USER_ID, "") + DELIMITER_COOKIES +
-                        sharedPref.getString(KEY_REMEMBER_ME, "") + DELIMITER_COOKIES +
-                        sharedPref.getString(KEY_CSRF, "") + DELIMITER_COOKIES +
-                        sharedPref.getString(KEY_SESSION_ID, "") + DELIMITER_COOKIES +
-                        sharedPref.getString(KEY_CSRF_TOKEN, "")
-            )
+				KEY_COOKIES_REQUEST,
+				sharedPrefs.getString(KEY_USER_ID, "") + DELIMITER_COOKIES +
+						sharedPrefs.getString(KEY_REMEMBER_ME, "") + DELIMITER_COOKIES +
+						sharedPrefs.getString(KEY_CSRF, "") + DELIMITER_COOKIES +
+						sharedPrefs.getString(KEY_SESSION_ID, "") + DELIMITER_COOKIES +
+						sharedPrefs.getString(KEY_CSRF_TOKEN, "")
+			)
 
-			if (sharedPref.contains(KEY_CSRF_TOKEN)) {
-				(sharedPref.getString(KEY_CSRF_TOKEN, "") ?: "").split(DELIMITER_CSRF).let {
+			if (sharedPrefs.contains(KEY_CSRF_TOKEN)) {
+				(sharedPrefs.getString(KEY_CSRF_TOKEN, "") ?: "").split(DELIMITER_CSRF).let {
 					if (it.size > 1) {
 						requestBuilder.addHeader(KEY_CSRF_TOKEN, it[1])
 					}

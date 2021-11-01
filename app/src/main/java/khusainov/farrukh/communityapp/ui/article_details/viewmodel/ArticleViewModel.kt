@@ -138,7 +138,7 @@ class ArticleViewModelFactory(
 	private val postsRepository: PostsRepository,
 	private val commentsRepository: CommentsRepository,
 ) : ViewModelProvider.Factory {
-	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(ArticleViewModel::class.java)) {
 			return ArticleViewModel(articleId, postsRepository, commentsRepository) as T
 		}

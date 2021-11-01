@@ -1,7 +1,6 @@
-package khusainov.farrukh.communityapp.di.dagger
+package khusainov.farrukh.communityapp.di.dagger_mock
 
 import dagger.Component
-import khusainov.farrukh.communityapp.di.car.Driver
 import javax.inject.Singleton
 
 /**
@@ -10,11 +9,11 @@ import javax.inject.Singleton
  **/
 @Singleton
 @Component(modules = [DriverModule::class])
-interface AppComponent {
+interface AppComponentMock {
 
 //	fun getDriver(): Driver
 
 //	fun getActivityComponentBuilder(): ActivityComponent.Builder
 
-	fun getActivityComponentFactory(): ActivityComponent.Factory
+	fun getActivityComponentFactory(): ActivityComponentMock.Factory
 }

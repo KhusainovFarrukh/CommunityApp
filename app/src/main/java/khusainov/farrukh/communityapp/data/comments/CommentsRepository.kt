@@ -4,12 +4,13 @@ import androidx.paging.*
 import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.comments.remote.*
 import khusainov.farrukh.communityapp.data.posts.remote.Post
+import javax.inject.Inject
 
 /**
  *Created by farrukh_kh on 10/4/21 11:13 PM
  *khusainov.farrukh.communityapp.data.comments
  **/
-class CommentsRepository(private val api: CommentsApi) {
+class CommentsRepository @Inject constructor(private val api: CommentsApi) {
 
 	//function to add a comment (as a post)
 	suspend fun addComment(body: String, parent: Post) = try {

@@ -24,7 +24,7 @@ class PostsOfUserViewModelFactory(
 	private val sortBy: String,
 	private val repository: UserRepository,
 ) : ViewModelProvider.Factory {
-	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(PostsOfUserViewModel::class.java)) {
 			return PostsOfUserViewModel(userId, type, sortBy, repository) as T
 		}

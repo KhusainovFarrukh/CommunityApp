@@ -67,7 +67,7 @@ class TopicViewModel(private val topicId: String, private val repository: Topics
 class TopicViewModelFactory(
 	private val topicId: String, private val repository: TopicsRepository,
 ) : ViewModelProvider.Factory {
-	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(TopicViewModel::class.java)) {
 			return TopicViewModel(topicId, repository) as T
 		}

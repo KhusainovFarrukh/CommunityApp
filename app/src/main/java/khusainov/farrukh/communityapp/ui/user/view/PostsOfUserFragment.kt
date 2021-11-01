@@ -9,9 +9,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.user.UserRepository
 import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.user.viewmodel.PostsOfUserViewModel
 import khusainov.farrukh.communityapp.ui.user.viewmodel.PostsOfUserViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SORT_BY
@@ -21,6 +21,7 @@ import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.adapters.PostsOfAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/17/21 11:14 PM
@@ -58,6 +59,8 @@ class PostsOfUserFragment : Fragment() {
 			R.string.no_sort_by))
 	}
 
+	@Inject
+	lateinit var userRepository: UserRepository
 	private val postsViewModel by lazy { initViewModel() }
 
 	fun newInstance(userId: String, postsType: String, sortBy: String): PostsOfUserFragment {
@@ -81,7 +84,7 @@ class PostsOfUserFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
+		getAppComponent().inject(this)
 		initRecyclerView()
 		setObservers()
 		setClickListeners()
@@ -133,6 +136,6 @@ class PostsOfUserFragment : Fragment() {
 		userId,
 		type,
 		sortBy,
-		UserRepository(RetrofitInstance(requireContext()).userApi)))
+		userRepository))
 		.get(PostsOfUserViewModel::class.java)
 }

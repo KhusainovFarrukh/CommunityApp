@@ -4,12 +4,13 @@ import androidx.paging.*
 import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.user.remote.User
 import khusainov.farrukh.communityapp.data.user.remote.UserApi
+import javax.inject.Inject
 
 /**
  *Created by farrukh_kh on 10/4/21 11:01 PM
  *khusainov.farrukh.communityapp.data.user
  **/
-class UserRepository(private val api: UserApi) {
+class UserRepository  @Inject constructor(private val api: UserApi) {
 
 	//function to get a user
 	suspend fun getUser(userId: String) = try {

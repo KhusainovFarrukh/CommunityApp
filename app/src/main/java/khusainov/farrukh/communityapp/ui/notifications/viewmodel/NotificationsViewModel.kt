@@ -16,7 +16,7 @@ class NotificationsViewModel(repository: NotificationsRepository) : ViewModel() 
 class NotificationsViewModelFactory(
 	private val repository: NotificationsRepository,
 ) : ViewModelProvider.Factory {
-	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(NotificationsViewModel::class.java)) {
 			return NotificationsViewModel(repository) as T
 		}

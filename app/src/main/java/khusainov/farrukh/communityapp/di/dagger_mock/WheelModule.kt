@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.di.dagger
+package khusainov.farrukh.communityapp.di.dagger_mock
 
 import dagger.Module
 import dagger.Provides

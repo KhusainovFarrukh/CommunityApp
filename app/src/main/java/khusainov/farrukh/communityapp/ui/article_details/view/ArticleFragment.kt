@@ -17,11 +17,11 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.comments.CommentsRepository
 import khusainov.farrukh.communityapp.data.posts.PostsRepository
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.article_details.utils.CommentAdapter
 import khusainov.farrukh.communityapp.ui.article_details.utils.TopicOfArticleAdapter
 import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ArticleViewModel
@@ -34,6 +34,7 @@ import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import javax.inject.Inject
 
 class ArticleFragment : Fragment(), CommentClickListener {
 
@@ -42,6 +43,12 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	private var activityListener: HomeActivityListener? = null
 	private val commentAdapter by lazy { CommentAdapter(this) }
 	private val navController by lazy { binding.root.findNavController() }
+
+	@Inject
+	lateinit var commentsRepository: CommentsRepository
+
+	@Inject
+	lateinit var postsRepository: PostsRepository
 
 	private val articleId by lazy {
 		ArticleFragmentArgs.fromBundle(requireArguments()).articleId
@@ -65,7 +72,7 @@ class ArticleFragment : Fragment(), CommentClickListener {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
+		getAppComponent().inject(this)
 		initRecyclerView()
 		setObservers()
 		setClickListeners()
@@ -311,8 +318,8 @@ class ArticleFragment : Fragment(), CommentClickListener {
 
 	private fun initViewModel() = ViewModelProvider(this,
 		ArticleViewModelFactory(articleId,
-			PostsRepository(RetrofitInstance(requireContext()).postsApi),
-			CommentsRepository(RetrofitInstance(requireContext()).commentsApi)))
+			postsRepository,
+			commentsRepository))
 		.get(ArticleViewModel::class.java)
 
 	override fun onSaveInstanceState(outState: Bundle) {

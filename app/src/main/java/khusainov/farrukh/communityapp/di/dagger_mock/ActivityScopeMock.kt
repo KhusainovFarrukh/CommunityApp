@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.di.dagger
+package khusainov.farrukh.communityapp.di.dagger_mock
 
 import javax.inject.Scope
 
@@ -9,4 +9,4 @@ import javax.inject.Scope
 @Scope
 @MustBeDocumented
 @kotlin.annotation.Retention(AnnotationRetention.RUNTIME)
-annotation class ActivityScope
+annotation class ActivityScopeMock

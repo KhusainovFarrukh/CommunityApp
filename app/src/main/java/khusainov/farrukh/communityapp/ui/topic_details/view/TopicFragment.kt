@@ -11,10 +11,10 @@ import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import coil.load
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.topics.TopicsRepository
 import khusainov.farrukh.communityapp.data.topics.remote.Topic
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.topic_details.viewmodel.TopicViewModel
 import khusainov.farrukh.communityapp.ui.topic_details.viewmodel.TopicViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
@@ -24,6 +24,7 @@ import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.adapters.PostsOfAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/22/21 11:31 PM
@@ -52,6 +53,8 @@ class TopicFragment : Fragment() {
 		TopicFragmentArgs.fromBundle(requireArguments()).topicId
 	}
 
+	@Inject
+	lateinit var topicsRepository: TopicsRepository
 	private val topicViewModel by lazy { initViewModel() }
 
 	override fun onCreateView(
@@ -65,7 +68,7 @@ class TopicFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
+		getAppComponent().inject(this)
 		initRecyclerView()
 		setSpinnerListener()
 		setObservers()
@@ -178,7 +181,6 @@ class TopicFragment : Fragment() {
 	}
 
 	private fun initViewModel() = ViewModelProvider(this,
-		TopicViewModelFactory(topicId,
-			TopicsRepository(RetrofitInstance(requireContext()).topicsApi)))
+		TopicViewModelFactory(topicId, topicsRepository))
 		.get(TopicViewModel::class.java)
 }

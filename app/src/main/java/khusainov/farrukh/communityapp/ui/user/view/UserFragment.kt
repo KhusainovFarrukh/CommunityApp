@@ -12,16 +12,17 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.user.UserRepository
 import khusainov.farrukh.communityapp.data.user.remote.User
 import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.user.utils.ViewPagerAdapter
 import khusainov.farrukh.communityapp.ui.user.viewmodel.UserViewModel
 import khusainov.farrukh.communityapp.ui.user.viewmodel.UserViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:55 PM
@@ -36,6 +37,8 @@ class UserFragment : Fragment() {
 		UserFragmentArgs.fromBundle(requireArguments()).userId
 	}
 
+	@Inject
+	lateinit var userRepository: UserRepository
 	private val userViewModel by lazy { initViewModel() }
 
 	override fun onCreateView(
@@ -50,6 +53,7 @@ class UserFragment : Fragment() {
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
+		getAppComponent().inject(this)
 		initViewPagerAdapter()
 		setSpinnerListener()
 		setObservers()
@@ -160,7 +164,6 @@ class UserFragment : Fragment() {
 	}
 
 	private fun initViewModel() = ViewModelProvider(this,
-		UserViewModelFactory(userId,
-			UserRepository(RetrofitInstance(requireContext()).userApi)))
+		UserViewModelFactory(userId, userRepository))
 		.get(UserViewModel::class.java)
 }

@@ -10,21 +10,25 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.auth.AuthRepository
 import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.databinding.FragmentDialogLoginBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModel
 import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModelFactory
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
+import javax.inject.Inject
 
 class LoginDialogFragment : DialogFragment() {
 
 	private var _binding: FragmentDialogLoginBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
+
+	@Inject
+	lateinit var authRepository: AuthRepository
 	private val loginViewModel: LoginViewModel by activityViewModels {
-		LoginViewModelFactory(AuthRepository(RetrofitInstance(requireContext()).authApi))
+		LoginViewModelFactory(authRepository)
 	}
 
 	override fun onCreateView(
@@ -38,7 +42,7 @@ class LoginDialogFragment : DialogFragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-
+		getAppComponent().inject(this)
 		setObservers()
 		setClickListeners()
 	}

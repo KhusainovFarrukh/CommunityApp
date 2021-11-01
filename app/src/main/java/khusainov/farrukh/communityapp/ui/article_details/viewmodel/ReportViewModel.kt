@@ -50,7 +50,7 @@ class ReportViewModel(private val repository: PostsRepository) : ViewModel() {
 class ReportViewModelFactory(
 	private val repository: PostsRepository,
 ) : ViewModelProvider.Factory {
-	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(ReportViewModel::class.java)) {
 			return ReportViewModel(repository) as T
 		}

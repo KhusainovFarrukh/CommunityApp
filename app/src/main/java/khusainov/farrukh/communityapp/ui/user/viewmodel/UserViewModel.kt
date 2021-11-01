@@ -69,7 +69,7 @@ class UserViewModel(private val userId: String, private val repository: UserRepo
 class UserViewModelFactory(
 	private val userId: String, private val repository: UserRepository
 ) : ViewModelProvider.Factory {
-	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
 			return UserViewModel(userId, repository) as T
 		}

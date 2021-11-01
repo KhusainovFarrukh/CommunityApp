@@ -56,7 +56,7 @@ class HomeViewModelFactory(
 	private val topicsRepository: TopicsRepository,
 	private val postsRepository: PostsRepository,
 ) : ViewModelProvider.Factory {
-	override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
 			return HomeViewModel(topicsRepository, postsRepository) as T
 		}
