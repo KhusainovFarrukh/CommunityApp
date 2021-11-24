@@ -8,15 +8,12 @@ import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ActivityMainBinding
-import khusainov.farrukh.communityapp.di.car.Car
-import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SIGN_IN_DATA
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
 import khusainov.farrukh.communityapp.utils.Constants.TYPE_INTENT_TEXT
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
-import javax.inject.Inject
 
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
@@ -25,45 +22,9 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 	private val editor by lazy { sharedPreferences.edit() }
 	private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-	@Inject
-	lateinit var car1: Car
-
-	@Inject
-	lateinit var car2: Car
-
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		setContentView(binding.root)
-
-//		val carComponent = DaggerCarComponent.builder()
-//			.horsePower(120)
-//			.fuelConsumePerKm(2)
-//			.build()
-
-//		carComponent.inject(this)
-
-//		val activityComponent = DaggerActivityComponent.builder()
-//			.horsePower(150)
-//			.fuelConsumePerKm(1)
-//			.appComponent(getAppComponent())
-//			.build()
-
-/*		getAppComponent().getActivityComponentBuilder()
-			.horsePower(130)
-			.fuelConsumePerKm(2)
-			.build()
-			.inject(this)*/
-
-		getAppComponent().getActivityComponentFactory()
-			.create(130, 2)
-			.inject(this)
-
-//		activityComponent.inject(this)
-
-//		getAppComponent().inject(this)
-
-		car1.drive()
-		car2.drive()
 	}
 
 	override fun saveSignInData(value: SignInRequest) {
