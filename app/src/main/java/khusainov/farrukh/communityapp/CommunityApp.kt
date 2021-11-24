@@ -10,7 +10,5 @@ class CommunityApp : Application() {
 
 	override fun onCreate() {
 		super.onCreate()
-
-		appComponent = DaggerAppComponent.create()
 	}
 }
