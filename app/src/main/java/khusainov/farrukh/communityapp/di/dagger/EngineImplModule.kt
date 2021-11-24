@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.di.dagger_mock
+package khusainov.farrukh.communityapp.di.dagger
 
 import dagger.*
 import khusainov.farrukh.communityapp.di.car.Engine

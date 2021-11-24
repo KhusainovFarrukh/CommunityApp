@@ -3,13 +3,12 @@ package khusainov.farrukh.communityapp.data.topics
 import androidx.paging.*
 import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.topics.remote.TopicsApi
-import javax.inject.Inject
 
 /**
  *Created by farrukh_kh on 10/4/21 10:48 PM
  *khusainov.farrukh.communityapp.data.topics
  **/
-class TopicsRepository @Inject constructor(private val api: TopicsApi) {
+class TopicsRepository(private val api: TopicsApi) {
 
 	//function to get topics (without paging)
 	suspend fun getTopics() = try {

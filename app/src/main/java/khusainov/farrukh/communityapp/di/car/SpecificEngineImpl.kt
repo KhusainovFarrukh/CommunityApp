@@ -1,8 +1,8 @@
 package khusainov.farrukh.communityapp.di.car
 
 import android.util.Log
-import khusainov.farrukh.communityapp.di.dagger_mock.FuelConsumePerKm
-import khusainov.farrukh.communityapp.di.dagger_mock.HorsePower
+import khusainov.farrukh.communityapp.di.dagger.FuelConsumePerKm
+import khusainov.farrukh.communityapp.di.dagger.HorsePower
 import javax.inject.Inject
 
 /**

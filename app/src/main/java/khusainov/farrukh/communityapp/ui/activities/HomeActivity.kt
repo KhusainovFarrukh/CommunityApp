@@ -9,7 +9,7 @@ import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.ActivityMainBinding
 import khusainov.farrukh.communityapp.di.car.Car
-import khusainov.farrukh.communityapp.getAppComponentMock
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.utils.Constants.BASE_URL
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SIGN_IN_DATA
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
@@ -54,7 +54,7 @@ class HomeActivity : AppCompatActivity(), HomeActivityListener {
 			.build()
 			.inject(this)*/
 
-		getAppComponentMock().getActivityComponentFactory()
+		getAppComponent().getActivityComponentFactory()
 			.create(130, 2)
 			.inject(this)
 

@@ -11,11 +11,11 @@ import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
+import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
 import khusainov.farrukh.communityapp.data.notifications.NotificationsRepository
 import khusainov.farrukh.communityapp.data.notifications.remote.Notification
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
-import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.notifications.utils.NotificationAdapter
 import khusainov.farrukh.communityapp.ui.notifications.viewmodel.NotificationsViewModel
 import khusainov.farrukh.communityapp.ui.notifications.viewmodel.NotificationsViewModelFactory
@@ -26,7 +26,6 @@ import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_REPLY
 import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class NotificationsFragment : Fragment() {
 
@@ -38,8 +37,6 @@ class NotificationsFragment : Fragment() {
 		NotificationAdapter { notification -> onNotificationClick(notification) }
 	}
 
-	@Inject
-	lateinit var notificationsRepository: NotificationsRepository
 	private val notificationsViewModel by lazy { initViewModel() }
 
 	override fun onCreateView(
@@ -53,7 +50,7 @@ class NotificationsFragment : Fragment() {
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
-		getAppComponent().inject(this)
+
 		initRecyclerView()
 		setClickListeners()
 		setObservers()
@@ -142,6 +139,6 @@ class NotificationsFragment : Fragment() {
 	}
 
 	private fun initViewModel() = ViewModelProvider(this,
-		NotificationsViewModelFactory(notificationsRepository))
+		NotificationsViewModelFactory(NotificationsRepository(RetrofitInstance(requireContext()).notificationsApi)))
 		.get(NotificationsViewModel::class.java)
 }
