@@ -1,7 +1,7 @@
 package khusainov.farrukh.communityapp.data.user.remote
 
 import com.google.gson.annotations.SerializedName
-import khusainov.farrukh.communityapp.data.utils.models.Stats
+import khusainov.farrukh.communityapp.data.Stats
 
 /**
  *Created by farrukh_kh on 10/4/21 11:00 PM

@@ -3,19 +3,21 @@ package khusainov.farrukh.communityapp.ui.article_details.viewmodel
 import androidx.lifecycle.*
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
+import khusainov.farrukh.communityapp.data.DataWrapper
+import khusainov.farrukh.communityapp.data.OtherError
 import khusainov.farrukh.communityapp.data.comments.CommentsRepository
-import khusainov.farrukh.communityapp.data.utils.models.OtherError
 import khusainov.farrukh.communityapp.data.posts.PostsRepository
 import khusainov.farrukh.communityapp.data.posts.remote.Post
+import khusainov.farrukh.communityapp.di.ArticleId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/4/21 10:53 PM
  **/
-class ArticleViewModel(
-	private val articleId: String,
+class ArticleViewModel @Inject constructor(
+	@ArticleId private val articleId: String,
 	private val postsRepository: PostsRepository,
 	private val commentsRepository: CommentsRepository,
 ) : ViewModel() {
@@ -130,18 +132,5 @@ class ArticleViewModel(
 					}
 				}
 		}
-	}
-}
-
-class ArticleViewModelFactory(
-	private val articleId: String,
-	private val postsRepository: PostsRepository,
-	private val commentsRepository: CommentsRepository,
-) : ViewModelProvider.Factory {
-	override fun <T : ViewModel> create(modelClass: Class<T>): T {
-		if (modelClass.isAssignableFrom(ArticleViewModel::class.java)) {
-			return ArticleViewModel(articleId, postsRepository, commentsRepository) as T
-		}
-		throw IllegalArgumentException("$modelClass is not ArticleViewModel")
 	}
 }

@@ -3,7 +3,7 @@ package khusainov.farrukh.communityapp.data.posts.remote
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
-import khusainov.farrukh.communityapp.data.utils.models.Stats
+import khusainov.farrukh.communityapp.data.Stats
 import khusainov.farrukh.communityapp.data.topics.remote.Topic
 import khusainov.farrukh.communityapp.data.user.remote.User
 import org.joda.time.DateTime

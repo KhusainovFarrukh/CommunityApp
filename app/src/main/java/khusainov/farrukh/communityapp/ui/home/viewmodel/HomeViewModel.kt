@@ -2,14 +2,15 @@ package khusainov.farrukh.communityapp.ui.home.viewmodel
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
+import khusainov.farrukh.communityapp.data.DataWrapper
 import khusainov.farrukh.communityapp.data.posts.PostsRepository
 import khusainov.farrukh.communityapp.data.topics.TopicsRepository
 import khusainov.farrukh.communityapp.data.topics.remote.Topic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(
+class HomeViewModel @Inject constructor(
 	private val topicsRepository: TopicsRepository,
 	private val postsRepository: PostsRepository,
 ) : ViewModel() {
@@ -49,17 +50,5 @@ class HomeViewModel(
 
 			_isLoadingTopics.postValue(false)
 		}
-	}
-}
-
-class HomeViewModelFactory(
-	private val topicsRepository: TopicsRepository,
-	private val postsRepository: PostsRepository,
-) : ViewModelProvider.Factory {
-	override fun <T : ViewModel> create(modelClass: Class<T>): T {
-		if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-			return HomeViewModel(topicsRepository, postsRepository) as T
-		}
-		throw IllegalArgumentException("$modelClass is not HomeViewModel")
 	}
 }

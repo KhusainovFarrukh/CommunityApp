@@ -9,6 +9,7 @@ import android.webkit.WebSettings
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -17,15 +18,12 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.comments.CommentsRepository
-import khusainov.farrukh.communityapp.data.posts.PostsRepository
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.FragmentArticleDetailsBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.article_details.utils.CommentAdapter
 import khusainov.farrukh.communityapp.ui.article_details.utils.TopicOfArticleAdapter
 import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ArticleViewModel
-import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ArticleViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
 import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.comingSoon
@@ -34,6 +32,7 @@ import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
+import javax.inject.Inject
 
 class ArticleFragment : Fragment(), CommentClickListener {
 
@@ -47,11 +46,24 @@ class ArticleFragment : Fragment(), CommentClickListener {
 		ArticleFragmentArgs.fromBundle(requireArguments()).articleId
 	}
 
-	private val articleViewModel: ArticleViewModel by lazy { initViewModel() }
+	@Inject
+	lateinit var viewModelFactory: ViewModelProvider.Factory
+	private val articleViewModel by viewModels<ArticleViewModel> { viewModelFactory }
 
 	private val topicOfArticleAdapter = TopicOfArticleAdapter { topicId ->
 		navController.navigate(ArticleFragmentDirections.actionArticleFragmentToTopicFragment(
 			topicId))
+	}
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		getAppComponent().articleDetailsSubcomponent().create(articleId).inject(this)
+		if (context is HomeActivityListener) {
+			activityListener = context
+		} else {
+			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
+				context.toString()))
+		}
 	}
 
 	override fun onCreateView(
@@ -74,16 +86,6 @@ class ArticleFragment : Fragment(), CommentClickListener {
 	override fun onDestroyView() {
 		super.onDestroyView()
 		_binding = null
-	}
-
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		if (context is HomeActivityListener) {
-			activityListener = context
-		} else {
-			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
-				context.toString()))
-		}
 	}
 
 	override fun onDetach() {
@@ -308,12 +310,6 @@ class ArticleFragment : Fragment(), CommentClickListener {
 			"UTF-8"
 		)
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		ArticleViewModelFactory(articleId,
-			PostsRepository(RetrofitInstance(requireContext()).postsApi),
-			CommentsRepository(RetrofitInstance(requireContext()).commentsApi)))
-		.get(ArticleViewModel::class.java)
 
 	override fun onSaveInstanceState(outState: Bundle) {
 		outState.putBoolean("is_first", false)

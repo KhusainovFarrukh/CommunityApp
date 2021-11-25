@@ -136,7 +136,7 @@
     </fragment>
     <dialog
         android:id="@+id/loginDialogFragment"
-        android:name="khusainov.farrukh.communityapp.ui.auth.view.LoginDialogFragment"
+        android:name="khusainov.farrukh.communityapp.ui.home.view.LoginDialogFragment"
         android:label="LoginDialogFragment"
         tools:layout="@layout/fragment_dialog_login" />
     <dialog

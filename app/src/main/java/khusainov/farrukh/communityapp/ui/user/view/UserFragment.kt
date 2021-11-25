@@ -1,27 +1,28 @@
 package khusainov.farrukh.communityapp.ui.user.view
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Html
 import android.view.*
 import android.widget.AdapterView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.user.UserRepository
 import khusainov.farrukh.communityapp.data.user.remote.User
 import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.user.utils.ViewPagerAdapter
 import khusainov.farrukh.communityapp.ui.user.viewmodel.UserViewModel
-import khusainov.farrukh.communityapp.ui.user.viewmodel.UserViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:55 PM
@@ -36,7 +37,14 @@ class UserFragment : Fragment() {
 		UserFragmentArgs.fromBundle(requireArguments()).userId
 	}
 
-	private val userViewModel by lazy { initViewModel() }
+	@Inject
+	lateinit var viewModelFactory: ViewModelProvider.Factory
+	private val userViewModel by viewModels<UserViewModel> { viewModelFactory }
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		getAppComponent().userSubcomponent().create(userId).inject(this)
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -158,9 +166,4 @@ class UserFragment : Fragment() {
 			}
 		}
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		UserViewModelFactory(userId,
-			UserRepository(RetrofitInstance(requireContext()).userApi)))
-		.get(UserViewModel::class.java)
 }

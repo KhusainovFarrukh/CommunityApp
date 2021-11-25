@@ -1,24 +1,24 @@
 package khusainov.farrukh.communityapp.ui.notifications.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import com.google.gson.Gson
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.notifications.NotificationsRepository
 import khusainov.farrukh.communityapp.data.notifications.remote.Notification
 import khusainov.farrukh.communityapp.data.posts.remote.Post
 import khusainov.farrukh.communityapp.databinding.FragmentNotificationsBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.notifications.utils.NotificationAdapter
 import khusainov.farrukh.communityapp.ui.notifications.viewmodel.NotificationsViewModel
-import khusainov.farrukh.communityapp.ui.notifications.viewmodel.NotificationsViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_FOLLOW_USER
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST
 import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_POST_UPVOTE
@@ -26,6 +26,7 @@ import khusainov.farrukh.communityapp.utils.Constants.KEY_NOTIFICATION_REPLY
 import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class NotificationsFragment : Fragment() {
 
@@ -37,7 +38,14 @@ class NotificationsFragment : Fragment() {
 		NotificationAdapter { notification -> onNotificationClick(notification) }
 	}
 
-	private val notificationsViewModel by lazy { initViewModel() }
+	@Inject
+	lateinit var viewModelFactory: ViewModelProvider.Factory
+	private val notificationsViewModel by viewModels<NotificationsViewModel> { viewModelFactory }
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		getAppComponent().notificationsSubcomponent().create().inject(this)
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -137,8 +145,4 @@ class NotificationsFragment : Fragment() {
 			}
 		}
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		NotificationsViewModelFactory(NotificationsRepository(RetrofitInstance(requireContext()).notificationsApi)))
-		.get(NotificationsViewModel::class.java)
 }

@@ -1,4 +1,4 @@
-package khusainov.farrukh.communityapp.data.utils.models
+package khusainov.farrukh.communityapp.data
 
 /**
  *Created by FarrukhKhusainov on 4/25/21 1:35 AM

@@ -1,19 +1,19 @@
 package khusainov.farrukh.communityapp.ui.user.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.user.UserRepository
 import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.user.viewmodel.PostsOfUserViewModel
-import khusainov.farrukh.communityapp.ui.user.viewmodel.PostsOfUserViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SORT_BY
 import khusainov.farrukh.communityapp.utils.Constants.KEY_TYPE
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
@@ -21,6 +21,7 @@ import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.adapters.PostsOfAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/17/21 11:14 PM
@@ -58,7 +59,9 @@ class PostsOfUserFragment : Fragment() {
 			R.string.no_sort_by))
 	}
 
-	private val postsViewModel by lazy { initViewModel() }
+	@Inject
+	lateinit var viewModelFactory: ViewModelProvider.Factory
+	private val postsViewModel by viewModels<PostsOfUserViewModel> { viewModelFactory }
 
 	fun newInstance(userId: String, postsType: String, sortBy: String): PostsOfUserFragment {
 		val fragment = PostsOfUserFragment()
@@ -68,6 +71,11 @@ class PostsOfUserFragment : Fragment() {
 		bundle.putString(KEY_SORT_BY, sortBy)
 		fragment.arguments = bundle
 		return fragment
+	}
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		getAppComponent().userSubcomponent().create(userId, type, sortBy).inject(this)
 	}
 
 	override fun onCreateView(
@@ -128,11 +136,4 @@ class PostsOfUserFragment : Fragment() {
 		super.onDestroyView()
 		_binding = null
 	}
-
-	private fun initViewModel() = ViewModelProvider(this, PostsOfUserViewModelFactory(
-		userId,
-		type,
-		sortBy,
-		UserRepository(RetrofitInstance(requireContext()).userApi)))
-		.get(PostsOfUserViewModel::class.java)
 }

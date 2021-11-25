@@ -1,18 +1,21 @@
-package khusainov.farrukh.communityapp.ui.auth.viewmodel
+package khusainov.farrukh.communityapp.ui.home.viewmodel
 
 import androidx.lifecycle.*
-import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
+import khusainov.farrukh.communityapp.data.DataWrapper
+import khusainov.farrukh.communityapp.data.OtherError
 import khusainov.farrukh.communityapp.data.auth.AuthRepository
 import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
-import khusainov.farrukh.communityapp.data.utils.models.OtherError
 import khusainov.farrukh.communityapp.data.user.remote.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/4/21 10:53 PM
  **/
-class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
+class LoginViewModel @Inject constructor(
+	private val repository: AuthRepository,
+) : ViewModel() {
 
 	/**
 	[_isLoading] - sign in loading state
@@ -45,16 +48,5 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
 
 			_isLoading.postValue(false)
 		}
-	}
-}
-
-class LoginViewModelFactory(
-	private val repository: AuthRepository,
-) : ViewModelProvider.Factory {
-	override fun <T : ViewModel> create(modelClass: Class<T>): T {
-		if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-			return LoginViewModel(repository) as T
-		}
-		throw IllegalArgumentException("$modelClass is not LoginViewModel")
 	}
 }

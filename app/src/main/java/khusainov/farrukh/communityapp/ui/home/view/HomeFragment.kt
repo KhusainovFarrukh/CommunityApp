@@ -6,8 +6,7 @@ import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.*
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -16,23 +15,19 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.auth.AuthRepository
-import khusainov.farrukh.communityapp.data.posts.PostsRepository
-import khusainov.farrukh.communityapp.data.topics.TopicsRepository
 import khusainov.farrukh.communityapp.data.user.remote.User
 import khusainov.farrukh.communityapp.databinding.FragmentHomeBinding
+import khusainov.farrukh.communityapp.getAppComponent
+import khusainov.farrukh.communityapp.ui.home.viewmodel.LoginViewModel
 import khusainov.farrukh.communityapp.ui.home.utils.ArticleAdapter
+import khusainov.farrukh.communityapp.ui.home.utils.TopicAdapter
+import khusainov.farrukh.communityapp.ui.home.viewmodel.HomeViewModel
+import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.comingSoon
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModel
-import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModelFactory
-import khusainov.farrukh.communityapp.ui.home.viewmodel.HomeViewModel
-import khusainov.farrukh.communityapp.ui.home.utils.TopicAdapter
-import khusainov.farrukh.communityapp.ui.home.viewmodel.HomeViewModelFactory
-import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class HomeFragment : Fragment() {
 
@@ -55,9 +50,17 @@ class HomeFragment : Fragment() {
 		}
 	}
 
-	private val mainViewModel by lazy { initViewModel() }
-	private val loginViewModel: LoginViewModel by activityViewModels {
-		LoginViewModelFactory(AuthRepository(RetrofitInstance(requireContext()).authApi))
+	@Inject
+	lateinit var viewModelFactory: ViewModelProvider.Factory
+	private val mainViewModel by viewModels<HomeViewModel> { viewModelFactory }
+	private val loginViewModel by activityViewModels<LoginViewModel> { viewModelFactory }
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		getAppComponent().homeSubcomponent().create().inject(this)
+		if (context is HomeActivityListener) {
+			activityListener = context
+		}
 	}
 
 	override fun onCreateView(
@@ -81,20 +84,6 @@ class HomeFragment : Fragment() {
 	override fun onDestroyView() {
 		super.onDestroyView()
 		_binding = null
-	}
-
-	override fun onAttach(context: Context) {
-		super.onAttach(context)
-		if (context is HomeActivityListener) {
-			activityListener = context
-		} else {
-			ViewModelProvider(this,
-				HomeViewModelFactory(TopicsRepository(RetrofitInstance(requireContext()).topicsApi),
-					PostsRepository(RetrofitInstance(requireContext()).postsApi)))
-				.get(HomeViewModel::class.java)
-			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
-				context.toString()))
-		}
 	}
 
 	override fun onDetach() {
@@ -228,9 +217,4 @@ class HomeFragment : Fragment() {
 			}
 		}
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		HomeViewModelFactory(TopicsRepository(RetrofitInstance(requireContext()).topicsApi),
-			PostsRepository(RetrofitInstance(requireContext()).postsApi)))
-		.get(HomeViewModel::class.java)
 }

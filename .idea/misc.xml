@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.21481481481481482" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/viewholder_load_state.xml" value="0.20555555555555555" />
       </map>
     </option>

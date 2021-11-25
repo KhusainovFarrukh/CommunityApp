@@ -1,14 +1,15 @@
 package khusainov.farrukh.communityapp.data.posts
 
 import androidx.paging.*
-import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
+import khusainov.farrukh.communityapp.data.DataWrapper
 import khusainov.farrukh.communityapp.data.posts.remote.*
+import javax.inject.Inject
 
 /**
  *Created by farrukh_kh on 10/4/21 11:27 PM
  *khusainov.farrukh.communityapp.data.posts.remote
  **/
-class PostsRepository(private val api: PostsApi) {
+class PostsRepository @Inject constructor(private val api: PostsApi) {
 
 	//function to get last articles (with paging)
 	fun getArticlesList() = Pager(

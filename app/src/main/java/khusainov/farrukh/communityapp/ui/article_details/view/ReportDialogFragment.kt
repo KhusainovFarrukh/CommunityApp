@@ -1,20 +1,21 @@
 package khusainov.farrukh.communityapp.ui.article_details.view
 
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.posts.PostsRepository
 import khusainov.farrukh.communityapp.data.posts.remote.ReportPostRequest
 import khusainov.farrukh.communityapp.databinding.FragmentDialogReportBinding
+import khusainov.farrukh.communityapp.getAppComponent
 import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ReportViewModel
-import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ReportViewModelFactory
+import javax.inject.Inject
 
 class ReportDialogFragment : DialogFragment() {
 
@@ -26,7 +27,14 @@ class ReportDialogFragment : DialogFragment() {
 			requireArguments()).postId
 	}
 
-	private val reportViewModel by lazy { initViewModel() }
+	@Inject
+	lateinit var viewModelFactory: ViewModelProvider.Factory
+	private val reportViewModel by viewModels<ReportViewModel> { viewModelFactory }
+
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		getAppComponent().articleDetailsSubcomponent().create(articleId).inject(this)
+	}
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -115,8 +123,4 @@ class ReportDialogFragment : DialogFragment() {
 				}).show()
 		}
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		ReportViewModelFactory(PostsRepository(RetrofitInstance(requireContext()).postsApi)))
-		.get(ReportViewModel::class.java)
 }

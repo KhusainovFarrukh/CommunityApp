@@ -73,8 +73,19 @@ dependencies {
     //paging3
     implementation 'androidx.paging:paging-runtime-ktx:3.0.0-alpha11'
 
-    // Navigation
+    //Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
     implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    //Dagger 2
+    implementation 'com.google.dagger:dagger:2.39.1'
+    kapt 'com.google.dagger:dagger-compiler:2.39.1'
+
+    //Dagger 2 (android specific)
+    implementation 'com.google.dagger:dagger-android:2.39.1'
+    kapt 'com.google.dagger:dagger-android-processor:2.39.1'
+
+    kapt("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.2.0")
+
 }
