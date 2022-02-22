@@ -6,8 +6,8 @@ import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -15,26 +15,22 @@ import androidx.paging.LoadState
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
+import dagger.android.support.DaggerFragment
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.auth.AuthRepository
-import khusainov.farrukh.communityapp.data.posts.PostsRepository
-import khusainov.farrukh.communityapp.data.topics.TopicsRepository
 import khusainov.farrukh.communityapp.data.user.remote.User
 import khusainov.farrukh.communityapp.databinding.FragmentHomeBinding
+import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModel
 import khusainov.farrukh.communityapp.ui.home.utils.ArticleAdapter
+import khusainov.farrukh.communityapp.ui.home.utils.TopicAdapter
+import khusainov.farrukh.communityapp.ui.home.viewmodel.HomeViewModel
+import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.comingSoon
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModel
-import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModelFactory
-import khusainov.farrukh.communityapp.ui.home.viewmodel.HomeViewModel
-import khusainov.farrukh.communityapp.ui.home.utils.TopicAdapter
-import khusainov.farrukh.communityapp.ui.home.viewmodel.HomeViewModelFactory
-import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeFragment : Fragment() {
+class HomeFragment : DaggerFragment() {
 
 	private var _binding: FragmentHomeBinding? = null
 	private val binding get() = _binding!!
@@ -55,10 +51,10 @@ class HomeFragment : Fragment() {
 		}
 	}
 
-	private val mainViewModel by lazy { initViewModel() }
-	private val loginViewModel: LoginViewModel by activityViewModels {
-		LoginViewModelFactory(AuthRepository(RetrofitInstance(requireContext()).authApi))
-	}
+	@Inject
+	lateinit var factory: ViewModelProvider.Factory
+	private val homeViewModel by viewModels<HomeViewModel> { factory }
+	private val loginViewModel by activityViewModels<LoginViewModel> { factory }
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -88,10 +84,6 @@ class HomeFragment : Fragment() {
 		if (context is HomeActivityListener) {
 			activityListener = context
 		} else {
-			ViewModelProvider(this,
-				HomeViewModelFactory(TopicsRepository(RetrofitInstance(requireContext()).topicsApi),
-					PostsRepository(RetrofitInstance(requireContext()).postsApi)))
-				.get(HomeViewModel::class.java)
 			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
 				context.toString()))
 		}
@@ -125,7 +117,7 @@ class HomeFragment : Fragment() {
 			}
 		}
 
-		with(mainViewModel) {
+		with(homeViewModel) {
 			//observe topics' loading state
 			isLoadingTopics.observe(viewLifecycleOwner) {
 				binding.pbLoadingTopics.isVisible = it
@@ -187,7 +179,7 @@ class HomeFragment : Fragment() {
 			articleAdapter.retry()
 		}
 		btnRetryTopics.setOnClickListener {
-			mainViewModel.initTopics()
+			homeViewModel.initTopics()
 		}
 		imvProfile.setOnClickListener {
 			activityListener?.getUserId()?.let { userId ->
@@ -228,9 +220,4 @@ class HomeFragment : Fragment() {
 			}
 		}
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		HomeViewModelFactory(TopicsRepository(RetrofitInstance(requireContext()).topicsApi),
-			PostsRepository(RetrofitInstance(requireContext()).postsApi)))
-		.get(HomeViewModel::class.java)
 }

@@ -2,8 +2,9 @@ package khusainov.farrukh.communityapp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.util.Log
 import com.google.gson.Gson
+import dagger.android.support.DaggerAppCompatActivity
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.data.posts.remote.Post
@@ -14,8 +15,9 @@ import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
 import khusainov.farrukh.communityapp.utils.Constants.TYPE_INTENT_TEXT
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
+import javax.inject.Inject
 
-class HomeActivity : AppCompatActivity(), HomeActivityListener {
+class HomeActivity : DaggerAppCompatActivity(), HomeActivityListener {
 
 	//sharedPrefs for saving some data (user email and password, api headers and etc.)
 	private val sharedPreferences by lazy { getPreferences(MODE_PRIVATE) }

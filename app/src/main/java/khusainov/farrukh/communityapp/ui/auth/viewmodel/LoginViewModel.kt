@@ -8,11 +8,12 @@ import khusainov.farrukh.communityapp.data.utils.models.OtherError
 import khusainov.farrukh.communityapp.data.user.remote.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/4/21 10:53 PM
  **/
-class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
+class LoginViewModel @Inject constructor(private val repository: AuthRepository) : ViewModel() {
 
 	/**
 	[_isLoading] - sign in loading state
