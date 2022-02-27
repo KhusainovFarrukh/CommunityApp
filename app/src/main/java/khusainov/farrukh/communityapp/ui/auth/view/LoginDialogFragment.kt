@@ -9,23 +9,20 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.auth.AuthRepository
 import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.databinding.FragmentDialogLoginBinding
 import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModel
-import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModelFactory
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 
+@AndroidEntryPoint
 class LoginDialogFragment : DialogFragment() {
 
 	private var _binding: FragmentDialogLoginBinding? = null
 	private val binding get() = _binding!!
 	private var activityListener: HomeActivityListener? = null
-	private val loginViewModel: LoginViewModel by activityViewModels {
-		LoginViewModelFactory(AuthRepository(RetrofitInstance(requireContext()).authApi))
-	}
+	private val loginViewModel by activityViewModels<LoginViewModel>()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,

@@ -1,17 +1,22 @@
 package khusainov.farrukh.communityapp.ui.article_details.viewmodel
 
 import androidx.lifecycle.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
 import khusainov.farrukh.communityapp.data.utils.models.OtherError
 import khusainov.farrukh.communityapp.data.posts.PostsRepository
 import khusainov.farrukh.communityapp.data.posts.remote.ReportPostRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/16/21 4:22 PM
  **/
-class ReportViewModel(private val repository: PostsRepository) : ViewModel() {
+@HiltViewModel
+class ReportViewModel @Inject constructor(
+	private val repository: PostsRepository,
+) : ViewModel() {
 
 	/**
 	[_isLoading] - report loading state
@@ -44,16 +49,5 @@ class ReportViewModel(private val repository: PostsRepository) : ViewModel() {
 
 			_isLoading.postValue(false)
 		}
-	}
-}
-
-class ReportViewModelFactory(
-	private val repository: PostsRepository,
-) : ViewModelProvider.Factory {
-	override fun <T : ViewModel> create(modelClass: Class<T>): T {
-		if (modelClass.isAssignableFrom(ReportViewModel::class.java)) {
-			return ReportViewModel(repository) as T
-		}
-		throw IllegalArgumentException("$modelClass is not ReportViewModel")
 	}
 }

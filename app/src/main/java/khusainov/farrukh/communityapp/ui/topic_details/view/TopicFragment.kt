@@ -5,18 +5,16 @@ import android.view.*
 import android.widget.AdapterView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.paging.LoadState
 import coil.load
+import dagger.hilt.android.AndroidEntryPoint
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.topics.TopicsRepository
 import khusainov.farrukh.communityapp.data.topics.remote.Topic
 import khusainov.farrukh.communityapp.databinding.FragmentTopicBinding
 import khusainov.farrukh.communityapp.ui.topic_details.viewmodel.TopicViewModel
-import khusainov.farrukh.communityapp.ui.topic_details.viewmodel.TopicViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
@@ -28,6 +26,7 @@ import kotlinx.coroutines.launch
 /**
  *Created by FarrukhKhusainov on 3/22/21 11:31 PM
  **/
+@AndroidEntryPoint
 class TopicFragment : Fragment() {
 
 	private var _binding: FragmentTopicBinding? = null
@@ -48,11 +47,7 @@ class TopicFragment : Fragment() {
 		)
 	}
 
-	private val topicId by lazy {
-		TopicFragmentArgs.fromBundle(requireArguments()).topicId
-	}
-
-	private val topicViewModel by lazy { initViewModel() }
+	private val topicViewModel by viewModels<TopicViewModel>()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -176,9 +171,4 @@ class TopicFragment : Fragment() {
 			placeholder(R.drawable.ic_account_circle)
 		}
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		TopicViewModelFactory(topicId,
-			TopicsRepository(RetrofitInstance(requireContext()).topicsApi)))
-		.get(TopicViewModel::class.java)
 }

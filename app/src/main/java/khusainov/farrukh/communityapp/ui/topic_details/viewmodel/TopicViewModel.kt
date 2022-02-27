@@ -2,17 +2,23 @@ package khusainov.farrukh.communityapp.ui.topic_details.viewmodel
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
+import dagger.hilt.android.lifecycle.HiltViewModel
 import khusainov.farrukh.communityapp.data.topics.TopicsRepository
 import khusainov.farrukh.communityapp.data.topics.remote.Topic
+import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
+import khusainov.farrukh.communityapp.ui.topic_details.view.TopicFragmentArgs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/22/21 11:33 PM
  **/
-class TopicViewModel(private val topicId: String, private val repository: TopicsRepository) :
-	ViewModel() {
+@HiltViewModel
+class TopicViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
+	private val repository: TopicsRepository,
+) : ViewModel() {
 
 	/**
 	[_isLoading] - topic loading state
@@ -21,6 +27,8 @@ class TopicViewModel(private val topicId: String, private val repository: Topics
 	[_errorTopic] - error while initializing topic
 	[topicPostsLiveData] - posts of topic value
 	 */
+
+	private val topicId = TopicFragmentArgs.fromSavedStateHandle(savedStateHandle).topicId
 
 	//private mutable live data:
 	private val _isLoading = MutableLiveData<Boolean>()
@@ -61,16 +69,5 @@ class TopicViewModel(private val topicId: String, private val repository: Topics
 		if (_sortBy.value != sortBy) {
 			_sortBy.postValue(sortBy)
 		}
-	}
-}
-
-class TopicViewModelFactory(
-	private val topicId: String, private val repository: TopicsRepository,
-) : ViewModelProvider.Factory {
-	override fun <T : ViewModel> create(modelClass: Class<T>): T {
-		if (modelClass.isAssignableFrom(TopicViewModel::class.java)) {
-			return TopicViewModel(topicId, repository) as T
-		}
-		throw IllegalArgumentException("$modelClass is not TopicViewModel")
 	}
 }

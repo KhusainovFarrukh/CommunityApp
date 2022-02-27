@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import khusainov.farrukh.communityapp.R
 import khusainov.farrukh.communityapp.data.auth.remote.SignInRequest
 import khusainov.farrukh.communityapp.data.posts.remote.Post
@@ -15,6 +16,7 @@ import khusainov.farrukh.communityapp.utils.Constants.TYPE_INTENT_TEXT
 import khusainov.farrukh.communityapp.utils.Constants.VALUE_DEFAULT
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
 
+@AndroidEntryPoint
 class HomeActivity : AppCompatActivity(), HomeActivityListener {
 
 	//sharedPrefs for saving some data (user email and password, api headers and etc.)

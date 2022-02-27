@@ -4,16 +4,13 @@ import android.os.Bundle
 import android.view.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.paging.LoadState
-import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.user.UserRepository
+import dagger.hilt.android.AndroidEntryPoint
 import khusainov.farrukh.communityapp.databinding.FragmentListPostsOfUserBinding
 import khusainov.farrukh.communityapp.ui.user.viewmodel.PostsOfUserViewModel
-import khusainov.farrukh.communityapp.ui.user.viewmodel.PostsOfUserViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.KEY_SORT_BY
 import khusainov.farrukh.communityapp.utils.Constants.KEY_TYPE
 import khusainov.farrukh.communityapp.utils.Constants.KEY_USER_ID
@@ -25,6 +22,7 @@ import kotlinx.coroutines.launch
 /**
  *Created by FarrukhKhusainov on 3/17/21 11:14 PM
  **/
+@AndroidEntryPoint
 class PostsOfUserFragment : Fragment() {
 
 	private var _binding: FragmentListPostsOfUserBinding? = null
@@ -45,20 +43,7 @@ class PostsOfUserFragment : Fragment() {
 		)
 	}
 
-	private val userId by lazy {
-		arguments?.getString(KEY_USER_ID) ?: throw NullPointerException(getString(
-			R.string.no_user_id))
-	}
-	private val type by lazy {
-		arguments?.getString(KEY_TYPE) ?: throw NullPointerException(getString(
-			R.string.no_type))
-	}
-	private val sortBy by lazy {
-		arguments?.getString(KEY_SORT_BY) ?: throw NullPointerException(getString(
-			R.string.no_sort_by))
-	}
-
-	private val postsViewModel by lazy { initViewModel() }
+	private val postsViewModel by viewModels<PostsOfUserViewModel>()
 
 	fun newInstance(userId: String, postsType: String, sortBy: String): PostsOfUserFragment {
 		val fragment = PostsOfUserFragment()
@@ -128,11 +113,4 @@ class PostsOfUserFragment : Fragment() {
 		super.onDestroyView()
 		_binding = null
 	}
-
-	private fun initViewModel() = ViewModelProvider(this, PostsOfUserViewModelFactory(
-		userId,
-		type,
-		sortBy,
-		UserRepository(RetrofitInstance(requireContext()).userApi)))
-		.get(PostsOfUserViewModel::class.java)
 }

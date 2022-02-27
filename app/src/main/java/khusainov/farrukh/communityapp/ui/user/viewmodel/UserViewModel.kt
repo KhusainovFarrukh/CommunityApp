@@ -1,17 +1,24 @@
 package khusainov.farrukh.communityapp.ui.user.viewmodel
 
 import androidx.lifecycle.*
-import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
-import khusainov.farrukh.communityapp.data.utils.models.OtherError
+import dagger.hilt.android.lifecycle.HiltViewModel
 import khusainov.farrukh.communityapp.data.user.UserRepository
 import khusainov.farrukh.communityapp.data.user.remote.User
+import khusainov.farrukh.communityapp.data.utils.models.DataWrapper
+import khusainov.farrukh.communityapp.data.utils.models.OtherError
+import khusainov.farrukh.communityapp.ui.user.view.UserFragmentArgs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:58 PM
  **/
-class UserViewModel(private val userId: String, private val repository: UserRepository) : ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(
+	private val savedStateHandle: SavedStateHandle,
+	private val repository: UserRepository,
+) : ViewModel() {
 
 	/**
 	[_isLoading] - user loading state
@@ -19,6 +26,8 @@ class UserViewModel(private val userId: String, private val repository: UserRepo
 	[_errorUser] - error while initializing user
 	[_otherError] - error while executing some functions (follow)
 	 */
+
+	private val userId = UserFragmentArgs.fromSavedStateHandle(savedStateHandle).userId
 
 	//private mutable live data:
 	private val _isLoading = MutableLiveData<Boolean>()
@@ -44,8 +53,8 @@ class UserViewModel(private val userId: String, private val repository: UserRepo
 
 			repository.getUser(userId).let { dataWrapper ->
 				when (dataWrapper) {
-                    is DataWrapper.Success -> _userLiveData.postValue(dataWrapper.data)
-                    is DataWrapper.Error -> _errorUser.postValue(dataWrapper.message)
+					is DataWrapper.Success -> _userLiveData.postValue(dataWrapper.data)
+					is DataWrapper.Error -> _errorUser.postValue(dataWrapper.message)
 				}
 			}
 
@@ -58,21 +67,10 @@ class UserViewModel(private val userId: String, private val repository: UserRepo
 		viewModelScope.launch(Dispatchers.IO) {
 			repository.followUser(_userLiveData.value!!).let { dataWrapper ->
 				when (dataWrapper) {
-                    is DataWrapper.Success -> _userLiveData.postValue(dataWrapper.data)
-                    is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message) { followUser() })
+					is DataWrapper.Success -> _userLiveData.postValue(dataWrapper.data)
+					is DataWrapper.Error -> _otherError.postValue(OtherError(dataWrapper.message) { followUser() })
 				}
 			}
 		}
-	}
-}
-
-class UserViewModelFactory(
-	private val userId: String, private val repository: UserRepository
-) : ViewModelProvider.Factory {
-	override fun <T : ViewModel> create(modelClass: Class<T>): T {
-		if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
-			return UserViewModel(userId, repository) as T
-		}
-		throw IllegalArgumentException("$modelClass is not UserViewModel")
 	}
 }

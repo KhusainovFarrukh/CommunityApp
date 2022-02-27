@@ -6,16 +6,15 @@ import android.view.*
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.posts.PostsRepository
 import khusainov.farrukh.communityapp.data.posts.remote.ReportPostRequest
 import khusainov.farrukh.communityapp.databinding.FragmentDialogReportBinding
 import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ReportViewModel
-import khusainov.farrukh.communityapp.ui.article_details.viewmodel.ReportViewModelFactory
 
+@AndroidEntryPoint
 class ReportDialogFragment : DialogFragment() {
 
 	private var _binding: FragmentDialogReportBinding? = null
@@ -26,7 +25,7 @@ class ReportDialogFragment : DialogFragment() {
 			requireArguments()).postId
 	}
 
-	private val reportViewModel by lazy { initViewModel() }
+	private val reportViewModel by viewModels<ReportViewModel>()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -115,8 +114,4 @@ class ReportDialogFragment : DialogFragment() {
 				}).show()
 		}
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		ReportViewModelFactory(PostsRepository(RetrofitInstance(requireContext()).postsApi)))
-		.get(ReportViewModel::class.java)
 }

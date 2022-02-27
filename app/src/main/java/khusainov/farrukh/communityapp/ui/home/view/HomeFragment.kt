@@ -6,34 +6,28 @@ import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.*
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.auth.AuthRepository
-import khusainov.farrukh.communityapp.data.posts.PostsRepository
-import khusainov.farrukh.communityapp.data.topics.TopicsRepository
 import khusainov.farrukh.communityapp.data.user.remote.User
 import khusainov.farrukh.communityapp.databinding.FragmentHomeBinding
+import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModel
 import khusainov.farrukh.communityapp.ui.home.utils.ArticleAdapter
+import khusainov.farrukh.communityapp.ui.home.utils.TopicAdapter
+import khusainov.farrukh.communityapp.ui.home.viewmodel.HomeViewModel
+import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import khusainov.farrukh.communityapp.utils.comingSoon
 import khusainov.farrukh.communityapp.utils.listeners.HomeActivityListener
-import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModel
-import khusainov.farrukh.communityapp.ui.auth.viewmodel.LoginViewModelFactory
-import khusainov.farrukh.communityapp.ui.home.viewmodel.HomeViewModel
-import khusainov.farrukh.communityapp.ui.home.utils.TopicAdapter
-import khusainov.farrukh.communityapp.ui.home.viewmodel.HomeViewModelFactory
-import khusainov.farrukh.communityapp.utils.adapters.ListLoadStateAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
 	private var _binding: FragmentHomeBinding? = null
@@ -55,10 +49,8 @@ class HomeFragment : Fragment() {
 		}
 	}
 
-	private val mainViewModel by lazy { initViewModel() }
-	private val loginViewModel: LoginViewModel by activityViewModels {
-		LoginViewModelFactory(AuthRepository(RetrofitInstance(requireContext()).authApi))
-	}
+	private val mainViewModel by viewModels<HomeViewModel>()
+	private val loginViewModel by activityViewModels<LoginViewModel>()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -88,10 +80,6 @@ class HomeFragment : Fragment() {
 		if (context is HomeActivityListener) {
 			activityListener = context
 		} else {
-			ViewModelProvider(this,
-				HomeViewModelFactory(TopicsRepository(RetrofitInstance(requireContext()).topicsApi),
-					PostsRepository(RetrofitInstance(requireContext()).postsApi)))
-				.get(HomeViewModel::class.java)
 			throw IllegalArgumentException(getString(R.string.context_is_not_listener,
 				context.toString()))
 		}
@@ -228,9 +216,4 @@ class HomeFragment : Fragment() {
 			}
 		}
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		HomeViewModelFactory(TopicsRepository(RetrofitInstance(requireContext()).topicsApi),
-			PostsRepository(RetrofitInstance(requireContext()).postsApi)))
-		.get(HomeViewModel::class.java)
 }

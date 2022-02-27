@@ -6,19 +6,17 @@ import android.view.*
 import android.widget.AdapterView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import khusainov.farrukh.communityapp.R
-import khusainov.farrukh.communityapp.data.utils.api.RetrofitInstance
-import khusainov.farrukh.communityapp.data.user.UserRepository
 import khusainov.farrukh.communityapp.data.user.remote.User
 import khusainov.farrukh.communityapp.databinding.FragmentUserBinding
 import khusainov.farrukh.communityapp.ui.user.utils.ViewPagerAdapter
 import khusainov.farrukh.communityapp.ui.user.viewmodel.UserViewModel
-import khusainov.farrukh.communityapp.ui.user.viewmodel.UserViewModelFactory
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_ASC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_TIME_DESC
 import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
@@ -26,17 +24,16 @@ import khusainov.farrukh.communityapp.utils.Constants.SORT_BY_UPVOTES
 /**
  *Created by FarrukhKhusainov on 3/5/21 2:55 PM
  **/
+@AndroidEntryPoint
 class UserFragment : Fragment() {
 
 	private var _binding: FragmentUserBinding? = null
 	private val binding get() = _binding!!
 	private val pagerAdapter by lazy { ViewPagerAdapter(userId, childFragmentManager) }
 
-	private val userId by lazy {
-		UserFragmentArgs.fromBundle(requireArguments()).userId
-	}
+	private val userId by lazy { UserFragmentArgs.fromBundle(requireArguments()).userId }
 
-	private val userViewModel by lazy { initViewModel() }
+	private val userViewModel by viewModels<UserViewModel>()
 
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -158,9 +155,4 @@ class UserFragment : Fragment() {
 			}
 		}
 	}
-
-	private fun initViewModel() = ViewModelProvider(this,
-		UserViewModelFactory(userId,
-			UserRepository(RetrofitInstance(requireContext()).userApi)))
-		.get(UserViewModel::class.java)
 }
