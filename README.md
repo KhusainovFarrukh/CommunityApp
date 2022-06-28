@@ -1,5 +1,5 @@
 # CommunityApp
-Demo Android client for [One Million Uzbek Coder Community](https://community.uzbekcoders.com)
+Demo Android client for [One Million Uzbek Coder Community](https://community.uzbekcoders.uz)
 
 Tech stack: MVVM, Retrofit, ViewBinding, Kotlin Coroutines, Navigation Component, MotionLayout and etc.
 
